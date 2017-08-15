@@ -91,7 +91,7 @@ Contract source file is `contract/Mail.sol`.
     uint64 public total_confirmed;
 ```
 
-* contract has `owner` which is the account that sent the transaction to deploy the contract. This account is also used by the server to create signatures. Therefore, it needs to be unlocked. In `utils/start_rpc.sh` predefined `0xdbde11e51b9fcc9c455de9af89729cf37d835156` is used. You can use another unlocked account, however you'd need to change `signer` property in `web-dapp/server-config.js` to your account's address.
+* contract has `owner` which is the account that sent the transaction to deploy the contract. This account is also used by the server to create signatures. Therefore, it needs to be unlocked. In `utils/start_rpc.sh` predefined `0xdbde11e51b9fcc9c455de9af89729cf37d835156` is used. You can use another unlocked account, however you'd need to change `signer` property in `web-dapp/server-config.js` to your account's address and `sender` property in `utils/utils-config.js`.
 
 * main methods are
 ```
@@ -107,8 +107,12 @@ Contract source file is `contract/Mail.sol`.
     public
 ```
 used to confirm an address.  
-`name` maybe different for each new address  
-`country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
+
+* `name` maybe different for each new address  
+
+* `country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
+
+* when confirmation code is entered, `user_address_by_confirmation_code` method is called by dapp to search for address with matching confirmation code.
 
 ### transaction signatures
 First, all relevant parameters for `register_address` and `confirm_address` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`), e.g.
@@ -119,7 +123,7 @@ First, all relevant parameters for `register_address` and `confirm_address` need
         var sign_output = sign(web3, text2sign);
 ```
 this function uses [`web3.eth.sign`](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsign) method to produce a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.  
-Contract uses built-in ethereum function `ecrecover` to verify that signer's address mathces contract's `owner`:
+Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `owner`:
 ```
     function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
