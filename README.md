@@ -26,7 +26,7 @@ cd ..
 5. open new tab in your terminal, cd to `utils` folder and start testrpc with a set of predefined acounts
 ```
 cd utils
-bash /start_rpc.sh
+bash start_rpc.sh
 ```
 leave this tab opened until your test is complete.
 
