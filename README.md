@@ -23,6 +23,16 @@ npm install
 cd ..
 ```
 
+4. sensitive data (like lob api key) can be provided by creating `web-dapp/server-config-private.js` file that exports config object like so:
+```
+'use strict';
+
+module.exports = {
+    lob_api_key: '***********',
+};
+```
+If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
+
 5. open new tab in your terminal, cd to `utils` folder and start testrpc with a set of predefined acounts
 ```
 cd utils
