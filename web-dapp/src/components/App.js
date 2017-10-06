@@ -17,20 +17,30 @@ class App extends Component {
         this.state = {
             my_web3: null,
             web3_checker: null,
-            web3_checker_dur: 0
+            web3_checker_dur: 0,
+            contract: null,
         };
     }
 
     check_web3 = () => {
         console.log('check_web3');
         if (window.my_web3) {
-            this.setState({ my_web3: window.my_web3 });
+            console.log('web3 found, getting contract');
             clearInterval(this.state.web3_checker);
-            this.setState({ web3_checker: null, web3_checker_dur: 0 });
+            var cconf = ContractOutput.ProofOfPhysicalAddress;
+            var contract = window.my_web3.eth.contract(cconf.abi).at(cconf.address);
+            window.megaContract = contract;
+            this.setState({
+                contract: contract,
+                my_web3: window.my_web3,
+                web3_checker: null,
+                web3_checker_dur: 0,
+            });
         }
         else {
-            this.setState({ web3_checker_dur: this.state.web3_checker_dur + WEB3_CHECKER_INTERV_MS });;
-            console.log('no web3 yet, web3_checker_dur = ' + this.state.web3_checker_dur);
+            this.setState((prevState, props) => { prevState.web3_checker_dur += WEB3_CHECKER_INTERV_MS }, () => {
+                console.log('no web3 yet, web3_checker_dur = ' + this.state.web3_checker_dur);
+            });
         }
     }
 
@@ -43,13 +53,13 @@ class App extends Component {
     }
 
     render = () => {
-        if (this.state.my_web3) {
+        if (this.state.my_web3 && this.state.contract) {
             return (
                 <BrowserRouter>
                 <div>
                     <Header/>
-                    <Route exact path="/" component={() => <RegisterAddressPage my_web3={this.state.my_web3} cconf={ ContractOutput.ProofOfPhysicalAddress }/> } />
-                    <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3} cconf={ ContractOutput.ProofOfPhysicalAddress }/> } />
+                    <Route exact path="/" component={() => <RegisterAddressPage my_web3={this.state.my_web3} contract={this.state.contract}/> } />
+                    <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3} contract={this.state.contract}/> } />
                     <Footer/>
                 </div>
                 </BrowserRouter>

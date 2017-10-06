@@ -10,7 +10,7 @@ class RegisterAddressPage extends Component {
             state: '',
             city: '',
             address: '',
-            zip: ''
+            zip: '',
         };
     }
 
@@ -43,21 +43,22 @@ class RegisterAddressPage extends Component {
         });
     }
 
-    check_user_exists = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('opts = ' + JSON.stringify(opts));
+    check_wallet_same = (current_wallet, initial_wallet) => {
+        console.log('check_wallet current_wallet: ' + current_wallet);
+        console.log('check_wallet initial_wallet: ' + initial_wallet);
+        if (!current_wallet) {
+            return 'MetaMask account should be unlocked';
+        }
+        if (current_wallet.trim().toLowerCase() !== initial_wallet) {
+            return 'MetaMask account was switched';
+        }
+        return '';
+    }
 
-        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-        console.log('Current wallet: ' + wallet);
-        if (!wallet) {
-            return callback('MetaMask account should be unlocked');
-        }
-        if (wallet.trim().toLowerCase() !== opts.wallet) {
-            return callback('MetaMask account was switched');
-        }
+    check_user_exists = (opts, callback) => {
+        var contract = this.props.contract;
+        var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+        if (wsame) return callback(wsame);
 
         console.log('calling contract.check_user_exists');
         contract.user_exists(opts.wallet, { from: opts.wallet }, (err, result) => {
@@ -72,26 +73,14 @@ class RegisterAddressPage extends Component {
     }
 
     check_address_exists = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('calling estimateGas');
-        console.log('opts = ' + JSON.stringify(opts));
-
-        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-        console.log('Current wallet: ' + wallet);
-        if (!wallet) {
-            return callback('MetaMask account should be unlocked');
-        }
-        if (wallet.trim().toLowerCase() !== opts.wallet) {
-            return callback('MetaMask account was switched');
-        }
+        var contract = this.props.contract;
+        var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+        if (wsame) return callback(wsame);
 
         this.check_user_exists(opts, (err, exists) => {
             if (err) {
                 window.show_alert('error', 'Error in check_user_exists: ' + err.message);
-                return;
+                return callback(err, false);
             }
 
             if (!exists) {
@@ -121,10 +110,8 @@ class RegisterAddressPage extends Component {
     }
 
     register_address = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
+        var contract = this.props.contract;
+
         console.log('calling estimateGas');
         console.log('opts = ' + JSON.stringify(opts));
         contract.register_address.estimateGas(
@@ -185,9 +172,11 @@ class RegisterAddressPage extends Component {
     }
 
     order_clicked = () => {
+        console.log(this.props);
+        console.log(this.props.my_web3);
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
         if (!wallet) {
-            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask first');
+            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
             return;
         }
 
@@ -241,7 +230,7 @@ class RegisterAddressPage extends Component {
 
                 if (!res.ok) {
                     console.log('Error: ' + res.err);
-                    window.show_alert('error', 'Server return error', res.err);
+                    window.show_alert('error', 'Server returned error', res.err);
                     return;
                 }
 
@@ -270,17 +259,42 @@ class RegisterAddressPage extends Component {
                         }
                         else if (tx_id) {
                             console.log('Transaction mined: ' + tx_id);
-                            window.show_alert('success', 'Address registered!', '<b>Transaction ID</b>: ' + tx_id);
+                            window.$.ajax({
+                                type: 'post',
+                                url: './api/notifyRegTx',
+                                data: {
+                                    wallet: wallet,
+                                    tx_id: tx_id,
+                                    session_key: res.result.session_key
+                                },
+                                success: (res) => {
+                                    if (!res) {
+                                        console.log('Empty response from server');
+                                        window.show_alert('error', 'Postcard sending error', 'Transaction was mined, but postcard was not sent<br><b>Transaction ID</b>: ' + tx_id + '<br><b>Error</b>: empty response from server');
+                                        return;
+                                    }
+                                    if (!res.ok) {
+                                        console.log('Not ok response from server: ' + res.err);
+                                        window.show_alert('error', 'Postcard sending error', 'Transaction was mined, but postcard was not sent<br><b>Transaction ID</b>: ' + tx_id + '<br><b>Error</b>: ' + res.err);
+                                        return;
+                                    }
+                                    window.show_alert('success', 'Address registered!', '<b>Transaction ID</b>: ' + tx_id + '<br><b>Postcard was sent</b>');
+                                },
+                                error: (xhr, ajaxOptions, thrownError) => {
+                                    console.log('Server returned error on notifyRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
+                                    window.show_alert('error', 'Server error on notifyRegTx', xhr.statusText + ' (' + xhr.status + ')');
+                                }
+                            });
                         }
                         else {
                             console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
-                            window.show_alert('error', 'Unexpected response from in register_address', 'Error is empty but tx_id is also empty');
+                            window.show_alert('error', 'Unexpected response from register_address', 'Error is empty but tx_id is also empty');
                         }
                     });
                 });
             },
             error: (xhr, ajaxOptions, thrownError) => {
-                console.log('Server returned error: ' + xhr.statusText + ' (' + xhr.status + ')');
+                console.log('Server returned error on prepareRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
                 window.show_alert('error', 'Server error on prepareRegTx', xhr.statusText + ' (' + xhr.status + ')');
             }
         });

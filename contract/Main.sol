@@ -79,6 +79,21 @@ contract ProofOfPhysicalAddress
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
+    function user_address_by_creation_block(address wallet, uint256 creation_block)
+    public constant returns (bool, uint256, bool)
+    {
+        require(user_exists(wallet));
+        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1)
+        {
+            if (users[wallet].physical_addresses[ai].creation_block == creation_block)
+            {
+                return (true, ai, user_address_confirmed(wallet, ai));
+            }
+        }
+        return (false, 0, false);
+    }
+
+    // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
     function user_address_by_confirmation_code(address wallet, bytes32 confirmation_code_sha3)
     public constant returns (bool, uint256, bool)
     {
@@ -120,7 +135,7 @@ contract ProofOfPhysicalAddress
         return users[wallet].physical_addresses[users[wallet].physical_addresses.length-1].name;
     }
 
-    // if user does not exists, returns 0
+    // if user does not exist, returns 0
     function user_addresses_count(address wallet)
     public constant returns (uint256)
     {

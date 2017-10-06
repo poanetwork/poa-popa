@@ -1,14 +1,15 @@
 'use strict';
 
-var logger = require('../logger');
+const logger = require('../logger');
 const express = require('express');
 const config = require('../server-config');
 const sign = require('../server-lib/sign');
 const generate_code = require('../server-lib/generate_code');
 const validate = require('../server-lib/validations').validate;
 const normalize = require('../server-lib/validations').normalize;
+const db = require('../server-lib/simple_db')();
 
-module.exports = function (web3) {
+module.exports = function (opts) {
     var router = express.Router();
     router.post('/prepareRegTx', function (req, res) {
         var prelog = '[prepareRegTx] ';
@@ -21,7 +22,7 @@ module.exports = function (web3) {
         var verr;
 
         // wallet
-        verr = validate.wallet(web3, req.body.wallet);
+        verr = validate.wallet(config.web3, req.body.wallet);
         if (verr) {
             logger.log(prelog + 'wallet: ' + verr);
             return res.json({ ok: false, err: 'wallet: ' + verr });
@@ -78,10 +79,10 @@ module.exports = function (web3) {
 
         logger.log(prelog + 'normalized params: ' + JSON.stringify(params));
 
-        // generate confimration code
-        var code = generate_code();
-        logger.log(prelog + 'confimration code: ' + code);
-        var sha3cc = web3.sha3(code);
+        // generate confimration confirmation_code_plain
+        var confirmation_code_plain = generate_code();
+        logger.log(prelog + 'confimration confirmation_code_plain: ' + confirmation_code_plain);
+        var sha3cc = config.web3.sha3(confirmation_code_plain);
 
         // combine parameters and sign them
         var hex_params = {};
@@ -94,7 +95,7 @@ module.exports = function (web3) {
         logger.log(prelog + 'hex city:      0x' + hex_params.city.toString('hex'));
         logger.log(prelog + 'hex address:   0x' + hex_params.address.toString('hex'));
         logger.log(prelog + 'hex zip:       0x' + hex_params.zip.toString('hex'));
-        logger.log(prelog + 'sha3(code):    ' + sha3cc);
+        logger.log(prelog + 'sha3(cc):        ' + sha3cc);
         var text2sign = wallet + Buffer.concat([
             hex_params.name,
             hex_params.country,
@@ -107,8 +108,10 @@ module.exports = function (web3) {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(web3, text2sign);
+            var sign_output = sign(config.web3, text2sign);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
+            var session_key = Math.random();
+            db.set(session_key, { wallet, date: new Date, confirmation_code_plain });
             return res.json({
                 ok: true,
                 result: {
@@ -117,7 +120,8 @@ module.exports = function (web3) {
                     confirmation_code_sha3: sha3cc,
                     v: sign_output.v,
                     r: sign_output.r,
-                    s: sign_output.s
+                    s: sign_output.s,
+                    session_key: session_key,
                 },
             });
         }
@@ -125,7 +129,7 @@ module.exports = function (web3) {
             logger.error(prelog + 'exception in sign(): ' + e.stack);
             return res.json({
                 ok: false,
-                err: 'exception occured during signature calculation'
+                err: 'exception occured during signature calculation',
             });
         }
     });

@@ -1,6 +1,6 @@
 'use strict';
 
-var logger = require('../logger');
+const logger = require('../logger');
 const express = require('express');
 const config = require('../server-config');
 const sign = require('../server-lib/sign');
@@ -8,7 +8,7 @@ const generate_code = require('../server-lib/generate_code');
 const validate = require('../server-lib/validations').validate;
 const normalize = require('../server-lib/validations').normalize;
 
-module.exports = function (web3) {
+module.exports = function (opts) {
     var router = express.Router();
     router.post('/prepareConTx', function (req, res) {
         var prelog = '[prepareConTx] ';
@@ -21,7 +21,7 @@ module.exports = function (web3) {
         var verr;
 
         // wallet
-        verr = validate.wallet(web3, req.body.wallet);
+        verr = validate.wallet(config.web3, req.body.wallet);
         if (verr) {
             logger.log(prelog + 'wallet: ' + verr);
             return res.json({ ok: false, err: 'wallet: ' + verr });
@@ -48,7 +48,7 @@ module.exports = function (web3) {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(web3, text2sign);
+            var sign_output = sign(config.web3, text2sign);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             return res.json({
                 ok: true,
@@ -57,7 +57,7 @@ module.exports = function (web3) {
                     params: params,
                     v: sign_output.v,
                     r: sign_output.r,
-                    s: sign_output.s
+                    s: sign_output.s,
                 },
             });
         }
@@ -65,7 +65,7 @@ module.exports = function (web3) {
             logger.error(prelog + 'exception in sign(): ' + e.stack);
             return res.json({
                 ok: false,
-                err: 'exception occured during signature calculation'
+                err: 'exception occured during signature calculation',
             });
         }
     });

@@ -16,21 +16,22 @@ class ConfirmationPage extends Component {
         });
     }
 
-    check_user_exists = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('opts = ' + JSON.stringify(opts));
+    check_wallet_same = (current_wallet, initial_wallet) => {
+        console.log('check_wallet_same, current_wallet: ' + current_wallet);
+        console.log('check_wallet_same, initial_wallet: ' + initial_wallet);
+        if (!current_wallet) {
+            return 'MetaMask account should be unlocked';
+        }
+        if (current_wallet.trim().toLowerCase() !== initial_wallet) {
+            return 'MetaMask account was switched';
+        }
+        return '';
+    }
 
-        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-        console.log('Current wallet: ' + wallet);
-        if (!wallet) {
-            return callback('MetaMask account should be unlocked');
-        }
-        if (wallet.trim().toLowerCase() !== opts.wallet) {
-            return callback('MetaMask account was switched');
-        }
+    check_user_exists = (opts, callback) => {
+        var contract = this.props.contract;
+        var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+        if (wsame) return callback(wsame);
 
         console.log('calling contract.check_user_exists');
         contract.user_exists(opts.wallet, { from: opts.wallet }, (err, result) => {
@@ -45,20 +46,9 @@ class ConfirmationPage extends Component {
     }
 
     find_address = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('opts = ' + JSON.stringify(opts));
-
-        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-        console.log('Current wallet: ' + wallet);
-        if (!wallet) {
-            return callback('MetaMask account should be unlocked');
-        }
-        if (wallet.trim().toLowerCase() !== opts.wallet) {
-            return callback('MetaMask account was switched');
-        }
+        var contract = this.props.contract;
+        var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+        if (wsame) return callback(wsame);
 
         console.log('calling contract.user_address_by_confirmation_code');
 
@@ -95,12 +85,7 @@ class ConfirmationPage extends Component {
     }
 
     confirm_address = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('calling estimateGas');
-        console.log('opts = ' + JSON.stringify(opts));
+        var contract = this.props.contract;
 
         contract.confirm_address.estimateGas(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
             if (err) {
@@ -113,14 +98,8 @@ class ConfirmationPage extends Component {
             var ugas = Math.floor(1.1*egas);
             console.log('Will set gas = ' + ugas);
 
-            var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-            console.log('Current wallet: ' + wallet);
-            if (!wallet) {
-                return callback('MetaMask account should be unlocked');
-            }
-            if (wallet.trim().toLowerCase() !== opts.wallet) {
-                return callback('MetaMask account was switched');
-            }
+            var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+            if (wsame) return callback(wsame);
 
             console.log('calling contract.confirm_address');
             contract.confirm_address(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, { from: opts.wallet, gas: ugas }, (err, tx_id) => {
@@ -145,7 +124,7 @@ class ConfirmationPage extends Component {
 
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
         if (!wallet) {
-            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask first');
+            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
             return;
         }
 
@@ -157,7 +136,7 @@ class ConfirmationPage extends Component {
             }
 
             if (!exists) {
-                window.show_alert('warning', 'You don\'t have any registered addresses', 'There are no addresses registered to your current MetaMask account');
+                window.show_alert('warning', 'You don\'t have any registered addresses', 'There are no addresses registered under your current MetaMask account');
                 return;
             }
 
@@ -165,8 +144,8 @@ class ConfirmationPage extends Component {
                 type: 'post',
                 url: './api/prepareConTx',
                 data: {
-                        wallet: wallet,
-                        confirmation_code_plain: this.state.confirmation_code_plain
+                    wallet: wallet,
+                    confirmation_code_plain: this.state.confirmation_code_plain
                 },
                 success: (res) => {
                     if (!res) return;
