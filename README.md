@@ -47,7 +47,7 @@ node deploy_contract
 ```
 answer `yes` when confirmation appears.
 
-7. then compile react components and start dapp
+7. then to compile react components and start dapp, run:
 ```
 bash run_web.sh
 ```
