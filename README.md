@@ -59,7 +59,13 @@ wait until a build is ready and `Listening on 3000` is printed in terminal
 
 To find out confirmation code, look for a line like
 ```
-[prepareRegTx] confimration code: wpy467ki
+[prepareRegTx] confimration confirmation_code_plain: y8t44s8yrt
+```
+in server logs
+
+To find response details from Lob, including links to the postcard, look for a line like
+```
+[notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... } 
 ```
 in server logs
 

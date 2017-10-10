@@ -6,8 +6,38 @@ class ConfirmationPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            confirmation_code_plain: ''
+            confirmation_code_plain: '',
+            confirmed_class: ''
         };
+    }
+
+    componentDidMount = () => {
+        console.log('ConfirmationPage.componentDidMount');
+
+        if (!window.mySwipe) {
+            console.log('Add mySwipe');
+            window.mySwipe = new window.Swipe(document.getElementById('slider'), {
+                startSlide: 0,
+                speed: 500,
+                auto: 4000,
+                disableScroll: true,
+                callback: function(index, elem) {
+                    window.$('.how-to-navigation-i').removeClass('how-to-navigation-i_active')
+                    .eq(index).addClass('how-to-navigation-i_active');
+                }
+            });
+
+            window.$('.how-to-navigation-i').on('click', function() {
+                var index = window.$(this).index();
+                window.mySwipe.slide(index);
+            });
+        }
+
+        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
+        if (!wallet) {
+            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
+            return;
+        }
     }
 
     on_change = (event) => {
@@ -173,6 +203,9 @@ class ConfirmationPage extends Component {
 
                         if (!address_details.found) {
                             window.show_alert('error', 'Address not found', 'This confirmation code does not correspond to any of your registered addresses.<br/>Please double check confirmation code and account selected in MetaMask');
+                            this.setState({
+                                confirmed_class: 'postcard-form_error'
+                            });
                             return;
                         }
 
@@ -200,6 +233,10 @@ class ConfirmationPage extends Component {
                                     + '<br/><b>City</b>: ' + address_details.city.toUpperCase()
                                     + '<br/><b>Address</b>: ' + address_details.address.toUpperCase()
                                     + '<br/><b>ZIP</b>: ' + address_details.zip.toUpperCase());
+
+                                this.setState({
+                                    confirmed_class: 'postcard-form_success'
+                                });
                             }
                             else {
                                 console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
@@ -224,7 +261,7 @@ class ConfirmationPage extends Component {
                         <div className="postcard">
                             <p className="postcard-title">Enter your unique code here:</p>
                             <form action="" className="postcard-form">
-                                <input type="text" className="postcard-input" name="confirmation_code_plain" value={this.state.confirmation_code_plain} onChange={this.on_change}/>
+                                <input type="text" className={'postcard-input ' + this.state.confirmed_class} name="confirmation_code_plain" value={this.state.confirmation_code_plain} onChange={this.on_change}/>
                                 <button type="button" className="postcard-button" onClick={this.confirm_clicked}></button>
                             </form>
                             <p>

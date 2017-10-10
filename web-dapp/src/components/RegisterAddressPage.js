@@ -6,7 +6,7 @@ class RegisterAddressPage extends Component {
         super(props);
         this.state = {
             name: '',
-            country: '',
+            country: 'US',
             state: '',
             city: '',
             address: '',
@@ -35,9 +35,16 @@ class RegisterAddressPage extends Component {
                 window.mySwipe.slide(index);
             });
         }
+
+        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
+        if (!wallet) {
+            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
+            return;
+        }
     }
 
     on_change = (event) => {
+        console.log('on_change ' + event.target.name + ': ' + event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -172,8 +179,14 @@ class RegisterAddressPage extends Component {
     }
 
     order_clicked = () => {
-        console.log(this.props);
-        console.log(this.props.my_web3);
+        console.log('Form data:');
+        console.log('name = ' + this.state.name);
+        console.log('country = ' + this.state.country);
+        console.log('state = ' + this.state.state);
+        console.log('city = ' + this.state.city);
+        console.log('address = ' + this.state.address);
+        console.log('zip = ' + this.state.zip);
+
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
         if (!wallet) {
             window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
@@ -328,18 +341,100 @@ class RegisterAddressPage extends Component {
                                 <input type="text" className="input" name="name" value={this.state.name} onChange={this.on_change} />
                             </div>
                             <div className="address-form-i">
-                                <label for="" className="label">
-                                    Address
-                                    <span className="address-question">
-                                        <span className="address-question-tooltip">
-                                            <span className="text">
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                tempor incididunt ut
+                                <div className="left">
+                                    <label for="" className="label">
+                                        Country
+                                        <span className="address-question">
+                                            <span className="address-question-tooltip">
+                                                <span className="text">
+                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                    tempor incididunt ut
+                                                </span>
                                             </span>
                                         </span>
-                                    </span>
-                                </label>
-                                <input type="text" className="input" name="address" value={this.state.address} onChange={this.on_change} />
+                                    </label>
+                                    <input type="text" className="input" readOnly={true} name="country" value={this.state.country} onChange={this.on_change} />
+                                </div>
+                                <div className="right">
+                                    <label for="" className="label">
+                                        State
+                                        <span className="address-question">
+                                            <span className="address-question-tooltip">
+                                                <span className="text">
+                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                    tempor incididunt ut
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    {/*
+                                    <input type="text" className="input" name="state" value={this.state.state} onChange={this.on_change} />
+                                    */}
+                                    <select className="input" name="state" style={{ 'background-color': 'white' }} value={this.state.state} onChange={this.on_change}>
+                                        <option value="AA">U.S. Armed Forces – Americas</option>
+                                        <option value="AE">U.S. Armed Forces – Europe</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AP">U.S. Armed Forces – Pacific</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="AS">American Somoa</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="CA">California</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="DC">District Of Columbia</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="FM">Federated States of Micronesia</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="GU">Guam</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MH">Marshall Islands</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MP">Northern Mariana</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NY">New York</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="PW">Palau</option>
+                                        <option value="PR">Puerto Rico</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WY">Wyoming</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="VI">Virgin Islands</option>
+                                        <option value="VT">Vermont</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="address-form-i">
                                 <div className="left">
@@ -358,23 +453,7 @@ class RegisterAddressPage extends Component {
                                 </div>
                                 <div className="right">
                                     <label for="" className="label">
-                                        State
-                                        <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <input type="text" className="input" name="state" value={this.state.state} onChange={this.on_change} />
-                                </div>
-                            </div>
-                            <div className="address-form-i">
-                                <div className="left">
-                                    <label for="" className="label">
-                                        Zip
+                                        ZIP
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
@@ -386,20 +465,20 @@ class RegisterAddressPage extends Component {
                                     </label>
                                     <input type="text" className="input" name="zip" value={this.state.zip} onChange={this.on_change} />
                                 </div>
-                                <div className="right">
-                                    <label for="" className="label">
-                                        Country
-                                        <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
-                                                </span>
+                            </div>
+                            <div className="address-form-i">
+                                <label for="" className="label">
+                                    Address
+                                    <span className="address-question">
+                                        <span className="address-question-tooltip">
+                                            <span className="text">
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                tempor incididunt ut
                                             </span>
                                         </span>
-                                    </label>
-                                    <input type="text" className="input" name="country" value={this.state.country} onChange={this.on_change} />
-                                </div>
+                                    </span>
+                                </label>
+                                <input type="text" className="input" name="address" value={this.state.address} onChange={this.on_change} />
                             </div>
                             <button type="button" className="button button_order" onClick={this.order_clicked}>Order</button>
                         </form>

@@ -18,8 +18,9 @@ var cfg = {
     rpc: rpc,
     network: network,
     web3: web3,
-    code_length: 8,
-    code_symbols: 'abcdefghijkmnpqrstuvwxyz23456789', // length of this should be divisor of 256
+    code_length: 10,
+    code_symbols: 'adfprstwxy345789', // length of this should be divisor of 256
+    confirmation_page_url: 'http://localhost:3000/confirm'
 };
 
 if (fs.existsSync('./server-config-private.js')) {
