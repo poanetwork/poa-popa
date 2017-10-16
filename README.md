@@ -5,6 +5,7 @@ DApp for proof of physical address
 1. clone this repository
 ```
 git clone https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address.git
+git checkout dev
 ```
 
 2. make sure you have node.js version >= 6.9.1 installed
