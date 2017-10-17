@@ -17,24 +17,22 @@ class RegisterAddressPage extends Component {
     componentDidMount = () => {
         console.log('RegisterAddressPage.componentDidMount');
 
-        if (!window.mySwipe) {
-            console.log('Add mySwipe');
-            window.mySwipe = new window.Swipe(document.getElementById('slider'), {
-                startSlide: 0,
-                speed: 500,
-                auto: 4000,
-                disableScroll: true,
-                callback: function(index, elem) {
-                    window.$('.how-to-navigation-i').removeClass('how-to-navigation-i_active')
-                    .eq(index).addClass('how-to-navigation-i_active');
-                }
-            });
+        console.log('Add mySwipe');
+        window.mySwipe = new window.Swipe(document.getElementById('slider'), {
+            startSlide: 0,
+            speed: 500,
+            auto: 4000,
+            disableScroll: true,
+            callback: function(index, elem) {
+                window.$('.how-to-navigation-i').removeClass('how-to-navigation-i_active')
+                .eq(index).addClass('how-to-navigation-i_active');
+            }
+        });
 
-            window.$('.how-to-navigation-i').on('click', function() {
-                var index = window.$(this).index();
-                window.mySwipe.slide(index);
-            });
-        }
+        window.$('.how-to-navigation-i').on('click', function() {
+            var index = window.$(this).index();
+            window.mySwipe.slide(index);
+        });
 
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
         if (!wallet) {

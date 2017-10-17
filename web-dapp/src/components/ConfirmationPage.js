@@ -14,25 +14,6 @@ class ConfirmationPage extends Component {
     componentDidMount = () => {
         console.log('ConfirmationPage.componentDidMount');
 
-        if (!window.mySwipe) {
-            console.log('Add mySwipe');
-            window.mySwipe = new window.Swipe(document.getElementById('slider'), {
-                startSlide: 0,
-                speed: 500,
-                auto: 4000,
-                disableScroll: true,
-                callback: function(index, elem) {
-                    window.$('.how-to-navigation-i').removeClass('how-to-navigation-i_active')
-                    .eq(index).addClass('how-to-navigation-i_active');
-                }
-            });
-
-            window.$('.how-to-navigation-i').on('click', function() {
-                var index = window.$(this).index();
-                window.mySwipe.slide(index);
-            });
-        }
-
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
         if (!wallet) {
             window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
