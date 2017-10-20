@@ -1,6 +1,8 @@
 # oracles-dapps-proof-of-physical-address
 DApp for proof of physical address
 
+This is still work-in-progress, for the latest version please checkout [dev branch](https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address/tree/dev)
+
 ## How to test the current version
 1. clone this repository
 ```
