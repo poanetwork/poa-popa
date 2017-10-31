@@ -34,13 +34,13 @@ contract ProofOfPhysicalAddress
     uint64 public total_addresses;
     uint64 public total_confirmed;
 
-    function ProofOfPhysicalAddress()
+    function ProofOfPhysicalAddress() public
     {
         owner = msg.sender;
     }
 
     function str_eq(string s, string m)
-    internal returns(bool)
+    internal pure returns(bool)
     {
         bytes memory _s = bytes(s);
         bytes memory _m = bytes(m);
@@ -61,7 +61,7 @@ contract ProofOfPhysicalAddress
     public constant returns (bool)
     {
         bytes memory prefix = '\x19Ethereum Signed Message:\n32';
-        bytes32 prefixed = sha3(prefix, data);
+        bytes32 prefixed = keccak256(prefix, data);
         return (ecrecover(prefixed, v, r, s) == owner);
     }
 
@@ -179,7 +179,7 @@ contract ProofOfPhysicalAddress
         require(!str_eq(country, '') && !str_eq(state, '') && !str_eq(city, '') && !str_eq(location, '') && !str_eq(zip, ''));
 
         require(signer_is_valid(
-            sha3(
+            keccak256(
                 msg.sender,
                 name,
                 country,
@@ -243,7 +243,7 @@ contract ProofOfPhysicalAddress
         require(user_exists(msg.sender));
 
         require(signer_is_valid(
-            sha3(
+            keccak256(
                 msg.sender,
                 confirmation_code_plain
             ),
@@ -253,7 +253,7 @@ contract ProofOfPhysicalAddress
         bool found;
         uint ai;
         bool confirmed;
-        (found, ai, confirmed) = user_address_by_confirmation_code(msg.sender, sha3(confirmation_code_plain));
+        (found, ai, confirmed) = user_address_by_confirmation_code(msg.sender, keccak256(confirmation_code_plain));
         require(found);
 
         if (confirmed)
@@ -265,37 +265,5 @@ contract ProofOfPhysicalAddress
             users[msg.sender].physical_addresses[ai].confirmation_block = block.number;
             total_confirmed += 1;
         }
-    }
-
-    // for dev
-    bytes32[] public logs;
-    function write_log(bytes32 mesg)
-    public
-    {
-        logs.push(mesg);
-    }
-
-    function test_ecrecover(bytes32 data, uint8 v, bytes32 r, bytes32 s)
-    public constant returns (bytes32, uint8, bytes32, bytes32,    bytes32, address, bool)
-    {
-        bytes memory prefix = '\x19Ethereum Signed Message:\n32';
-        bytes32 prefixed = sha3(prefix, data);
-        address recovered = ecrecover(prefixed, v, r, s);
-        return (data, v, r, s, prefixed, recovered, recovered == owner);
-    }
-
-    function test_sha3(string name, string country, string state, string city, string location, string zip, bytes32 cc)
-    public constant returns (bytes32)
-    {
-        return sha3(
-            msg.sender,
-            name,
-            country,
-            state,
-            city,
-            location,
-            zip,
-            cc
-        );
     }
 }

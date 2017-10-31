@@ -81,7 +81,7 @@ module.exports = function (opts) {
 
         // generate confimration confirmation_code_plain
         var confirmation_code_plain = generate_code();
-        logger.log(prelog + 'confimration confirmation_code_plain: ' + confirmation_code_plain);
+        logger.log(prelog + 'confirmation_code_plain: ' + confirmation_code_plain);
         var sha3cc = config.web3.sha3(confirmation_code_plain);
 
         // combine parameters and sign them
@@ -95,7 +95,7 @@ module.exports = function (opts) {
         logger.log(prelog + 'hex city:      0x' + hex_params.city.toString('hex'));
         logger.log(prelog + 'hex address:   0x' + hex_params.address.toString('hex'));
         logger.log(prelog + 'hex zip:       0x' + hex_params.zip.toString('hex'));
-        logger.log(prelog + 'sha3(cc):        ' + sha3cc);
+        logger.log(prelog + 'sha3(cc):      ' + sha3cc);
         var text2sign = wallet + Buffer.concat([
             hex_params.name,
             hex_params.country,
