@@ -246,14 +246,12 @@ class ConfirmationPage extends Component {
                                 <button type="button" className="postcard-button" onClick={this.confirm_clicked}></button>
                             </form>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                                do eiusmod tempor.
+                                Type code from the postcard. Letter case is irrelevant.
                             </p>
                         </div>
-                        <h1 className="title">Lorem ipsum dolor sit</h1>
+                        <h1 className="title">Verify your address</h1>
                         <p className="description">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.
+                            Enter confirmation code from the postcard you received, sign the transaction and finalize the verification process.
                         </p>
                     </div>
                 </div>

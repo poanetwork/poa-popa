@@ -318,10 +318,7 @@ class RegisterAddressPage extends Component {
                     <div className="address-content">
                         <h1 className="title">Proof of physical address</h1>
                         <p className="description">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                            This DApps can be used to verify that you have access to a certain postal address  in U.S. by receiving a postcard with confirmation code.
                         </p>
                         <form action="" className="address-form">
                             <div className="address-form-i">
@@ -330,8 +327,7 @@ class RegisterAddressPage extends Component {
                                     <span className="address-question">
                                         <span className="address-question-tooltip">
                                             <span className="text">
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                tempor incididunt ut
+                                                Enter your full name
                                             </span>
                                         </span>
                                     </span>
@@ -345,8 +341,7 @@ class RegisterAddressPage extends Component {
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
+                                                    At the present moment address verification is available only in the United States.
                                                 </span>
                                             </span>
                                         </span>
@@ -359,8 +354,7 @@ class RegisterAddressPage extends Component {
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
+                                                    Select one of the states from the dropdown list
                                                 </span>
                                             </span>
                                         </span>
@@ -441,8 +435,7 @@ class RegisterAddressPage extends Component {
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
+                                                    Enter full name of the city
                                                 </span>
                                             </span>
                                         </span>
@@ -455,8 +448,7 @@ class RegisterAddressPage extends Component {
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
+                                                    Enter ZIP code
                                                 </span>
                                             </span>
                                         </span>
@@ -470,8 +462,7 @@ class RegisterAddressPage extends Component {
                                     <span className="address-question">
                                         <span className="address-question-tooltip">
                                             <span className="text">
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                tempor incididunt ut
+                                                Enter the rest of the address
                                             </span>
                                         </span>
                                     </span>
@@ -483,7 +474,7 @@ class RegisterAddressPage extends Component {
                         <div className="address-postcard">
                             <p className="address-postcard-title">5$ / 0.0248548378 ETH</p>
                             <p className="address-postcard-description">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing
+                                This is the price we charge for sending a postcard to you
                             </p>
                         </div>
                     </div>
@@ -498,10 +489,7 @@ class RegisterAddressPage extends Component {
                                         Fill form
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Fill the form with your full name and postal address
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_sign-transaction">
@@ -510,10 +498,7 @@ class RegisterAddressPage extends Component {
                                         Sign transaction
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Sign transaction in MetaMask to add your data to smart contract and send you a postcard
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_get-postcard">
@@ -522,10 +507,7 @@ class RegisterAddressPage extends Component {
                                         Get postcard
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Check your mailbox for the postcard with confirmation code on it
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_type-code">
@@ -534,10 +516,7 @@ class RegisterAddressPage extends Component {
                                         Type code
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Open the webpage specified on the postcard and type in confirmation code
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_finalize-proof">
@@ -546,10 +525,7 @@ class RegisterAddressPage extends Component {
                                         Finalize proof
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Sign the second transaction to verify the code and finalize the process
                                     </p>
                                 </div>
                             </div>

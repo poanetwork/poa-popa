@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../logger');
 const uuidv4 = require('uuid/v4');
-//const qrcode = require('qrcode');
 
 var prelog = '[post_api] ';
 logger.log(prelog + 'loading Lob');
@@ -14,6 +13,7 @@ logger.log(prelog + 'reading postcard templates');
 const pc_front = fs.readFileSync(path.join(__dirname, '../postcard/front.html'), 'utf8');
 const pc_back = fs.readFileSync(path.join(__dirname, '../postcard/back.html'), 'utf8');
 
+/*
 var countries = [];
 
 logger.log(prelog + 'loading list of countries');
@@ -49,6 +49,7 @@ Lob.states.list(function (err, res) {
     }
     logger.log(prelog + 'loaded ' + states.US.length + ' US states');
 });
+*/
 
 function new_idempotency_key() {
     return uuidv4();
@@ -87,7 +88,9 @@ module.exports = {
     Lob,
     create_postcard,
     lists: {
+        /*
         countries: countries,
         states: states
+        */
     }
 };
