@@ -11,6 +11,7 @@ var cconf = require(contract_output).ProofOfPhysicalAddress;
 
 var cfg = {
     port: 3000,
+    req_id_length: 6,
     contract_output: contract_output,
     cconf: cconf,
     contract: web3.eth.contract(cconf.abi).at(cconf.address),
@@ -20,7 +21,11 @@ var cfg = {
     web3: web3,
     code_length: 10,
     code_symbols: 'adfprstwxy345789', // length of this should be divisor of 256
-    confirmation_page_url: 'http://localhost:3000/confirm'
+    confirmation_page_url: 'http://localhost:3000/confirm', // used for postcard only
+    session_store: {
+        type: 'memory',
+        params: {},
+    },
 };
 
 if (fs.existsSync('./server-config-private.js')) {

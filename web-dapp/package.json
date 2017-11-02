@@ -11,6 +11,7 @@
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",
     "react-scripts": "1.0.10",
+    "redis": "^2.8.0",
     "uuid": "^3.1.0",
     "web3": "^0.20.2"
   },

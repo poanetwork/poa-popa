@@ -7,14 +7,15 @@ const sign = require('../server-lib/sign');
 const generate_code = require('../server-lib/generate_code');
 const validate = require('../server-lib/validations').validate;
 const normalize = require('../server-lib/validations').normalize;
+const send_response = require('../server-lib/send_response');
 
 module.exports = function (opts) {
     var router = express.Router();
     router.post('/prepareConTx', function (req, res) {
-        var prelog = '[prepareConTx] ';
+        var prelog = req.log_prfx + '[prepareConTx] ';
         if (!req.body) {
             logger.log(prelog + 'request body empty');
-            return res.json({ ok: false, err: 'request body: empty' });
+            return send_response(res, { ok: false, err: 'request body: empty' });
         }
 
         var params = {};
@@ -24,7 +25,7 @@ module.exports = function (opts) {
         verr = validate.wallet(config.web3, req.body.wallet);
         if (verr) {
             logger.log(prelog + 'wallet: ' + verr);
-            return res.json({ ok: false, err: 'wallet: ' + verr });
+            return send_response(res, { ok: false, err: 'wallet: ' + verr });
         }
         var wallet = req.body.wallet;
 
@@ -32,7 +33,7 @@ module.exports = function (opts) {
         verr = validate.string(req.body.confirmation_code_plain);
         if (verr) {
             logger.log(prelog + 'confirmation_code_plain: ' + verr);
-            return res.json({ ok: false, err: 'confirmation_code_plain: ' + verr });
+            return send_response(res, { ok: false, err: 'confirmation_code_plain: ' + verr });
         }
         params.confirmation_code_plain = normalize.string(req.body.confirmation_code_plain);
 
@@ -50,7 +51,7 @@ module.exports = function (opts) {
         try {
             var sign_output = sign(config.web3, text2sign);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
-            return res.json({
+            return send_response(res, {
                 ok: true,
                 result: {
                     wallet: wallet,
@@ -63,7 +64,7 @@ module.exports = function (opts) {
         }
         catch (e) {
             logger.error(prelog + 'exception in sign(): ' + e.stack);
-            return res.json({
+            return send_response(res, {
                 ok: false,
                 err: 'exception occured during signature calculation',
             });
