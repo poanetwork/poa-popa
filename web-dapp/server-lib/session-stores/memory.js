@@ -2,18 +2,25 @@
 
 var db = {};
 
-module.exports = function (params) {
+module.exports = function (params, logger) {
     return {
         set: function (k,v, done) {
             db[k] = v;
-            return done();
+            setTimeout((k,v) => {
+                db[k] = v;
+                done();
+            }, 1);
         },
         get: function (k, done) {
-            return done(null, db[k]);;
+            setTimeout((k) => {
+                done(null, db[k])
+            }, 1);
         },
         unset: function (k, done) {
-            delete db[k];
-            return done();
+            setTimeout((k) => {
+                delete db[k];
+                done()
+            }, 1);
         },
     };
 };

@@ -129,7 +129,7 @@ class ConfirmationPage extends Component {
         var confirmation_code_plain = this.state.confirmation_code_plain.trim();
 
         if (!confirmation_code_plain) {
-            window.show_alert('warning', 'Required field is empty', 'Please enter the confirmation code first');
+            window.show_alert('warning', 'Verification', 'Please enter the confirmation code first');
             return;
         }
 
@@ -142,12 +142,12 @@ class ConfirmationPage extends Component {
         console.log('Using account ' + wallet);
         this.check_user_exists({ wallet: wallet }, (err, exists) => {
             if (err) {
-                window.show_alert('error', 'Error in check_user_exists: ' + err.message);
+                window.show_alert('error', 'Checking if user exists', [['Error', err.message]]);
                 return;
             }
 
             if (!exists) {
-                window.show_alert('warning', 'You don\'t have any registered addresses', 'There are no addresses registered under your current MetaMask account');
+                window.show_alert('warning', 'Checking if user exists', 'There are no addresses registered under your current MetaMask account');
                 return;
             }
 
@@ -164,13 +164,13 @@ class ConfirmationPage extends Component {
 
                     if (!res.ok) {
                         console.log('Error: ' + res.err);
-                        window.show_alert('error', 'Server return error', res.err);
+                        window.show_alert('error', 'Preparing confirmation transaction', [['RequestID', res.x_id], ['Error', res.err]]);
                         return;
                     }
 
                     if (!res.result) {
                         console.log('Invalid response: missing result');
-                        window.show_alert('error', 'Invalid server response', 'Missing result field');
+                        window.show_alert('error', 'Preparing confirmation transaction', [['RequestID', res.x_id], ['Error', 'Missing result field']]);
                         return;
                     }
 
@@ -178,12 +178,15 @@ class ConfirmationPage extends Component {
                     this.find_address(res.result, (err, address_details) => {
                         if (err) {
                             console.log('Error occured in find_address: ', err);
-                            window.show_alert('error', 'Error in find_address', err.message);
+                            window.show_alert('error', 'Finding address to confirm', [['Error', err.message]]);
                             return;
                         }
 
                         if (!address_details.found) {
-                            window.show_alert('error', 'Address not found', 'This confirmation code does not correspond to any of your registered addresses.<br/>Please double check confirmation code and account selected in MetaMask');
+                            window.show_alert('error', 'Finding address to confirm', [
+                                ['This confirmation code does not correspond to any of your registered addresses.'],
+                                ['Please double check confirmation code and account selected in MetaMask']
+                            ]);
                             this.setState({
                                 confirmed_class: 'postcard-form_error'
                             });
@@ -191,12 +194,14 @@ class ConfirmationPage extends Component {
                         }
 
                         if (address_details.confirmed) {
-                            window.show_alert('warning', 'Address already confirmed', 'This confirmation code corresponds to address that is already confirmed.<br/>'
-                                + '<br/><b>Country</b>: ' + address_details.country.toUpperCase()
-                                + '<br/><b>State</b>: ' + address_details.state.toUpperCase()
-                                + '<br/><b>City</b>: ' + address_details.city.toUpperCase()
-                                + '<br/><b>Address</b>: ' + address_details.address.toUpperCase()
-                                + '<br/><b>ZIP</b>: ' + address_details.zip.toUpperCase());
+                            window.show_alert('warning', 'Finding address to confirm', [
+                                ['This confirmation code corresponds to address that is already confirmed'],
+                                ['Country', address_details.country.toUpperCase()],
+                                ['State', address_details.state.toUpperCase()],
+                                ['City', address_details.city.toUpperCase()],
+                                ['Address', address_details.address.toUpperCase()],
+                                ['ZIP code', address_details.zip.toUpperCase()]
+                            ]);
                             return;
                         }
 
@@ -204,16 +209,19 @@ class ConfirmationPage extends Component {
                         this.confirm_address(res.result, (err, tx_id) => {
                             if (err) {
                                 console.log('Error occured in confirm_address: ', err);
-                                window.show_alert('error', 'Error in confirm_address', err.message);
+                                window.show_alert('error', 'Confirming address', [['Error', err.message]]);
                             }
                             else if (tx_id) {
                                 console.log('Transaction mined: ' + tx_id);
-                                window.show_alert('success', 'Address confirmed!', '<b>Transaction ID</b>: ' + tx_id + '<br/>'
-                                    + '<br/><b>Country</b>: ' + address_details.country.toUpperCase()
-                                    + '<br/><b>State</b>: ' + address_details.state.toUpperCase()
-                                    + '<br/><b>City</b>: ' + address_details.city.toUpperCase()
-                                    + '<br/><b>Address</b>: ' + address_details.address.toUpperCase()
-                                    + '<br/><b>ZIP</b>: ' + address_details.zip.toUpperCase());
+                                window.show_alert('success', 'Address confirmed!', [
+                                    ['Transaction to confirm address was mined'],
+                                    ['Transaction ID', tx_id],
+                                    ['Country', address_details.country.toUpperCase()],
+                                    ['State', address_details.state.toUpperCase()],
+                                    ['City', address_details.city.toUpperCase()],
+                                    ['Address', address_details.address.toUpperCase()],
+                                    ['ZIP code', address_details.zip.toUpperCase()]
+                                ]);
 
                                 this.setState({
                                     confirmed_class: 'postcard-form_success'
@@ -221,14 +229,14 @@ class ConfirmationPage extends Component {
                             }
                             else {
                                 console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
-                                window.show_alert('error', 'Unexpected response from confirm_address', 'Error is empty but tx_id is also empty');
+                                window.show_alert('error', 'Confirming address', 'Error is empty but tx_id is also empty');
                             }
                         });
                     });
                 },
                 error: (xhr, ajaxOptions, thrownError) => {
                     console.log('Server returned error: ' + xhr.statusText + ' (' + xhr.status + ')');
-                    window.show_alert('error', 'Server error on prepareConTx', xhr.statusText + ' (' + xhr.status + ')');
+                    window.show_alert('error', 'Preparing confirmation transaction', [['Error', xhr.statusText + ' (' + xhr.status + ')']]);
                 }
             });
         });

@@ -84,7 +84,7 @@ class RegisterAddressPage extends Component {
 
         this.check_user_exists(opts, (err, exists) => {
             if (err) {
-                window.show_alert('error', 'Error in check_user_exists: ' + err.message);
+                window.show_alert('error', 'Checking if user exists: ', [['Error', err.message]]);
                 return callback(err, false);
             }
 
@@ -119,6 +119,7 @@ class RegisterAddressPage extends Component {
 
         console.log('calling estimateGas');
         console.log('opts = ' + JSON.stringify(opts));
+        console.log('10eth = ', { value: new this.props.my_web3.BigNumber('10000000000000000000')});
         contract.register_address.estimateGas(
             opts.params.name,
             opts.params.country,
@@ -163,7 +164,7 @@ class RegisterAddressPage extends Component {
                 opts.v,
                 opts.r,
                 opts.s,
-                { from: opts.wallet, gas: ugas }, (err, tx_id) => {
+                { from: opts.wallet, value: new this.props.my_web3.BigNumber('10000000000000000000'), gas: ugas }, (err, tx_id) => {
 
                 if (err) {
                     console.log('Error calling contract.register_address:', err);
@@ -194,32 +195,32 @@ class RegisterAddressPage extends Component {
         console.log('Using account ' + wallet);
 
         if (!this.state.name) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide your NAME');
+            window.show_alert('warning', 'Verification', 'Please provide your NAME');
             return;
         }
 
         if (!this.state.country) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide COUNTRY');
+            window.show_alert('warning', 'Verification', 'Please provide COUNTRY');
             return;
         }
 
         if (!this.state.state) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide STATE');
+            window.show_alert('warning', 'Verification', 'Please provide STATE');
             return;
         }
 
         if (!this.state.city) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide CITY');
+            window.show_alert('warning', 'Verification', 'Please provide CITY');
             return;
         }
 
         if (!this.state.address) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide ADDRESS');
+            window.show_alert('warning', 'Verification', 'Please provide ADDRESS');
             return;
         }
 
         if (!this.state.zip) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide ZIP');
+            window.show_alert('warning', 'Verification', 'Please provide ZIP');
             return;
         }
 
@@ -236,29 +237,33 @@ class RegisterAddressPage extends Component {
                 zip: this.state.zip,
             },
             success: (res) => {
-                if (!res) return;
+                if (!res) {
+                    console.log('Empty response from server');
+                    window.show_alert('error', 'Preparing register transaction', [['Error', 'Empty response from server']]);
+                    return;
+                }
                 console.log(res);
 
                 if (!res.ok) {
                     console.log('Error: ' + res.err);
-                    window.show_alert('error', 'Server returned error', res.err);
+                    window.show_alert('error', 'Preparing register transaction', [['Request ID', res.x_id], ['Error', res.err]]);
                     return;
                 }
 
                 if (!res.result) {
                     console.log('Invalid response: missing result');
-                    window.show_alert('error', 'Invalid server response', 'Missing result field');
+                    window.show_alert('error', 'Preparing register transaction', [['Request ID', res.x_id], ['Error', 'Missing result field']]);
                     return;
                 }
 
                 this.check_address_exists(res.result, (err, exists) => {
                     if (err) {
                         console.log('Error occured in check_address_exists: ', err);
-                        window.show_alert('error', 'Error in check_address_exists', err.message);
+                        window.show_alert('error', 'Checking if address exists', [['Error', err.message]]);
                         return;
                     }
                     if (exists) {
-                        window.show_alert('error', 'Address already registered', 'This address is already registered under your current MetaMask account');
+                        window.show_alert('error', 'Checking if address exists', 'This address is already registered under your current MetaMask account');
                         return;
                     }
 
@@ -266,7 +271,7 @@ class RegisterAddressPage extends Component {
                     this.register_address(res.result, (err, tx_id) => {
                         if (err) {
                             console.log('Error occured in register_address: ', err);
-                            window.show_alert('error', 'Error in register_address', err.message);
+                            window.show_alert('error', 'Register address', [['Error', err.message]]);
                         }
                         else if (tx_id) {
                             console.log('Transaction mined: ' + tx_id);
@@ -281,32 +286,46 @@ class RegisterAddressPage extends Component {
                                 success: (res) => {
                                     if (!res) {
                                         console.log('Empty response from server');
-                                        window.show_alert('error', 'Postcard sending error', 'Transaction was mined, but postcard was not sent<br><b>Transaction ID</b>: ' + tx_id + '<br><b>Error</b>: empty response from server');
+                                        window.show_alert('error', 'Postcard sending', [
+                                            ['Transaction to register address was mined, but postcard was not sent'],
+                                            ['Transaction ID', tx_id],
+                                            ['Error', 'empty response from server']
+                                        ]);
                                         return;
                                     }
                                     if (!res.ok) {
                                         console.log('Not ok response from server: ' + res.err);
-                                        window.show_alert('error', 'Postcard sending error', 'Transaction was mined, but postcard was not sent<br><b>Transaction ID</b>: ' + tx_id + '<br><b>Error</b>: ' + res.err);
+                                        window.show_alert('error', 'Postcard sending', [
+                                            ['Transaction to register address was mined, but postcard was not sent'],
+                                            ['Request ID', res.x_id ],
+                                            ['Transaction ID', tx_id],
+                                            ['Error', res.err]
+                                        ]);
                                         return;
                                     }
-                                    window.show_alert('success', 'Address registered!', '<b>Transaction ID</b>: ' + tx_id + '<br><b>Postcard was sent</b>');
+                                    window.show_alert('success', 'Address registered!', [
+                                        ['Transaction to register address was mined and postcard was sent'],
+                                        ['Transaction ID', tx_id],
+                                        ['Expected delivery date', res.result.expected_delivery_date],
+                                        ['Mail type', res.result.mail_type]
+                                    ]);
                                 },
                                 error: (xhr, ajaxOptions, thrownError) => {
                                     console.log('Server returned error on notifyRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
-                                    window.show_alert('error', 'Server error on notifyRegTx', xhr.statusText + ' (' + xhr.status + ')');
+                                    window.show_alert('error', 'Postcard sending', [['Server error', xhr.statusText + ' (' + xhr.status + ')']]);
                                 }
                             });
                         }
                         else {
                             console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
-                            window.show_alert('error', 'Unexpected response from register_address', 'Error is empty but tx_id is also empty');
+                            window.show_alert('error', 'Register address', 'Error is empty but tx_id is also empty!');
                         }
                     });
                 });
             },
             error: (xhr, ajaxOptions, thrownError) => {
                 console.log('Server returned error on prepareRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
-                window.show_alert('error', 'Server error on prepareRegTx', xhr.statusText + ' (' + xhr.status + ')');
+                window.show_alert('error', 'Preparing register transaction', [['Server error', xhr.statusText + ' (' + xhr.status + ')']]);
             }
         });
     }

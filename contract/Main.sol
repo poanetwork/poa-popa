@@ -1,9 +1,13 @@
-pragma solidity ^0.4.15;
+pragma solidity 0.4.18;
 
 // Checks -> Effects -> Interactions
 
 contract ProofOfPhysicalAddress
 {
+    address public owner;
+
+    // Main structures:
+
     struct PhysicalAddress
     {
         string name;
@@ -19,6 +23,11 @@ contract ProofOfPhysicalAddress
         uint256 confirmation_block;
     }
 
+    function ProofOfPhysicalAddress() public
+    {
+        owner = msg.sender;
+    }
+
     struct User
     {
         uint256 creation_block;
@@ -27,17 +36,13 @@ contract ProofOfPhysicalAddress
 
     mapping (address => User) public users;
 
-    address public owner;
+    // Stats:
 
-    // stats
     uint64 public total_users;
     uint64 public total_addresses;
     uint64 public total_confirmed;
 
-    function ProofOfPhysicalAddress() public
-    {
-        owner = msg.sender;
-    }
+    // Helpers:
 
     function str_eq(string s, string m)
     internal pure returns(bool)
@@ -55,14 +60,32 @@ contract ProofOfPhysicalAddress
         return true;
     }
 
-    // Public methods:
-
     function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
     {
         bytes memory prefix = '\x19Ethereum Signed Message:\n32';
         bytes32 prefixed = keccak256(prefix, data);
         return (ecrecover(prefixed, v, r, s) == owner);
+    }
+
+    // Methods:
+
+    // withdraw specified amount of eth
+    function withdraw_some(uint256 amount)
+    public
+    {
+        require(msg.sender == owner);
+        if (this.balance < amount) revert();
+        owner.transfer(amount);
+    }
+
+    // withdraw all available eth
+    function withdraw_all()
+    public
+    {
+        require(msg.sender == owner);
+        if (this.balance == 0) revert();
+        owner.transfer(this.balance);
     }
 
     function user_exists(address wallet)
@@ -169,11 +192,13 @@ contract ProofOfPhysicalAddress
         );
     }
 
+    // Main methods:
+
     function register_address(
         string name,
         string country, string state, string city, string location, string zip,
         bytes32 confirmation_code_sha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
-    public
+    public payable
     {
         require(!str_eq(name, ''));
         require(!str_eq(country, '') && !str_eq(state, '') && !str_eq(city, '') && !str_eq(location, '') && !str_eq(zip, ''));

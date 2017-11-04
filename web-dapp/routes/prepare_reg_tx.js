@@ -9,6 +9,7 @@ const validate = require('../server-lib/validations').validate;
 const normalize = require('../server-lib/validations').normalize;
 const db = require('../server-lib/session_store');
 const send_response = require('../server-lib/send_response');
+const recalc_price = require('../server-lib/recalc_price');
 
 module.exports = function (opts) {
     var router = express.Router();
