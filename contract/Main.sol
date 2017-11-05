@@ -197,26 +197,32 @@ contract ProofOfPhysicalAddress
     function register_address(
         string name,
         string country, string state, string city, string location, string zip,
+        uint256 price_wei,
         bytes32 confirmation_code_sha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public payable
     {
         require(!str_eq(name, ''));
-        require(!str_eq(country, '') && !str_eq(state, '') && !str_eq(city, '') && !str_eq(location, '') && !str_eq(zip, ''));
+        require(!str_eq(country, ''));
+        require(!str_eq(state, ''));
+        require(!str_eq(city, ''));
+        require(!str_eq(location, ''));
+        require(!str_eq(zip, ''));
+        require(msg.value >= price_wei);
 
-        require(signer_is_valid(
-            keccak256(
-                msg.sender,
-                name,
-                country,
-                state,
-                city,
-                location,
-                zip,
-                confirmation_code_sha3
-            ),
-            sig_v, sig_r, sig_s
-        ));
+        bytes32 data = keccak256(
+            msg.sender,
+            name,
+            country,
+            state,
+            city,
+            location,
+            zip,
+            price_wei,
+            confirmation_code_sha3
+        );
+        require(signer_is_valid(data, sig_v, sig_r, sig_s));
 
+        PhysicalAddress memory pa;
         if (user_exists(msg.sender))
         {
             // check if this address is already registered
@@ -226,17 +232,16 @@ contract ProofOfPhysicalAddress
             if (found) revert();
 
             // not registered yet:
-            users[msg.sender].physical_addresses.push(PhysicalAddress({
-                name: name,
-                country: country,
-                state: state,
-                city: city,
-                location: location,
-                zip: zip,
-                creation_block: block.number,
-                confirmation_code_sha3: confirmation_code_sha3,
-                confirmation_block: 0
-            }));
+            pa.name = name;
+            pa.country = country;
+            pa.state = state;
+            pa.city = city;
+            pa.location = location;
+            pa.zip = zip;
+            pa.creation_block = block.number;
+            pa.confirmation_code_sha3 = confirmation_code_sha3;
+            pa.confirmation_block = 0;
+            users[msg.sender].physical_addresses.push(pa);
 
             total_addresses += 1;
         }
@@ -244,17 +249,16 @@ contract ProofOfPhysicalAddress
         {
             // new user
             users[msg.sender].creation_block = block.number;
-            users[msg.sender].physical_addresses.push(PhysicalAddress({
-                name: name,
-                country: country,
-                state: state,
-                city: city,
-                location: location,
-                zip: zip,
-                creation_block: block.number,
-                confirmation_code_sha3: confirmation_code_sha3,
-                confirmation_block: 0
-            }));
+            pa.name = name;
+            pa.country = country;
+            pa.state = state;
+            pa.city = city;
+            pa.location = location;
+            pa.zip = zip;
+            pa.creation_block = block.number;
+            pa.confirmation_code_sha3 = confirmation_code_sha3;
+            pa.confirmation_block = 0;
+            users[msg.sender].physical_addresses.push(pa);
 
             total_users += 1;
             total_addresses += 1;
@@ -267,13 +271,11 @@ contract ProofOfPhysicalAddress
         require(!str_eq(confirmation_code_plain, ''));
         require(user_exists(msg.sender));
 
-        require(signer_is_valid(
-            keccak256(
-                msg.sender,
-                confirmation_code_plain
-            ),
-            sig_v, sig_r, sig_s
-        ));
+        bytes32 data = keccak256(
+            msg.sender,
+            confirmation_code_plain
+        );
+        require(signer_is_valid(data, sig_v, sig_r, sig_s));
 
         bool found;
         uint ai;

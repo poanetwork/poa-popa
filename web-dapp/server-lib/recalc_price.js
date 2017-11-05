@@ -19,10 +19,13 @@ function recalc(done) {
 
     // fake for now
     setTimeout((done) => {
-        current_price_wei = config.price_us_cents*Math.random();
-
-        logger.log(prelog + 'current_price_wei updated, new value: ' + current_price_wei);
         updating = false;
+
+        var usd_per_1eth = 250 + (350-250)*Math.random(); // for tests
+
+        logger.log(prelog + 'got exchange rate: 1 ETH = ' + usd_per_1eth + ' USD');
+        current_price_wei = (new config.web3.BigNumber('1e+18')).times(config.price_us_cents).dividedBy(usd_per_1eth.toString()).dividedBy(100).ceil();
+        logger.log(prelog + 'current_price_wei updated, new value: ' + current_price_wei);
         last_updated = new Date();
         return done();
     }, 500, done);

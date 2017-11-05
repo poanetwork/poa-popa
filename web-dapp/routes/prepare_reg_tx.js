@@ -87,24 +87,31 @@ module.exports = function (opts) {
         var sha3cc = config.web3.sha3(confirmation_code_plain);
 
         // combine parameters and sign them
-        var hex_params = {};
-        Object.keys(params).forEach(p => { hex_params[p] = Buffer.from(params[p], 'utf8') });
+        var buf_params = {};
+        Object.keys(params).forEach(p => { buf_params[p] = Buffer.from(params[p], 'utf8') });
+        // get post card price
+        params.price_wei = recalc_price.get_price_wei();
+        logger.log(prelog + 'price_wei: ' + params.price_wei);
+        buf_params.price_wei = Buffer.from(config.web3.padLeft(params.price_wei.toString(16), 64), 'hex');
+
         logger.log(prelog + 'combining into text2sign hex string:');
         logger.log(prelog + 'wallet:        ' + wallet);
-        logger.log(prelog + 'hex name:      0x' + hex_params.name.toString('hex'));
-        logger.log(prelog + 'hex country:   0x' + hex_params.country.toString('hex'));
-        logger.log(prelog + 'hex state:     0x' + hex_params.state.toString('hex'));
-        logger.log(prelog + 'hex city:      0x' + hex_params.city.toString('hex'));
-        logger.log(prelog + 'hex address:   0x' + hex_params.address.toString('hex'));
-        logger.log(prelog + 'hex zip:       0x' + hex_params.zip.toString('hex'));
+        logger.log(prelog + 'hex name:      0x' + buf_params.name.toString('hex'));
+        logger.log(prelog + 'hex country:   0x' + buf_params.country.toString('hex'));
+        logger.log(prelog + 'hex state:     0x' + buf_params.state.toString('hex'));
+        logger.log(prelog + 'hex city:      0x' + buf_params.city.toString('hex'));
+        logger.log(prelog + 'hex address:   0x' + buf_params.address.toString('hex'));
+        logger.log(prelog + 'hex zip:       0x' + buf_params.zip.toString('hex'));
+        logger.log(prelog + 'hex price_wei: 0x' + buf_params.price_wei.toString('hex'));
         logger.log(prelog + 'sha3(cc):      ' + sha3cc);
         var text2sign = wallet + Buffer.concat([
-            hex_params.name,
-            hex_params.country,
-            hex_params.state,
-            hex_params.city,
-            hex_params.address,
-            hex_params.zip,
+            buf_params.name,
+            buf_params.country,
+            buf_params.state,
+            buf_params.city,
+            buf_params.address,
+            buf_params.zip,
+            buf_params.price_wei,
             Buffer.from(sha3cc.substr(2), 'hex')
         ]).toString('hex');
         logger.log(prelog + '=> text2sign: ' + text2sign);

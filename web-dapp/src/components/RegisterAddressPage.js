@@ -117,9 +117,11 @@ class RegisterAddressPage extends Component {
     register_address = (opts, callback) => {
         var contract = this.props.contract;
 
-        console.log('calling estimateGas');
+        console.log('Calling contract.register_address.estimateGas');
         console.log('opts = ' + JSON.stringify(opts));
-        console.log('10eth = ', { value: new this.props.my_web3.BigNumber('10000000000000000000')});
+
+        opts.params.price_wei = new this.props.my_web3.BigNumber(opts.params.price_wei);
+        console.log('Price for the postcard (in wei): ' + opts.params.price_wei);
         contract.register_address.estimateGas(
             opts.params.name,
             opts.params.country,
@@ -127,11 +129,12 @@ class RegisterAddressPage extends Component {
             opts.params.city,
             opts.params.address,
             opts.params.zip,
+            opts.params.price_wei,
             opts.confirmation_code_sha3,
             opts.v,
             opts.r,
             opts.s,
-            { from: opts.wallet }, (err, result) => {
+            { from: opts.wallet, value: opts.params.price_wei }, (err, result) => {
 
             if (err) {
                 console.log('Estimate gas callback error:', err);
@@ -160,11 +163,12 @@ class RegisterAddressPage extends Component {
                 opts.params.city,
                 opts.params.address,
                 opts.params.zip,
+                opts.params.price_wei,
                 opts.confirmation_code_sha3,
                 opts.v,
                 opts.r,
                 opts.s,
-                { from: opts.wallet, value: new this.props.my_web3.BigNumber('10000000000000000000'), gas: ugas }, (err, tx_id) => {
+                { from: opts.wallet, value: opts.params.price_wei, gas: ugas }, (err, tx_id) => {
 
                 if (err) {
                     console.log('Error calling contract.register_address:', err);
