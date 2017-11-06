@@ -2,7 +2,7 @@
 
 var db = {};
 
-module.exports = function (params, logger) {
+module.exports = function () {
     return {
         set: function (k,v, done) {
             db[k] = v;

@@ -28,7 +28,7 @@ var cfg = {
     web3: web3,
 
     code_length: 10,
-    code_symbols: 'adfprstwxy345789', // length of this should be divisor of 256
+    code_symbols: 'abcdhkmnprstwxy345789',
     confirmation_page_url: 'http://localhost:3000/confirm', // used only for postcard's front conver
 
     price_us_cents: 500, // NOTE: this is in cents! e.g. for $5 price, put 500

@@ -1,11 +1,12 @@
 'use strict';
-
+const config = require('../server-config');
+const logger = require('../logger');
 const redis = require('redis'); // https://github.com/NodeRedis/node_redis
 const prelog = '[redis] ';
 
-module.exports = function (params, logger) {
+module.exports = function () {
     logger.log(prelog + 'connecting');
-    const client = redis.createClient(params);
+    const client = redis.createClient(config.session_store.params);
     client.on('error', (err) => {
         logger.error(prelog + 'error ' + err);
     });
