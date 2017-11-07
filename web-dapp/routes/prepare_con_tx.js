@@ -12,7 +12,7 @@ const send_response = require('../server-lib/send_response');
 module.exports = function (opts) {
     var router = express.Router();
     router.post('/prepareConTx', function (req, res) {
-        var prelog = req.log_prfx + '[prepareConTx] ';
+        var prelog = '[prepareConTx] (' + req.log_prfx + ') ';
         if (!req.body) {
             logger.log(prelog + 'request body empty');
             return send_response(res, { ok: false, err: 'request body: empty' });
@@ -49,7 +49,7 @@ module.exports = function (opts) {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(config.web3, text2sign);
+            var sign_output = sign(text2sign);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             return send_response(res, {
                 ok: true,

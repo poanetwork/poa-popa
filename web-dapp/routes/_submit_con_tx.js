@@ -15,7 +15,7 @@ const contract = config.web3.eth.contract(cconf.abi).at(cconf.address);
 module.exports = function (opts) {
     var router = express.Router();
     router.post('/submitConTx', function (req, res) {
-        var prelog = req.log_prfx + '[submitConTx] ';
+        var prelog = '[submitConTx] (' + req.log_prfx + ') ';
         if (!req.body) {
             logger.log(prelog + 'request body empty');
             return send_response(res, { ok: false, err: 'request body: empty' });

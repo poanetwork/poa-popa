@@ -14,7 +14,7 @@ const recalc_price = require('../server-lib/recalc_price');
 module.exports = function (opts) {
     var router = express.Router();
     router.post('/prepareRegTx', function (req, res) {
-        var prelog = req.log_prfx + '[prepareRegTx] ';
+        var prelog = '[prepareRegTx] (' + req.log_prfx + ') ';
         if (!req.body) {
             logger.log(prelog + 'request body empty');
             return send_response(res, { ok: false, err: 'request body: empty' });
@@ -117,7 +117,7 @@ module.exports = function (opts) {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(config.web3, text2sign);
+            var sign_output = sign(text2sign);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             var session_key = Math.random();
             logger.log(prelog + 'setting session_key: ' + session_key);

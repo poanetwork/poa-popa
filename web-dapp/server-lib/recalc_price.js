@@ -38,7 +38,10 @@ module.exports = {
             return setTimeout(done, 1);
         }
         logger.log(prelog + 'calculating current_price_wei for the first time');
-        recalc(done);
+        recalc(() => {
+            initialized = true;
+            done();
+        });
         logger.log(prelog + 'setting price update interval: ' + config.price_upd_interval_ms);
         setInterval(() => recalc(()=>{}), config.price_upd_interval_ms);
     },

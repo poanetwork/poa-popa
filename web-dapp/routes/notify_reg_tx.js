@@ -12,7 +12,7 @@ const send_response = require('../server-lib/send_response');
 module.exports = function (opts) {
     var router = express.Router();
     router.post('/notifyRegTx', function (req, res) {
-        var prelog = req.log_prfx + '[notifyRegTx] ';
+        var prelog = '[notifyRegTx] (' + req.log_prfx + ') ';
         if (!req.body) {
             logger.log(prelog + 'request body empty');
             return send_response(res, { ok: false, err: 'request body: empty' });
@@ -44,14 +44,14 @@ module.exports = function (opts) {
         }
         var session_key = normalize.string(req.body.session_key);
 
-        logger.log(prelog + 'fetching info by session_key');
+        logger.log(prelog + 'fetching info by session_key: ' + session_key);
         db.get(session_key, function (err, info) {
             if (err) {
                 logger.error(prelog + 'error getting info by session_key: ' + err);
                 return send_response(res, { ok: false, err: 'error getting info by session_key' });
             }
             if (!info || Object.keys(info).length === 0 || !info.wallet || !info.confirmation_code_plain) {
-                logger.log(prelog + 'no info for this session_key');
+                logger.log(prelog + 'no info for this session_key: ' + session_key);
                 return send_response(res, { ok: false, err: 'no info for this session_key' });
             }
 
@@ -133,7 +133,7 @@ module.exports = function (opts) {
                                     return send_response(res, { ok: false, err: 'error while sending postcard' });
                                 }
                                 logger.log(prelog + 'postcard: ' + JSON.stringify(result));
-                                logger.log(prelog + 'removing used session_key from memory');
+                                logger.log(prelog + 'removing used session_key from memory: ' + session_key);
                                 db.unset(session_key, function (err) {
                                     if (err) {
                                         logger.error(prelog + 'error removing used session_key: ' + err);

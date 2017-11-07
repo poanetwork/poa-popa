@@ -18,8 +18,7 @@ app.use('/', express.static('build'));
 function log_request(req, res, next) {
     req.log_prfx = 'ID=' + req.x_id;
     if (req.x_ip) req.log_prfx += ('|IP=' + req.x_ip);
-    req.log_prfx += ' ';
-    logger.log(req.log_prfx + '[request] ' + req.method + ' ' + req.path + ' by ' + JSON.stringify(req.headers));
+    logger.log('[request] (' + req.log_prfx + ') ' + req.method + ' ' + req.path + ' by ' + JSON.stringify(req.headers));
     next();
 }
 
