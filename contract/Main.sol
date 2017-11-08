@@ -70,13 +70,13 @@ contract ProofOfPhysicalAddress
 
     // Methods:
 
-    // withdraw specified amount of eth
-    function withdraw_some(uint256 amount)
+    // withdraw specified amount of eth in wei
+    function withdraw_some(uint256 amount_wei)
     public
     {
         require(msg.sender == owner);
-        if (this.balance < amount) revert();
-        owner.transfer(amount);
+        if (this.balance < amount_wei) revert();
+        owner.transfer(amount_wei);
     }
 
     // withdraw all available eth

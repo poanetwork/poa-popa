@@ -26,7 +26,7 @@ module.exports = function (opts) {
         // wallet
         verr = validate.wallet(config.web3, req.body.wallet);
         if (verr) {
-            logger.log(prelog + 'wallet: ' + verr);
+            logger.log(prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'wallet: ' + verr });
         }
         var wallet = req.body.wallet;
@@ -34,7 +34,7 @@ module.exports = function (opts) {
         // name
         verr = validate.string(req.body.name);
         if (verr) {
-            logger.log(prelog + 'name: ' + verr);
+            logger.log(prelog + 'validation error on name: ' + name + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'name: ' + verr });
         }
         params.name = normalize.string(req.body.name);
@@ -42,7 +42,7 @@ module.exports = function (opts) {
         // country
         verr = validate.string(req.body.country);
         if (verr) {
-            logger.log(prelog + 'country: ' + verr);
+            logger.log(prelog + 'validation error on country: ' + country + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'country: ' + verr });
         }
         params.country = normalize.string(req.body.country);
@@ -50,7 +50,7 @@ module.exports = function (opts) {
         // state
         verr = validate.string(req.body.state);
         if (verr) {
-            logger.log(prelog + 'state: ' + verr);
+            logger.log(prelog + 'validation error on state: ' + state + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'state: ' + verr });
         }
         params.state = normalize.string(req.body.state);
@@ -58,7 +58,7 @@ module.exports = function (opts) {
         // city
         verr = validate.string(req.body.city);
         if (verr) {
-            logger.log(prelog + 'city: ' + verr);
+            logger.log(prelog + 'validation error on city: ' + city + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'city: ' + verr });
         }
         params.city = normalize.string(req.body.city);
@@ -66,7 +66,7 @@ module.exports = function (opts) {
         // address
         verr = validate.string(req.body.address);
         if (verr) {
-            logger.log(prelog + 'address: ' + verr);
+            logger.log(prelog + 'validation error on address: ' + address + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'address: ' + verr });
         }
         params.address = normalize.string(req.body.address);
@@ -74,7 +74,7 @@ module.exports = function (opts) {
         // zip
         verr = validate.string(req.body.zip);
         if (verr) {
-            logger.log(prelog + 'zip: ' + verr);
+            logger.log(prelog + 'validation error on zip: ' + zip + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'zip: ' + verr });
         }
         params.zip = normalize.string(req.body.zip);
@@ -86,9 +86,10 @@ module.exports = function (opts) {
         logger.log(prelog + 'confirmation_code_plain: ' + confirmation_code_plain);
         var sha3cc = config.web3.sha3(confirmation_code_plain);
 
-        // combine parameters and sign them
+        // convert parameters to buffers
         var buf_params = {};
         Object.keys(params).forEach(p => { buf_params[p] = Buffer.from(params[p], 'utf8') });
+
         // get post card price
         params.price_wei = recalc_price.get_price_wei();
         logger.log(prelog + 'price_wei: ' + params.price_wei);
@@ -114,7 +115,7 @@ module.exports = function (opts) {
             buf_params.price_wei,
             Buffer.from(sha3cc.substr(2), 'hex')
         ]).toString('hex');
-        logger.log(prelog + '=> text2sign: ' + text2sign);
+        logger.log(prelog + 'calling sign() with text2sign: ' + text2sign);
 
         try {
             var sign_output = sign(text2sign);

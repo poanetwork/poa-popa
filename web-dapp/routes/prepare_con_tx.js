@@ -24,7 +24,7 @@ module.exports = function (opts) {
         // wallet
         verr = validate.wallet(config.web3, req.body.wallet);
         if (verr) {
-            logger.log(prelog + 'wallet: ' + verr);
+            logger.log(prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'wallet: ' + verr });
         }
         var wallet = req.body.wallet;
@@ -32,7 +32,7 @@ module.exports = function (opts) {
         // confirmation_code_plain
         verr = validate.string(req.body.confirmation_code_plain);
         if (verr) {
-            logger.log(prelog + 'confirmation_code_plain: ' + verr);
+            logger.log(prelog + 'validation error on confirmation_code_plain: ' + confirmation_code_plain + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'confirmation_code_plain: ' + verr });
         }
         params.confirmation_code_plain = normalize.string(req.body.confirmation_code_plain);

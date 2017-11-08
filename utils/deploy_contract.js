@@ -17,7 +17,7 @@ var config = require('./utils-config')();
 
 var web3 = new Web3(config.network);
 var source = fs.readFileSync(config.source_file, 'utf8');
-var creator = (config.sender === '$TEST' ? web3.eth.accounts[1] : config.sender);
+var owner = (config.owner === '$TEST' ? web3.eth.accounts[1] : config.owner);
 
 function ask_pass(next) {
     logger.log('Please enter passphrase for your account:');
@@ -56,7 +56,7 @@ var bytecode = compiled_contract.bytecode;
 
 var web3_contract = web3.eth.contract(abi_def);
 var tx_params = {
-    from: creator,
+    from: owner,
     data: compiled_contract.bytecode
 };
 
@@ -71,7 +71,7 @@ var confirm = function (next) {
     logger.log('\n==============================');
     logger.log('* This will deploy contract from ' + config.source_file + ' to network', config.network);
     logger.log('* Contract output will be saved to ' + config.contract_output);
-    logger.log('* Contract creator is ' + (config.sender === '$TEST' ? 'TEST ' : '') + creator);
+    logger.log('* Contract owner is ' + (config.owner === '$TEST' ? 'TEST ' : '') + owner);
     logger.log('* Gas estimation: ' + egas + ' => ~' + gprice*egas/1e18 + ' ETH');
     logger.log('* Will set gas = ' + ugas + ' => ~' + gprice*ugas/1e18 + ' ETH');
     logger.log('==============================');
@@ -110,7 +110,7 @@ confirm(function () {
     var try_create_contract = function (password, proceed) {
         try {
             if (should_ask_pass) {
-                web3.personal.unlockAccount(creator, password, 1000);
+                web3.personal.unlockAccount(owner, password, 1000);
             }
             contract = web3_contract.new([], tx_params);
             return proceed();
