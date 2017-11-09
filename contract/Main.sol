@@ -5,6 +5,7 @@ pragma solidity 0.4.18;
 contract ProofOfPhysicalAddress
 {
     address public owner;
+    address public signer;
 
     // Main structures:
 
@@ -26,6 +27,7 @@ contract ProofOfPhysicalAddress
     function ProofOfPhysicalAddress() public
     {
         owner = msg.sender;
+        signer = owner;
     }
 
     struct User
@@ -65,10 +67,19 @@ contract ProofOfPhysicalAddress
     {
         bytes memory prefix = '\x19Ethereum Signed Message:\n32';
         bytes32 prefixed = keccak256(prefix, data);
-        return (ecrecover(prefixed, v, r, s) == owner);
+        return (ecrecover(prefixed, v, r, s) == signer);
     }
 
     // Methods:
+
+    // set address that is used on server-side to calculate signatures
+    // and on contract-side to verify them
+    function set_signer(address new_signer)
+    public
+    {
+        require(msg.sender == owner);
+        signer = new_signer;
+    }
 
     // withdraw specified amount of eth in wei
     function withdraw_some(uint256 amount_wei)
