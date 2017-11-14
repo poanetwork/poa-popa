@@ -61,8 +61,6 @@ module.exports = function (opts) {
             }
 
             logger.log(prelog + 'fetching tx_details from blockchain by tx_id: ' + tx_id);
-
-            // TODO: there should probably be setInterval() checker to wait until the initial tx propagates to our node
             var tx_bn = null;
             var get_bn_job = {
                 id: null,
@@ -73,7 +71,6 @@ module.exports = function (opts) {
                 config.web3.eth.getTransaction(tx_id, function (err, tx_details) {
                     var err = null;
                     var fatal = false;
-                    tx_details = null;
                     if (err) {
                         logger.error(prelog + 'error getting details from blockchain about tx: ' + tx_id + ', err: ' + err);
                         err = 'error getting tx details from blockchain';

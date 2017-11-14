@@ -29,7 +29,7 @@ var cfg = {
 
     code_length: 10,
     code_symbols: 'abcdhkmnprstwxy345789',
-    confirmation_page_url: 'http://localhost:3000/confirm', // used only for postcard's front conver
+    confirmation_page_url: 'http://localhost:3000/confirm', // used only for postcard's front cover
 
     block_wait_interval_ms:  15000,
     block_wait_max_time_ms:  60000,
