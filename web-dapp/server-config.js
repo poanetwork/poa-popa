@@ -34,7 +34,7 @@ var cfg = {
     block_wait_interval_ms:  15000,
     block_wait_max_time_ms:  60000,
 
-    price_wei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored 40000000000000000
+    price_wei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored
     price_us_cents: 1000, // NOTE: this is in cents! e.g. for $10 price, put 1000
     price_upd_interval_ms: 60000,
 };

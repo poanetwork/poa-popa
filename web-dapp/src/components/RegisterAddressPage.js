@@ -495,7 +495,7 @@ class RegisterAddressPage extends Component {
                             <button type="button" className="button button_order" onClick={this.order_clicked}>Order</button>
                         </form>
                         <div className="address-postcard">
-                            <p className="address-postcard-title">5$ / 0.0248548378 ETH</p>
+                            <p className="address-postcard-title">0.04 ETH</p>
                             <p className="address-postcard-description">
                                 This is the price we charge for sending a postcard to you
                             </p>
