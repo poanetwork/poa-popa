@@ -36,6 +36,7 @@ module.exports = function (cfg_public) {
         rpc: '******************************',
         signer: '0x****************************', // with 0x prefix
         signer_private_key: '******************************', // without 0x prefix
+        confirmation_page_url: '******************************',
     };
 };
 
