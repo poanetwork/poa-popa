@@ -24,7 +24,9 @@ function log_request(req, res, next) {
 
 app.use(body_parser.urlencoded({ extended: true }));
 app.use(body_parser.json());
-app.use('/api', req_id, log_request, require('./routes')({}));
+var routes = require('./routes')({});
+app.use('/api', req_id, log_request, routes);
+app.use('/confirm/api', req_id, log_request, routes);
 
 recalc_price.init(function () {
     var port = process.env.PORT || config.port || 3000;
