@@ -184,9 +184,6 @@ class RegisterAddressPage extends Component {
     }
 
     order_clicked = () => {
-        this.setState({
-            loading: true
-        });
         console.log('Form data:');
         console.log('name = ' + this.state.name);
         console.log('country = ' + this.state.country);
@@ -232,6 +229,10 @@ class RegisterAddressPage extends Component {
             window.show_alert('warning', 'Verification', 'Please provide ZIP');
             return;
         }
+
+        this.setState({
+            loading: true
+        });
 
         window.$.ajax({
             type: 'post',
