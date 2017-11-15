@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Loading } from './Loading';
 import '../assets/javascripts/show-alert.js';
 
 class RegisterAddressPage extends Component {
@@ -11,6 +12,7 @@ class RegisterAddressPage extends Component {
             city: '',
             address: '',
             zip: '',
+            loading: false,
         };
     }
 
@@ -182,6 +184,9 @@ class RegisterAddressPage extends Component {
     }
 
     order_clicked = () => {
+        this.setState({
+            loading: true
+        });
         console.log('Form data:');
         console.log('name = ' + this.state.name);
         console.log('country = ' + this.state.country);
@@ -243,6 +248,9 @@ class RegisterAddressPage extends Component {
             success: (res) => {
                 if (!res) {
                     console.log('Empty response from server');
+                    this.setState({
+                        loading: false
+                    });
                     window.show_alert('error', 'Preparing register transaction', [['Error', 'Empty response from server']]);
                     return;
                 }
@@ -250,12 +258,18 @@ class RegisterAddressPage extends Component {
 
                 if (!res.ok) {
                     console.log('Error: ' + res.err);
+                    this.setState({
+                        loading: false
+                    });
                     window.show_alert('error', 'Preparing register transaction', [['Request ID', res.x_id], ['Error', res.err]]);
                     return;
                 }
 
                 if (!res.result) {
                     console.log('Invalid response: missing result');
+                    this.setState({
+                        loading: false
+                    });
                     window.show_alert('error', 'Preparing register transaction', [['Request ID', res.x_id], ['Error', 'Missing result field']]);
                     return;
                 }
@@ -263,10 +277,17 @@ class RegisterAddressPage extends Component {
                 this.check_address_exists(res.result, (err, exists) => {
                     if (err) {
                         console.log('Error occured in check_address_exists: ', err);
+                        this.setState({
+                            loading: false
+                        });
                         window.show_alert('error', 'Checking if address exists', [['Error', err.message]]);
                         return;
                     }
                     if (exists) {
+                        console.log('This address already exists');
+                        this.setState({
+                            loading: false
+                        });
                         window.show_alert('error', 'Checking if address exists', 'This address is already registered under your current MetaMask account');
                         return;
                     }
@@ -275,6 +296,9 @@ class RegisterAddressPage extends Component {
                     this.register_address(res.result, (err, tx_id) => {
                         if (err) {
                             console.log('Error occured in register_address: ', err);
+                            this.setState({
+                                loading: false
+                            });
                             window.show_alert('error', 'Register address', [['Error', err.message]]);
                         }
                         else if (tx_id) {
@@ -288,6 +312,9 @@ class RegisterAddressPage extends Component {
                                     session_key: res.result.session_key
                                 },
                                 success: (res) => {
+                                    this.setState({
+                                        loading: false
+                                    });
                                     if (!res) {
                                         console.log('Empty response from server');
                                         window.show_alert('error', 'Postcard sending', [
@@ -316,6 +343,9 @@ class RegisterAddressPage extends Component {
                                 },
                                 error: (xhr, ajaxOptions, thrownError) => {
                                     console.log('Server returned error on notifyRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
+                                    this.setState({
+                                        loading: false
+                                    });
                                     window.show_alert('error', 'Postcard sending', [['Server error', xhr.statusText + ' (' + xhr.status + ')']]);
                                 }
                             });
@@ -336,6 +366,7 @@ class RegisterAddressPage extends Component {
 
     render = () => {
         return (
+            <div>
             <section className="content address table">
                 <div className="table-cell table-cell_left">
                     <div className="address-content">
@@ -385,7 +416,7 @@ class RegisterAddressPage extends Component {
                                     {/*
                                     <input type="text" className="input" name="state" value={this.state.state} onChange={this.on_change} />
                                     */}
-                                    <select className="input" name="state" style={{ 'background-color': 'white' }} value={this.state.state} onChange={this.on_change}>
+                                    <select className="input" name="state" style={{ 'backgroundColor': 'white' }} value={this.state.state} onChange={this.on_change}>
                                         <option value="AA">U.S. Armed Forces – Americas</option>
                                         <option value="AE">U.S. Armed Forces – Europe</option>
                                         <option value="AK">Alaska</option>
@@ -563,6 +594,8 @@ class RegisterAddressPage extends Component {
                     </div>
                 </div>
             </section>
+            <Loading show={this.state.loading}></Loading>
+            </div>
         );
     }
 };
