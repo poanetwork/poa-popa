@@ -90,12 +90,18 @@ module.exports = function (opts) {
                         err = 'from-address in transaction does not match user wallet';
                     }
 
-                    if (err) {
+                    if (err || !tx_details.blockNumber) {
                         if (fatal || new Date - get_bn_job.started_at > config.block_wait_max_time_ms) {
                             logger.log(prelog + 'giving up on tx_id: ' + tx_id);
-                            return send_response(res, { ok: false, err: err });
+                            return send_response(res, { ok: false, err: (err || 'Empty tx.blockNumber') });
                         }
                         else {
+                            if (err) {
+                                logger.log(prelog + 'check tx_id: ' + tx_id + ', err: ' + err);
+                            }
+                            else if (!tx_details.blockNumber) {
+                                logger.log(prelog + 'check tx_id: ' + tx_id + ', still not mined (empty tx.blockNumber)');
+                            }
                             logger.log(prelog + 'check tx_id: ' + tx_id + ' again in: ' + config.block_wait_interval_ms + ' ms');
                             setTimeout(get_tx_bn, config.block_wait_interval_ms);
                         }
