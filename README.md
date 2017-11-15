@@ -7,6 +7,7 @@ This is still work-in-progress, for the latest version please checkout [dev bran
 1. clone this repository
 ```
 git clone https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address.git
+git checkout dev
 ```
 
 2. make sure you have node.js version >= 6.9.1 installed
@@ -49,7 +50,7 @@ node deploy_contract
 ```
 answer `yes` when confirmation appears.
 
-7. then compile react components and start dapp
+7. then to compile react components and start dapp, run:
 ```
 bash run_web.sh
 ```
@@ -61,7 +62,13 @@ wait until a build is ready and `Listening on 3000` is printed in terminal
 
 To find out confirmation code, look for a line like
 ```
-[prepareRegTx] confimration code: wpy467ki
+[prepareRegTx] confimration confirmation_code_plain: y8t44s8yrt
+```
+in server logs
+
+To find response details from Lob, including links to the postcard, look for a line like
+```
+[notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... } 
 ```
 in server logs
 

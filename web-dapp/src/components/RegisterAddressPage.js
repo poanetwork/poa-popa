@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Loading } from './Loading';
 import '../assets/javascripts/show-alert.js';
 
 class RegisterAddressPage extends Component {
@@ -6,58 +7,65 @@ class RegisterAddressPage extends Component {
         super(props);
         this.state = {
             name: '',
-            country: '',
+            country: 'US',
             state: '',
             city: '',
             address: '',
-            zip: ''
+            zip: '',
+            loading: false,
         };
     }
 
     componentDidMount = () => {
         console.log('RegisterAddressPage.componentDidMount');
 
-        if (!window.mySwipe) {
-            console.log('Add mySwipe');
-            window.mySwipe = new window.Swipe(document.getElementById('slider'), {
-                startSlide: 0,
-                speed: 500,
-                auto: 4000,
-                disableScroll: true,
-                callback: function(index, elem) {
-                    window.$('.how-to-navigation-i').removeClass('how-to-navigation-i_active')
-                    .eq(index).addClass('how-to-navigation-i_active');
-                }
-            });
+        console.log('Add mySwipe');
+        window.mySwipe = new window.Swipe(document.getElementById('slider'), {
+            startSlide: 0,
+            speed: 500,
+            auto: 4000,
+            disableScroll: true,
+            callback: function(index, elem) {
+                window.$('.how-to-navigation-i').removeClass('how-to-navigation-i_active')
+                .eq(index).addClass('how-to-navigation-i_active');
+            }
+        });
 
-            window.$('.how-to-navigation-i').on('click', function() {
-                var index = window.$(this).index();
-                window.mySwipe.slide(index);
-            });
+        window.$('.how-to-navigation-i').on('click', function() {
+            var index = window.$(this).index();
+            window.mySwipe.slide(index);
+        });
+
+        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
+        if (!wallet) {
+            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
+            return;
         }
     }
 
     on_change = (event) => {
+        console.log('on_change ' + event.target.name + ': ' + event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         });
     }
 
-    check_user_exists = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('opts = ' + JSON.stringify(opts));
+    check_wallet_same = (current_wallet, initial_wallet) => {
+        console.log('check_wallet current_wallet: ' + current_wallet);
+        console.log('check_wallet initial_wallet: ' + initial_wallet);
+        if (!current_wallet) {
+            return 'MetaMask account should be unlocked';
+        }
+        if (current_wallet.trim().toLowerCase() !== initial_wallet) {
+            return 'MetaMask account was switched';
+        }
+        return '';
+    }
 
-        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-        console.log('Current wallet: ' + wallet);
-        if (!wallet) {
-            return callback('MetaMask account should be unlocked');
-        }
-        if (wallet.trim().toLowerCase() !== opts.wallet) {
-            return callback('MetaMask account was switched');
-        }
+    check_user_exists = (opts, callback) => {
+        var contract = this.props.contract;
+        var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+        if (wsame) return callback(wsame);
 
         console.log('calling contract.check_user_exists');
         contract.user_exists(opts.wallet, { from: opts.wallet }, (err, result) => {
@@ -72,26 +80,14 @@ class RegisterAddressPage extends Component {
     }
 
     check_address_exists = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('calling estimateGas');
-        console.log('opts = ' + JSON.stringify(opts));
-
-        var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
-        console.log('Current wallet: ' + wallet);
-        if (!wallet) {
-            return callback('MetaMask account should be unlocked');
-        }
-        if (wallet.trim().toLowerCase() !== opts.wallet) {
-            return callback('MetaMask account was switched');
-        }
+        var contract = this.props.contract;
+        var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+        if (wsame) return callback(wsame);
 
         this.check_user_exists(opts, (err, exists) => {
             if (err) {
-                window.show_alert('error', 'Error in check_user_exists: ' + err.message);
-                return;
+                window.show_alert('error', 'Checking if user exists: ', [['Error', err.message]]);
+                return callback(err, false);
             }
 
             if (!exists) {
@@ -121,12 +117,13 @@ class RegisterAddressPage extends Component {
     }
 
     register_address = (opts, callback) => {
-        console.log('getting contract, this.props.cconf = ', this.props.cconf);
-        var contract = this.props.my_web3.eth.contract(this.props.cconf.abi).at(this.props.cconf.address);
-        console.log('getting contract, contract = ', contract);
-        window.mega_contract = contract;
-        console.log('calling estimateGas');
+        var contract = this.props.contract;
+
+        console.log('Calling contract.register_address.estimateGas');
         console.log('opts = ' + JSON.stringify(opts));
+
+        opts.params.price_wei = new this.props.my_web3.BigNumber(opts.params.price_wei);
+        console.log('Price for the postcard (in wei): ' + opts.params.price_wei);
         contract.register_address.estimateGas(
             opts.params.name,
             opts.params.country,
@@ -134,11 +131,12 @@ class RegisterAddressPage extends Component {
             opts.params.city,
             opts.params.address,
             opts.params.zip,
+            opts.params.price_wei,
             opts.confirmation_code_sha3,
             opts.v,
             opts.r,
             opts.s,
-            { from: opts.wallet }, (err, result) => {
+            { from: opts.wallet, value: opts.params.price_wei }, (err, result) => {
 
             if (err) {
                 console.log('Estimate gas callback error:', err);
@@ -167,11 +165,12 @@ class RegisterAddressPage extends Component {
                 opts.params.city,
                 opts.params.address,
                 opts.params.zip,
+                opts.params.price_wei,
                 opts.confirmation_code_sha3,
                 opts.v,
                 opts.r,
                 opts.s,
-                { from: opts.wallet, gas: ugas }, (err, tx_id) => {
+                { from: opts.wallet, value: opts.params.price_wei, gas: ugas }, (err, tx_id) => {
 
                 if (err) {
                     console.log('Error calling contract.register_address:', err);
@@ -185,43 +184,55 @@ class RegisterAddressPage extends Component {
     }
 
     order_clicked = () => {
+        console.log('Form data:');
+        console.log('name = ' + this.state.name);
+        console.log('country = ' + this.state.country);
+        console.log('state = ' + this.state.state);
+        console.log('city = ' + this.state.city);
+        console.log('address = ' + this.state.address);
+        console.log('zip = ' + this.state.zip);
+
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
         if (!wallet) {
-            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask first');
+            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
             return;
         }
 
         console.log('Using account ' + wallet);
 
         if (!this.state.name) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide your NAME');
+            window.show_alert('warning', 'Verification', 'Please provide your NAME');
             return;
         }
 
         if (!this.state.country) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide COUNTRY');
+            window.show_alert('warning', 'Verification', 'Please provide COUNTRY');
             return;
         }
 
         if (!this.state.state) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide STATE');
+            window.show_alert('warning', 'Verification', 'Please provide STATE');
             return;
         }
 
         if (!this.state.city) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide CITY');
+            window.show_alert('warning', 'Verification', 'Please provide CITY');
             return;
         }
 
         if (!this.state.address) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide ADDRESS');
+            window.show_alert('warning', 'Verification', 'Please provide ADDRESS');
             return;
         }
 
         if (!this.state.zip) {
-            window.show_alert('warning', 'Required field is empty', 'Please provide ZIP');
+            window.show_alert('warning', 'Verification', 'Please provide ZIP');
             return;
         }
+
+        this.setState({
+            loading: true
+        });
 
         window.$.ajax({
             type: 'post',
@@ -236,29 +247,49 @@ class RegisterAddressPage extends Component {
                 zip: this.state.zip,
             },
             success: (res) => {
-                if (!res) return;
+                if (!res) {
+                    console.log('Empty response from server');
+                    this.setState({
+                        loading: false
+                    });
+                    window.show_alert('error', 'Preparing register transaction', [['Error', 'Empty response from server']]);
+                    return;
+                }
                 console.log(res);
 
                 if (!res.ok) {
                     console.log('Error: ' + res.err);
-                    window.show_alert('error', 'Server return error', res.err);
+                    this.setState({
+                        loading: false
+                    });
+                    window.show_alert('error', 'Preparing register transaction', [['Request ID', res.x_id], ['Error', res.err]]);
                     return;
                 }
 
                 if (!res.result) {
                     console.log('Invalid response: missing result');
-                    window.show_alert('error', 'Invalid server response', 'Missing result field');
+                    this.setState({
+                        loading: false
+                    });
+                    window.show_alert('error', 'Preparing register transaction', [['Request ID', res.x_id], ['Error', 'Missing result field']]);
                     return;
                 }
 
                 this.check_address_exists(res.result, (err, exists) => {
                     if (err) {
                         console.log('Error occured in check_address_exists: ', err);
-                        window.show_alert('error', 'Error in check_address_exists', err.message);
+                        this.setState({
+                            loading: false
+                        });
+                        window.show_alert('error', 'Checking if address exists', [['Error', err.message]]);
                         return;
                     }
                     if (exists) {
-                        window.show_alert('error', 'Address already registered', 'This address is already registered under your current MetaMask account');
+                        console.log('This address already exists');
+                        this.setState({
+                            loading: false
+                        });
+                        window.show_alert('error', 'Checking if address exists', 'This address is already registered under your current MetaMask account');
                         return;
                     }
 
@@ -266,37 +297,83 @@ class RegisterAddressPage extends Component {
                     this.register_address(res.result, (err, tx_id) => {
                         if (err) {
                             console.log('Error occured in register_address: ', err);
-                            window.show_alert('error', 'Error in register_address', err.message);
+                            this.setState({
+                                loading: false
+                            });
+                            window.show_alert('error', 'Register address', [['Error', err.message]]);
                         }
                         else if (tx_id) {
                             console.log('Transaction mined: ' + tx_id);
-                            window.show_alert('success', 'Address registered!', '<b>Transaction ID</b>: ' + tx_id);
+                            window.$.ajax({
+                                type: 'post',
+                                url: './api/notifyRegTx',
+                                data: {
+                                    wallet: wallet,
+                                    tx_id: tx_id,
+                                    session_key: res.result.session_key
+                                },
+                                success: (res) => {
+                                    this.setState({
+                                        loading: false
+                                    });
+                                    if (!res) {
+                                        console.log('Empty response from server');
+                                        window.show_alert('error', 'Postcard sending', [
+                                            ['Transaction to register address was mined, but postcard was not sent'],
+                                            ['Transaction ID', tx_id],
+                                            ['Error', 'empty response from server']
+                                        ]);
+                                        return;
+                                    }
+                                    if (!res.ok) {
+                                        console.log('Not ok response from server: ' + res.err);
+                                        window.show_alert('error', 'Postcard sending', [
+                                            ['Transaction to register address was mined, but postcard was not sent'],
+                                            ['Request ID', res.x_id ],
+                                            ['Transaction ID', tx_id],
+                                            ['Error', res.err]
+                                        ]);
+                                        return;
+                                    }
+                                    window.show_alert('success', 'Address registered!', [
+                                        ['Transaction to register address was mined and postcard was sent'],
+                                        ['Transaction ID', tx_id],
+                                        ['Expected delivery date', res.result.expected_delivery_date],
+                                        ['Mail type', res.result.mail_type]
+                                    ]);
+                                },
+                                error: (xhr, ajaxOptions, thrownError) => {
+                                    console.log('Server returned error on notifyRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
+                                    this.setState({
+                                        loading: false
+                                    });
+                                    window.show_alert('error', 'Postcard sending', [['Server error', xhr.statusText + ' (' + xhr.status + ')']]);
+                                }
+                            });
                         }
                         else {
                             console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
-                            window.show_alert('error', 'Unexpected response from in register_address', 'Error is empty but tx_id is also empty');
+                            window.show_alert('error', 'Register address', 'Error is empty but tx_id is also empty!');
                         }
                     });
                 });
             },
             error: (xhr, ajaxOptions, thrownError) => {
-                console.log('Server returned error: ' + xhr.statusText + ' (' + xhr.status + ')');
-                window.show_alert('error', 'Server error on prepareRegTx', xhr.statusText + ' (' + xhr.status + ')');
+                console.log('Server returned error on prepareRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
+                window.show_alert('error', 'Preparing register transaction', [['Server error', xhr.statusText + ' (' + xhr.status + ')']]);
             }
         });
     }
 
     render = () => {
         return (
+            <div>
             <section className="content address table">
                 <div className="table-cell table-cell_left">
                     <div className="address-content">
                         <h1 className="title">Proof of physical address</h1>
                         <p className="description">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                            This DApps can be used to verify that you have access to a certain postal address  in U.S. by receiving a postcard with confirmation code.
                         </p>
                         <form action="" className="address-form">
                             <div className="address-form-i">
@@ -305,8 +382,7 @@ class RegisterAddressPage extends Component {
                                     <span className="address-question">
                                         <span className="address-question-tooltip">
                                             <span className="text">
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                tempor incididunt ut
+                                                Enter your full name
                                             </span>
                                         </span>
                                     </span>
@@ -314,18 +390,98 @@ class RegisterAddressPage extends Component {
                                 <input type="text" className="input" name="name" value={this.state.name} onChange={this.on_change} />
                             </div>
                             <div className="address-form-i">
-                                <label for="" className="label">
-                                    Address
-                                    <span className="address-question">
-                                        <span className="address-question-tooltip">
-                                            <span className="text">
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                tempor incididunt ut
+                                <div className="left">
+                                    <label for="" className="label">
+                                        Country
+                                        <span className="address-question">
+                                            <span className="address-question-tooltip">
+                                                <span className="text">
+                                                    At the present moment address verification is available only in the United States.
+                                                </span>
                                             </span>
                                         </span>
-                                    </span>
-                                </label>
-                                <input type="text" className="input" name="address" value={this.state.address} onChange={this.on_change} />
+                                    </label>
+                                    <input type="text" className="input" readOnly={true} name="country" value={this.state.country} onChange={this.on_change} />
+                                </div>
+                                <div className="right">
+                                    <label for="" className="label">
+                                        State
+                                        <span className="address-question">
+                                            <span className="address-question-tooltip">
+                                                <span className="text">
+                                                    Select one of the states from the dropdown list
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    {/*
+                                    <input type="text" className="input" name="state" value={this.state.state} onChange={this.on_change} />
+                                    */}
+                                    <select className="input" name="state" style={{ 'backgroundColor': 'white' }} value={this.state.state} onChange={this.on_change}>
+                                        <option value="AA">U.S. Armed Forces – Americas</option>
+                                        <option value="AE">U.S. Armed Forces – Europe</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AP">U.S. Armed Forces – Pacific</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="AS">American Somoa</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="CA">California</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="DC">District Of Columbia</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="FM">Federated States of Micronesia</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="GU">Guam</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MH">Marshall Islands</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MP">Northern Mariana</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NY">New York</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="PW">Palau</option>
+                                        <option value="PR">Puerto Rico</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WY">Wyoming</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="VI">Virgin Islands</option>
+                                        <option value="VT">Vermont</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="address-form-i">
                                 <div className="left">
@@ -334,8 +490,7 @@ class RegisterAddressPage extends Component {
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
+                                                    Enter full name of the city
                                                 </span>
                                             </span>
                                         </span>
@@ -344,55 +499,37 @@ class RegisterAddressPage extends Component {
                                 </div>
                                 <div className="right">
                                     <label for="" className="label">
-                                        State
+                                        ZIP
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
                                                 <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <input type="text" className="input" name="state" value={this.state.state} onChange={this.on_change} />
-                                </div>
-                            </div>
-                            <div className="address-form-i">
-                                <div className="left">
-                                    <label for="" className="label">
-                                        Zip
-                                        <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
+                                                    Enter ZIP code
                                                 </span>
                                             </span>
                                         </span>
                                     </label>
                                     <input type="text" className="input" name="zip" value={this.state.zip} onChange={this.on_change} />
                                 </div>
-                                <div className="right">
-                                    <label for="" className="label">
-                                        Country
-                                        <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                    tempor incididunt ut
-                                                </span>
+                            </div>
+                            <div className="address-form-i">
+                                <label for="" className="label">
+                                    Address
+                                    <span className="address-question">
+                                        <span className="address-question-tooltip">
+                                            <span className="text">
+                                                Enter the rest of the address
                                             </span>
                                         </span>
-                                    </label>
-                                    <input type="text" className="input" name="country" value={this.state.country} onChange={this.on_change} />
-                                </div>
+                                    </span>
+                                </label>
+                                <input type="text" className="input" name="address" value={this.state.address} onChange={this.on_change} />
                             </div>
                             <button type="button" className="button button_order" onClick={this.order_clicked}>Order</button>
                         </form>
                         <div className="address-postcard">
-                            <p className="address-postcard-title">5$ / 0.0248548378 ETH</p>
+                            <p className="address-postcard-title">0.04 ETH</p>
                             <p className="address-postcard-description">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing
+                                This is the price we charge for sending a postcard to you
                             </p>
                         </div>
                     </div>
@@ -407,10 +544,7 @@ class RegisterAddressPage extends Component {
                                         Fill form
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Fill the form with your full name and postal address
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_sign-transaction">
@@ -419,10 +553,7 @@ class RegisterAddressPage extends Component {
                                         Sign transaction
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Sign transaction in MetaMask to add your data to smart contract and send you a postcard
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_get-postcard">
@@ -431,10 +562,7 @@ class RegisterAddressPage extends Component {
                                         Get postcard
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Check your mailbox for the postcard with confirmation code on it
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_type-code">
@@ -443,10 +571,7 @@ class RegisterAddressPage extends Component {
                                         Type code
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Open the webpage specified on the postcard and type in confirmation code
                                     </p>
                                 </div>
                                 <div className="how-to-i how-to-i_finalize-proof">
@@ -455,10 +580,7 @@ class RegisterAddressPage extends Component {
                                         Finalize proof
                                     </p>
                                     <p className="how-to-description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        commodo consequat.
+                                        Sign the second transaction to verify the code and finalize the process
                                     </p>
                                 </div>
                             </div>
@@ -473,6 +595,8 @@ class RegisterAddressPage extends Component {
                     </div>
                 </div>
             </section>
+            <Loading show={this.state.loading}></Loading>
+            </div>
         );
     }
 };

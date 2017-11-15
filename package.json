@@ -9,7 +9,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "secp256k1": "^3.3.0",
     "solc": "^0.4.15",
     "web3": "^0.20.0"
   }

@@ -34,6 +34,7 @@
 
 testrpc \
     -m "toddler weather rocket off sentence chat unlock flame organ shuffle treat awful" \
+    #--blocktime 10 \
     --secure \
     --account="0x68d90a98fc4b8e66a016f66cb8363904a4e521a2480602bd78cc67945676e9cd," \
     --account="0x1dd9083e16e190fa5413f87837025556063c546bf16e38cc53fd5d018a3acfbb," \

@@ -1,38 +1,39 @@
 'use strict';
 
-var logger = require('../logger');
+const logger = require('../logger');
 const express = require('express');
 const config = require('../server-config');
 const sign = require('../server-lib/sign');
 const generate_code = require('../server-lib/generate_code');
 const validate = require('../server-lib/validations').validate;
 const normalize = require('../server-lib/validations').normalize;
+const send_response = require('../server-lib/send_response');
 
-module.exports = function (web3) {
+module.exports = function (opts) {
     var router = express.Router();
     router.post('/prepareConTx', function (req, res) {
-        var prelog = '[prepareConTx] ';
+        var prelog = '[prepareConTx] (' + req.log_prfx + ') ';
         if (!req.body) {
             logger.log(prelog + 'request body empty');
-            return res.json({ ok: false, err: 'request body: empty' });
+            return send_response(res, { ok: false, err: 'request body: empty' });
         }
 
         var params = {};
         var verr;
 
         // wallet
-        verr = validate.wallet(web3, req.body.wallet);
+        verr = validate.wallet(config.web3, req.body.wallet);
         if (verr) {
-            logger.log(prelog + 'wallet: ' + verr);
-            return res.json({ ok: false, err: 'wallet: ' + verr });
+            logger.log(prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr);
+            return send_response(res, { ok: false, err: 'wallet: ' + verr });
         }
         var wallet = req.body.wallet;
 
         // confirmation_code_plain
         verr = validate.string(req.body.confirmation_code_plain);
         if (verr) {
-            logger.log(prelog + 'confirmation_code_plain: ' + verr);
-            return res.json({ ok: false, err: 'confirmation_code_plain: ' + verr });
+            logger.log(prelog + 'validation error on confirmation_code_plain: ' + confirmation_code_plain + ', err: ' + verr);
+            return send_response(res, { ok: false, err: 'confirmation_code_plain: ' + verr });
         }
         params.confirmation_code_plain = normalize.string(req.body.confirmation_code_plain);
 
@@ -48,24 +49,24 @@ module.exports = function (web3) {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(web3, text2sign);
+            var sign_output = sign(text2sign);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
-            return res.json({
+            return send_response(res, {
                 ok: true,
                 result: {
                     wallet: wallet,
                     params: params,
                     v: sign_output.v,
                     r: sign_output.r,
-                    s: sign_output.s
+                    s: sign_output.s,
                 },
             });
         }
         catch (e) {
             logger.error(prelog + 'exception in sign(): ' + e.stack);
-            return res.json({
+            return send_response(res, {
                 ok: false,
-                err: 'exception occured during signature calculation'
+                err: 'exception occured during signature calculation',
             });
         }
     });

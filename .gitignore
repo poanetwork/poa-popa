@@ -9,3 +9,4 @@ web-dapp/node_modules
 web-dapp/coverage
 web-dapp/build
 web-dapp/server-config-private.js
+web-dapp/src/contract-output.json
