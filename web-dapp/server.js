@@ -12,7 +12,7 @@ app.use(helmet());
 
 // react front-end
 app.use('/', express.static('build'));
-
+app.use('/confirm', express.static('build'));
 // api
 
 function log_request(req, res, next) {
