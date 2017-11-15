@@ -30,9 +30,15 @@ cd ..
 ```
 'use strict';
 
-module.exports = {
-    lob_api_key: '***********',
+module.exports = function (cfg_public) {
+    return {
+        lob_api_key: '******************************',
+        rpc: '******************************',
+        signer: '0x****************************', // with 0x prefix
+        signer_private_key: '******************************', // without 0x prefix
+    };
 };
+
 ```
 If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
 
@@ -68,7 +74,7 @@ in server logs
 
 To find response details from Lob, including links to the postcard, look for a line like
 ```
-[notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... } 
+[notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
 ```
 in server logs
 
@@ -125,9 +131,9 @@ Contract source file is `contract/Mail.sol`.
     function confirm_address(string confirmation_code_plain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public
 ```
-used to confirm an address.  
+used to confirm an address.
 
-* `name` maybe different for each new address  
+* `name` maybe different for each new address
 
 * `country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
 
@@ -141,7 +147,7 @@ First, all relevant parameters for `register_address` and `confirm_address` need
     try {
         var sign_output = sign(web3, text2sign);
 ```
-this function uses [`web3.eth.sign`](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsign) method to produce a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.  
+this function uses [`web3.eth.sign`](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsign) method to produce a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
 Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `owner`:
 ```
     function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
