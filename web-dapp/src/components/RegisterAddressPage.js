@@ -353,6 +353,9 @@ class RegisterAddressPage extends Component {
                         }
                         else {
                             console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
+                            this.setState({
+                                loading: false
+                            });
                             window.show_alert('error', 'Register address', 'Error is empty but tx_id is also empty!');
                         }
                     });
@@ -360,6 +363,9 @@ class RegisterAddressPage extends Component {
             },
             error: (xhr, ajaxOptions, thrownError) => {
                 console.log('Server returned error on prepareRegTx: ' + xhr.statusText + ' (' + xhr.status + ')');
+                this.setState({
+                    loading: false
+                });
                 window.show_alert('error', 'Preparing register transaction', [['Server error', xhr.statusText + ' (' + xhr.status + ')']]);
             }
         });

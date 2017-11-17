@@ -49,10 +49,10 @@ function sign3(text) {
 var secp256k1 = require('secp256k1');
 
 function sign(text) {
-    logger.log(prelog + 'signer = ' + config.signer);
-    logger.log(prelog + 'text (must be in hex) = ' + text);
+    logger.log(prelog + 'signer: ' + config.signer);
+    logger.log(prelog + 'text (must be in hex): ' + text);
     var sha = config.web3.sha3(text, { encoding: 'hex' });
-    logger.log(prelog + 'sha3(text) = ' + sha); // hex string of sha3(text) => message
+    logger.log(prelog + 'sha3(text): ' + sha); // hex string of sha3(text) => message
 
     // now concat buffers representing prefix + message.length + message
     var buff_prefix = Buffer.from('\u0019Ethereum Signed Message:\n', 'utf8');
@@ -62,14 +62,14 @@ function sign(text) {
     var buff_sha3 = config.web3.sha3('0x' + buff.toString('hex'), { encoding: 'hex' });
     var sig_obj = secp256k1.sign(Buffer.from(buff_sha3.substr(2), 'hex'), Buffer.from(config.signer_private_key, 'hex'));
     var sig = '0x' + sig_obj.signature.toString('hex') + (sig_obj.recovery? '01' : '00');
-    logger.log(prelog + 'sig = ' + sig);
+    logger.log(prelog + 'signature: ' + sig);
     sig = sig.substr(2, sig.length);
     var r = '0x' + sig.substr(0, 64);
     var s = '0x' + sig.substr(64, 64);
     var v = config.web3.toDecimal(sig.substr(128, 2)) + 27;
-    logger.log(prelog + 'v = ' + v);
-    logger.log(prelog + 'r = ' + r);
-    logger.log(prelog + 's = ' + s);
+    logger.log(prelog + 'v: ' + v);
+    logger.log(prelog + 'r: ' + r);
+    logger.log(prelog + 's: ' + s);
     return { v, r, s };
 }
 
