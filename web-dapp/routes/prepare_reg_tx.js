@@ -10,6 +10,7 @@ const normalize = require('../server-lib/validations').normalize;
 const db = require('../server-lib/session_store');
 const send_response = require('../server-lib/send_response');
 const recalc_price = require('../server-lib/recalc_price');
+const post_api = require('../server-lib/post_api');
 
 module.exports = function (opts) {
     var router = express.Router();
@@ -81,45 +82,66 @@ module.exports = function (opts) {
 
         logger.log(prelog + 'normalized params: ' + JSON.stringify(params));
 
-        // generate confimration confirmation_code_plain
-        var confirmation_code_plain = generate_code();
-        logger.log(prelog + 'confirmation_code_plain: ' + confirmation_code_plain);
-        var sha3cc = config.web3.sha3(confirmation_code_plain);
+        var addr = {
+            state: params.state,
+            city: params.city,
+            location: params.address,
+            zip: params.zip,
+        };
+        post_api.verify_address(addr, function (address_ok) {
+            if (!address_ok) {
+                logger.log(prelog + 'address is not ok');
+                return send_response(res, { ok: false, err: 'address is invalid' });
+            }
 
-        // convert parameters to buffers
-        var buf_params = {};
-        Object.keys(params).forEach(p => { buf_params[p] = Buffer.from(params[p], 'utf8') });
+            // generate confimration confirmation_code_plain
+            var confirmation_code_plain = generate_code();
+            logger.log(prelog + 'confirmation_code_plain: ' + confirmation_code_plain);
+            var sha3cc = config.web3.sha3(confirmation_code_plain);
 
-        // get post card price
-        params.price_wei = recalc_price.get_price_wei();
-        logger.log(prelog + 'price_wei: ' + params.price_wei);
-        buf_params.price_wei = Buffer.from(config.web3.padLeft(params.price_wei.toString(16), 64), 'hex');
+            // convert parameters to buffers
+            var buf_params = {};
+            Object.keys(params).forEach(p => { buf_params[p] = Buffer.from(params[p], 'utf8') });
 
-        logger.log(prelog + 'combining into text2sign hex string:');
-        logger.log(prelog + 'wallet:        ' + wallet);
-        logger.log(prelog + 'hex name:      0x' + buf_params.name.toString('hex'));
-        logger.log(prelog + 'hex country:   0x' + buf_params.country.toString('hex'));
-        logger.log(prelog + 'hex state:     0x' + buf_params.state.toString('hex'));
-        logger.log(prelog + 'hex city:      0x' + buf_params.city.toString('hex'));
-        logger.log(prelog + 'hex address:   0x' + buf_params.address.toString('hex'));
-        logger.log(prelog + 'hex zip:       0x' + buf_params.zip.toString('hex'));
-        logger.log(prelog + 'hex price_wei: 0x' + buf_params.price_wei.toString('hex'));
-        logger.log(prelog + 'sha3(cc):      ' + sha3cc);
-        var text2sign = wallet + Buffer.concat([
-            buf_params.name,
-            buf_params.country,
-            buf_params.state,
-            buf_params.city,
-            buf_params.address,
-            buf_params.zip,
-            buf_params.price_wei,
-            Buffer.from(sha3cc.substr(2), 'hex')
-        ]).toString('hex');
-        logger.log(prelog + 'calling sign() with text2sign: ' + text2sign);
+            // get post card price
+            params.price_wei = recalc_price.get_price_wei();
+            logger.log(prelog + 'price_wei: ' + params.price_wei);
+            buf_params.price_wei = Buffer.from(config.web3.padLeft(params.price_wei.toString(16), 64), 'hex');
 
-        try {
-            var sign_output = sign(text2sign);
-            logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
+            logger.log(prelog + 'combining into text2sign hex string:');
+            logger.log(prelog + 'wallet:        ' + wallet);
+            logger.log(prelog + 'hex name:      0x' + buf_params.name.toString('hex'));
+            logger.log(prelog + 'hex country:   0x' + buf_params.country.toString('hex'));
+            logger.log(prelog + 'hex state:     0x' + buf_params.state.toString('hex'));
+            logger.log(prelog + 'hex city:      0x' + buf_params.city.toString('hex'));
+            logger.log(prelog + 'hex address:   0x' + buf_params.address.toString('hex'));
+            logger.log(prelog + 'hex zip:       0x' + buf_params.zip.toString('hex'));
+            logger.log(prelog + 'hex price_wei: 0x' + buf_params.price_wei.toString('hex'));
+            logger.log(prelog + 'sha3(cc):      ' + sha3cc);
+            var text2sign = wallet + Buffer.concat([
+                buf_params.name,
+                buf_params.country,
+                buf_params.state,
+                buf_params.city,
+                buf_params.address,
+                buf_params.zip,
+                buf_params.price_wei,
+                Buffer.from(sha3cc.substr(2), 'hex')
+            ]).toString('hex');
+            logger.log(prelog + 'calling sign() with text2sign: ' + text2sign);
+
+            try {
+                var sign_output = sign(text2sign);
+                logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
+            }
+            catch (e) {
+                logger.error(prelog + 'exception in sign(): ' + e.stack);
+                return send_response(res, {
+                    ok: false,
+                    err: 'exception occured during signature calculation',
+                });
+            }
+
             var session_key = Math.random();
             logger.log(prelog + 'setting session_key: ' + session_key);
             db.set(session_key, { wallet, date: new Date, confirmation_code_plain }, function (err) {
@@ -140,14 +162,7 @@ module.exports = function (opts) {
                     },
                 });
             });
-        }
-        catch (e) {
-            logger.error(prelog + 'exception in sign(): ' + e.stack);
-            return send_response(res, {
-                ok: false,
-                err: 'exception occured during signature calculation',
-            });
-        }
+        });
     });
 
     return router;

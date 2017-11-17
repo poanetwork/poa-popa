@@ -55,6 +55,17 @@ function new_idempotency_key() {
     return uuidv4();
 }
 
+function verify_address(address_details, done) {
+    Lob.usVerifications.verify({
+        state: address_details.state.toUpperCase(),
+        city: address_details.city.toUpperCase(),
+        primary_line: address_details.location.toUpperCase(),
+        zip_code: address_details.zip.toUpperCase(),
+    }, function (err, result) {
+        return done(!err && result && result.deliverability && result.deliverability.trim().toLowerCase() === 'deliverable');
+    });
+}
+
 function create_postcard(wallet, address_details, tx_id, confirmation_code_plain, done) {
     Lob.postcards.create({
         description: 'Postcard for ' + wallet,
@@ -86,6 +97,7 @@ function create_postcard(wallet, address_details, tx_id, confirmation_code_plain
 
 module.exports = {
     Lob,
+    verify_address,
     create_postcard,
     lists: {
         /*

@@ -238,19 +238,15 @@ class ConfirmationPage extends Component {
 
                         console.log('calling confirm_address');
                         this.confirm_address(res.result, (err, tx_id) => {
+                            this.setState({
+                                loading: false
+                            });
                             if (err) {
                                 console.log('Error occured in confirm_address: ', err);
-                                this.setState({
-                                    loading: false
-                                });
                                 window.show_alert('error', 'Confirming address', [['Error', err.message]]);
                             }
                             else if (tx_id) {
                                 console.log('Transaction mined: ' + tx_id);
-                                this.setState({
-                                    loading: false,
-                                    confirmed_class: 'postcard-form_success'
-                                });
                                 window.show_alert('success', 'Address confirmed!', [
                                     ['Transaction to confirm address was mined'],
                                     ['Transaction ID', tx_id],
@@ -263,9 +259,6 @@ class ConfirmationPage extends Component {
                             }
                             else {
                                 console.log('JSON RPC unexpected response: err is empty but tx_id is also empty');
-                                this.setState({
-                                    loading: false
-                                });
                                 window.show_alert('error', 'Confirming address', 'Error is empty but tx_id is also empty');
                             }
                         });

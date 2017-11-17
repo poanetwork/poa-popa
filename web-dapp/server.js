@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const body_parser = require('body-parser');
 const helmet = require('helmet');
