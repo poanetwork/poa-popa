@@ -199,7 +199,7 @@ used to confirm an address.
 
 * when confirmation code is entered, `user_address_by_confirmation_code` method is called by dapp to search for address with matching confirmation code.
 
-## Data signatures
+### signing parameters
 First, all relevant parameters for `register_address` and `confirm_address` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`), e.g.
 
 ```
