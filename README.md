@@ -1,7 +1,7 @@
 # oracles-dapps-proof-of-physical-address
 DApp for proof of physical address
 
-## How to test the current version
+## How to test the current version locally
 1. clone this repository
 ```
 git clone https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address.git
@@ -77,6 +77,64 @@ To find response details from Lob, including links to the postcard, look for a l
 ```
 in server logs
 
+## How to deploy to a real network
+1. download the latest version from master branch
+```
+git clone https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address.git
+```
+2. install dependencies
+```
+cd oracles-dapps-proof-of-physical-address
+npm install
+cd web-dapp
+npm install
+```
+3. deploy the contract, e.g. use Remix and Metamask
+4. create file `oracles-dapps-proof-of-physical-address/web-dapp/src/contract-output.json` with the following structure:
+```
+    {
+        "ProofOfPhysicalAddress": {
+            "address": "*** CONTRACT ADDRESS, 0x... ***",
+            "bytecode": "*** BYTECODE, 60606040... ***",
+            "abi": [ *** ABI *** ]
+        }
+    }
+```
+5. create file `oracles-dapps-proof-of-physical-address/web-dapp/server-config-private.js` with the following content:
+```
+'use strict';
+
+module.exports = function (cfg_public) {
+    return {
+        lob_api_key: '*** LOB TEST OR PROD API KEY ***',
+        rpc: '*** PROBABLY INFURA ***',
+        signer: '*** SIGNER ADDRESS, 0x... ***', // with 0x prefix
+        signer_private_key: '*** SIGNER PRIVATE KEY ***', // without 0x prefix
+        confirmation_page_url: '*** URL FOR CONFIRMATION PAGE, e.g. https://yourserver.com/confirm ***', // used only for postcard
+        // it is recommended to install and use redis for keeping session keys
+        session_store: {
+            "type": "redis",
+            "params": { *** REDIS CONNECTION PARAMETERS *** }
+        },
+    };
+};
+```
+6. build react components
+```
+cd oracles-dapps-proof-of-physical-address/web-dapp
+npm run build
+```
+7. start server
+```
+oracles-dapps-proof-of-physical-address/web-dapp
+node server
+```
+or, still better, use pm2
+```
+oracles-dapps-proof-of-physical-address/web-dapp
+pm2 start -i 0 server
+```
+
 ## Description
 ### contract
 Contract source file is `contract/Mail.sol`.
@@ -115,15 +173,18 @@ Contract source file is `contract/Mail.sol`.
     uint64 public total_confirmed;
 ```
 
-* contract has `owner` which is the account that sent the transaction to deploy the contract. This account is also used by the server to create signatures. Therefore, it needs to be unlocked. In `utils/start_rpc.sh` predefined `0xdbde11e51b9fcc9c455de9af89729cf37d835156` is used. You can use another unlocked account, however you'd need to change `signer` property in `web-dapp/server-config.js` to your account's address and `sender` property in `utils/utils-config.js`.
+* contract has `owner` which is the account that sent the transaction to deploy the contract.
+
+* contract has `signer` which is the account that is used to calculate signatures on server-side and validate parameters from contract-side. By default when contract is created, `signer` is set to `owner`. You can change it later with `set_signer` method.
 
 * main methods are
 ```
     function register_address(
         string name,
         string country, string state, string city, string location, string zip,
+        uint256 price_wei,
         bytes32 confirmation_code_sha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
-    public
+    public payable
  ```
  used to register a new address, and
  ```
@@ -132,13 +193,13 @@ Contract source file is `contract/Mail.sol`.
 ```
 used to confirm an address.
 
-* `name` maybe different for each new address
+* `name` may be different for each new address
 
 * `country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
 
 * when confirmation code is entered, `user_address_by_confirmation_code` method is called by dapp to search for address with matching confirmation code.
 
-### transaction signatures
+## Data signatures
 First, all relevant parameters for `register_address` and `confirm_address` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`), e.g.
 
 ```
@@ -146,15 +207,15 @@ First, all relevant parameters for `register_address` and `confirm_address` need
     try {
         var sign_output = sign(web3, text2sign);
 ```
-this function uses [`web3.eth.sign`](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethsign) method to produce a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
-Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `owner`:
+this function produces a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
+Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `signer`:
 ```
     function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
     {
         bytes memory prefix = '\x19Ethereum Signed Message:\n32';
-        bytes32 prefixed = sha3(prefix, data);
-        return (ecrecover(prefixed, v, r, s) == owner);
+        bytes32 prefixed = keccak256(prefix, data);
+        return (ecrecover(prefixed, v, r, s) == signer);
     }
 ```
 Note the use of magical `prefix`.
