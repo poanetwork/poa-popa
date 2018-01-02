@@ -7,7 +7,7 @@ class Footer extends Component {
         return (
             <footer className="footer">
                 <div className="container">
-                <p className="rights"><script>document.write(new Date().getFullYear())</script> POA Network. All rights reserved.</p>
+                <p className="rights">{ new Date().getFullYear() } POA Network. All rights reserved.</p>
                 <a href="#" className="logo"></a>
                 <div className="socials">
                     <a href="https://twitter.com/poanetwork" className="social social_twitter"></a>
