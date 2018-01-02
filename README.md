@@ -1,10 +1,10 @@
-# oracles-dapps-proof-of-physical-address
+# poa-popa
 DApp for proof of physical address
 
 ## How to test the current version locally
 1. clone this repository
 ```
-git clone https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address.git
+git clone https://github.com/poanetwork/poa-popa.git
 ```
 
 2. make sure you have node.js version >= 6.9.1 installed
@@ -16,7 +16,7 @@ npm install -g ethereumjs-testrpc
 
 4. cd to the repo folder and install dependencies
 ```
-cd oracles-dapps-proof-of-physical-address
+cd poa-popa
 npm install
 cd web-dapp
 npm install
@@ -79,17 +79,17 @@ in server logs
 ## How to deploy to a real network
 1. download the latest version from master branch
 ```
-git clone https://github.com/oraclesorg/oracles-dapps-proof-of-physical-address.git
+git clone https://github.com/poanetwork/poa-popa.git
 ```
 2. install dependencies
 ```
-cd oracles-dapps-proof-of-physical-address
+cd poa-popa
 npm install
 cd web-dapp
 npm install
 ```
 3. deploy the contract, e.g. use Remix and Metamask
-4. create file `oracles-dapps-proof-of-physical-address/web-dapp/src/contract-output.json` with the following structure:
+4. create file `poa-popa/web-dapp/src/contract-output.json` with the following structure:
 ```
     {
         "ProofOfPhysicalAddress": {
@@ -99,7 +99,7 @@ npm install
         }
     }
 ```
-5. create file `oracles-dapps-proof-of-physical-address/web-dapp/server-config-private.js` with the following content:
+5. create file `poa-popa/web-dapp/server-config-private.js` with the following content:
 ```
 'use strict';
 
@@ -120,17 +120,17 @@ module.exports = function (cfg_public) {
 ```
 6. build react components
 ```
-cd oracles-dapps-proof-of-physical-address/web-dapp
+# in poa-popa/web-dapp
 npm run build
 ```
 7. start server
 ```
-oracles-dapps-proof-of-physical-address/web-dapp
+# in poa-popa/web-dapp
 node server
 ```
 or, still better, use pm2
 ```
-oracles-dapps-proof-of-physical-address/web-dapp
+# in poa-popa/web-dapp
 pm2 start -i 0 server
 ```
 

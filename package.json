@@ -1,7 +1,7 @@
 {
   "name": "proof-of-address",
   "version": "1.0.0",
-  "description": "Smart contract and DApp by oracles.org to create proof of a physical address",
+  "description": "Smart contract and DApp by poa.network to create proof of a physical address",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
