@@ -20,12 +20,12 @@
     top: 50%;
   }
 
-  .logo {
+  &-logo {
     @extend %logos;
     left: 0;
-    width: 74px;
+    width: 136px;
   	height: 24px;
-  	background-position: 0 0;
+  	background-position: 0 0
   }
 
   .rights {
