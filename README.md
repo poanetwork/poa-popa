@@ -14,13 +14,10 @@ git clone https://github.com/poanetwork/poa-popa.git
 npm install -g ethereumjs-testrpc
 ```
 
-4. cd to the repo folder and install dependencies
+4. cd to the repo folder and install dependencies.
 ```
 cd poa-popa
 npm install
-cd web-dapp
-npm install
-cd ..
 ```
 
 4. sensitive data (like lob api key) can be provided by creating `web-dapp/server-config-private.js` file that exports config object like so:
@@ -40,33 +37,31 @@ module.exports = function (cfg_public) {
 ```
 If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
 
-5. open new tab in your terminal, cd to `utils` folder and start testrpc with a set of predefined acounts
+5. open new tab in your terminal, and start testrpc with a set of predefined acounts
 ```
-cd utils
-bash start_rpc.sh
+npm run start-rpc
 ```
 leave this tab opened until your test is complete.
 
-6. in the first tab of your terminal, go to `utils` folder too and deploy the contract
+6. in the first tab of your terminal deploy the contract
 ```
-cd utils
-node deploy_contract
+npm run deploy
 ```
 answer `yes` when confirmation appears.
 
 7. then to compile react components and start dapp, run:
 ```
-bash run_web.sh
+npm start
 ```
 wait until a build is ready and `Listening on 3000` is printed in terminal
 
-8. open file `utils/start_rpc.sh` in text editor and import one of the accounts from there to MetaMask using its private key. You can choose any address-private-key pair except `0xdbde11e51b9fcc9c455de9af89729cf37d835156` which is reserved for contract's owner.
+8. open file `scripts/start_rpc.sh` in text editor and import one of the accounts from there to MetaMask using its private key. You can choose any address-private-key pair except `0xdbde11e51b9fcc9c455de9af89729cf37d835156` which is reserved for contract's owner.
 
 9. navigate to http://localhost:3000 in your browser and do tests.
 
 To find out confirmation code, look for a line like
 ```
-[prepareRegTx] confimration confirmation_code_plain: y8t44s8yrt
+[prepareRegTx] confirmation confirmation_code_plain: y8t44s8yrt
 ```
 in server logs
 
@@ -84,8 +79,6 @@ git clone https://github.com/poanetwork/poa-popa.git
 2. install dependencies
 ```
 cd poa-popa
-npm install
-cd web-dapp
 npm install
 ```
 3. deploy the contract, e.g. use Remix and Metamask
