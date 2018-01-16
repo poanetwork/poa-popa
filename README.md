@@ -9,9 +9,9 @@ git clone https://github.com/poanetwork/poa-popa.git
 
 2. make sure you have node.js version >= 6.9.1 installed
 
-3. install ethereum testrpc globally
+3. install Ganache CLI globally
 ```
-npm install -g ethereumjs-testrpc
+npm install -g ganache-cli
 ```
 
 4. cd to the repo folder and install dependencies.

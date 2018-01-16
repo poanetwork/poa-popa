@@ -32,7 +32,7 @@
 # Base HD Path:  m/44'/60'/0'/0/{account_index}
 
 
-testrpc \
+ganache-cli \
     -m "toddler weather rocket off sentence chat unlock flame organ shuffle treat awful" \
     #--blocktime 10 \
     --secure \
