@@ -39,25 +39,19 @@ If this file is present, its keys will add to/replace keys in `web-dapp/server-c
 
 5. open new tab in your terminal, and start testrpc with a set of predefined acounts
 ```
-npm run start-rpc
+npm run start-testrpc
 ```
 leave this tab opened until your test is complete.
 
-6. in the first tab of your terminal deploy the contract
-```
-npm run deploy
-```
-answer `yes` when confirmation appears.
-
-7. then to compile react components and start dapp, run:
+6. in the first tab of your terminal, start the dapp. Previous to starting the dapp, it will deploy the contract
 ```
 npm start
 ```
-wait until a build is ready and `Listening on 3000` is printed in terminal
+answer `yes` when ask for confirmation. After deploying the contract and compiling the react components, `Listening on 3000` will be printed in terminal.
 
-8. open file `scripts/start_rpc.sh` in text editor and import one of the accounts from there to MetaMask using its private key. You can choose any address-private-key pair except `0xdbde11e51b9fcc9c455de9af89729cf37d835156` which is reserved for contract's owner.
+7. open file `scripts/start_testrpc.sh` in text editor and import one of the accounts from there to MetaMask using its private key. You can choose any address-private-key pair except `0xdbde11e51b9fcc9c455de9af89729cf37d835156` which is reserved for contract's owner.
 
-9. navigate to http://localhost:3000 in your browser and do tests.
+8. navigate to http://localhost:3000 in your browser and do tests.
 
 To find out confirmation code, look for a line like
 ```
