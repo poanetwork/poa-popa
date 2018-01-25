@@ -4,12 +4,12 @@
   "description": "Smart contract and DApp by poa.network to create proof of a physical address",
   "main": "server.js",
   "scripts": {
-    "build": "cd web-dapp && npm run build",
-    "deploy": "cd utils && node deploy_contract",
-    "postinstall": "cd web-dapp && npm install",
-    "prestart": "npm run build",
-    "start": "cd web-dapp && node server",
-    "start-rpc": "./scripts/start_rpc.sh",
+    "build": "./scripts/build.sh",
+    "deploy-on-test": "./scripts/deploy-on-test.sh",
+    "postinstall": "./scripts/postinstall.sh",
+    "prestart": "npm run deploy-on-test && npm run build",
+    "start": "./scripts/start.sh",
+    "start-testrpc": "./scripts/start_testrpc.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
