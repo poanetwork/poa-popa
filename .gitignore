@@ -1,6 +1,9 @@
 .DS_Store
 trash.txt
 
+/.idea
+/.nvmrc
+
 node_modules
 
 utils/node_modules

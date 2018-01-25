@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # EthereumJS TestRPC v4.0.1 (ganache-core: 1.0.1)
 
 # Available Accounts
