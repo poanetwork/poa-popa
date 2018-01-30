@@ -17,4 +17,10 @@ Please also put it into pull request title, e.g. `(Fix) confirmation page loadin
 - Does it close any open issues?
 Closes ...
 
+
+- Quick checklist
+    - [ ] docs were updated where necessary OR they don't need to be updated
+    - [ ] tests were updated where necessary OR they don't need to be updated
+
 - Additional information
+
