@@ -45,7 +45,7 @@ leave this tab opened until your test is complete.
 
 6. in the first tab of your terminal deploy the contract
 ```
-npm run deploy
+npm run deploy-on-test
 ```
 answer `yes` when confirmation appears.
 
@@ -70,6 +70,17 @@ To find response details from Lob, including links to the postcard, look for a l
 [notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
 ```
 in server logs
+
+### Running tests on test network:
+1. make sure you have truffle installed
+```
+npm install -g truffle
+```
+2. switch to `blockchain` folder
+3. run tests
+```
+truffle test
+```
 
 ## How to deploy to a real network
 1. download the latest version from master branch
@@ -129,7 +140,7 @@ pm2 start -i 0 server
 
 ## Description
 ### contract
-Contract source file is `contract/Mail.sol`.
+Contract source file is `blockchain/contracts/ProofOfPhysicalAddress.sol`.
 * main data structures are `User` and `PhysicalAddress`:
 ```
     struct PhysicalAddress
