@@ -1,6 +1,6 @@
 Before submitting a pull request, please provide the following information:
 
-- What is it? (leave one option)
+- **What is it?** (leave one option)
     * Bug `(Fix)`
     * New `(Feature)` implementation
     * `(Improvement)` of existing functionality
@@ -8,19 +8,19 @@ Before submitting a pull request, please provide the following information:
 
 Please also put it into pull request title, e.g. `(Fix) confirmation page loading`
 
-- What was the root cause of the problem originally / what feature was missing?
+- **What was the root cause of the problem originally / what feature was missing?**
 
 
-- How does this pull request solve it (in broad terms)?
+- **How does this pull request solve it (in broad terms)?**
 
 
-- Does it close any open issues?
+- **Does it close any open issues?**
 Closes ...
 
 
-- Quick checklist
+- **Quick checklist**
     - [ ] docs were updated where necessary OR they don't need to be updated
     - [ ] tests were updated where necessary OR they don't need to be updated
 
-- Additional information
+- **Additional information**
 
