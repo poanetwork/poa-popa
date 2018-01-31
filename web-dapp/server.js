@@ -19,7 +19,10 @@ app.use("/confirm", express.static("build"));
 // api
 app.use(body_parser.urlencoded({ extended: true }));
 app.use(body_parser.json());
-require("./routes")(app);
+
+const routes = require('./routes')({});
+app.use("/api", routes);
+app.use("/confirm/api", routes);
 
 recalc_price.init(() => {
   app.listen(port, () => {
