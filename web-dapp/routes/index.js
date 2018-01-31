@@ -3,9 +3,9 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const logger = require("../utils/logger");
+const logger = require("../server-lib/logger");
 const req_id = require('../server-lib/req_id');
-const log_request = require('../utils/log_request');
+const log_request = require('../server-lib/log_request');
 
 module.exports = function(app) {
   const files = fs

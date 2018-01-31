@@ -1,6 +1,6 @@
 "use strict";
 
-const logger = require("../utils/logger");
+const logger = require("../server-lib/logger");
 const express = require("express");
 const config = require("../server-config");
 const sign = require("../server-lib/sign");
