@@ -19,6 +19,11 @@ Closes ...
 
 
 - **Quick checklist**
+    - [ ] eslint shows no errors
+        ```
+        cd web-dapp
+        eslint .
+        ```
     - [ ] docs were updated where necessary OR they don't need to be updated
     - [ ] tests were updated where necessary OR they don't need to be updated
 
