@@ -12,6 +12,7 @@ const send_response = require("../server-lib/send_response");
 const recalc_price = require("../server-lib/recalc_price");
 const post_api = require("../server-lib/post_api");
 
+// eslint-disable-next-line no-unused-vars
 module.exports = (opts) => {
     var router = express.Router();
     router.post("/prepareRegTx", function(req, res) {
@@ -37,7 +38,7 @@ module.exports = (opts) => {
         // name
         verr = validate.string(req.body.name);
         if (verr) {
-            logger.log(prelog + "validation error on name: " + name + ", err: " + verr);
+            logger.log(prelog + "validation error on name: " + req.body.name + ", err: " + verr);
             return send_response(res, { ok: false, err: "name: " + verr });
         }
         params.name = normalize.string(req.body.name);
@@ -46,7 +47,7 @@ module.exports = (opts) => {
         verr = validate.string(req.body.country);
         if (verr) {
             logger.log(
-                prelog + "validation error on country: " + country + ", err: " + verr
+                prelog + "validation error on country: " + req.body.country + ", err: " + verr
             );
             return send_response(res, { ok: false, err: "country: " + verr });
         }
@@ -56,7 +57,7 @@ module.exports = (opts) => {
         verr = validate.string(req.body.state);
         if (verr) {
             logger.log(
-                prelog + "validation error on state: " + state + ", err: " + verr
+                prelog + "validation error on state: " + req.body.state + ", err: " + verr
             );
             return send_response(res, { ok: false, err: "state: " + verr });
         }
@@ -65,7 +66,7 @@ module.exports = (opts) => {
         // city
         verr = validate.string(req.body.city);
         if (verr) {
-            logger.log(prelog + "validation error on city: " + city + ", err: " + verr);
+            logger.log(prelog + "validation error on city: " + req.body.city + ", err: " + verr);
             return send_response(res, { ok: false, err: "city: " + verr });
         }
         params.city = normalize.string(req.body.city);
@@ -74,7 +75,7 @@ module.exports = (opts) => {
         verr = validate.string(req.body.address);
         if (verr) {
             logger.log(
-                prelog + "validation error on address: " + address + ", err: " + verr
+                prelog + "validation error on address: " + req.body.address + ", err: " + verr
             );
             return send_response(res, { ok: false, err: "address: " + verr });
         }
@@ -83,7 +84,7 @@ module.exports = (opts) => {
         // zip
         verr = validate.string(req.body.zip);
         if (verr) {
-            logger.log(prelog + "validation error on zip: " + zip + ", err: " + verr);
+            logger.log(prelog + "validation error on zip: " + req.body.zip + ", err: " + verr);
             return send_response(res, { ok: false, err: "zip: " + verr });
         }
         params.zip = normalize.string(req.body.zip);

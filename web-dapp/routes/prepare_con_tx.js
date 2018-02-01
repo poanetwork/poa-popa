@@ -4,11 +4,11 @@ const logger = require("../server-lib/logger");
 const express = require("express");
 const config = require("../server-config");
 const sign = require("../server-lib/sign");
-const generate_code = require("../server-lib/generate_code");
 const validate = require("../server-lib/validations").validate;
 const normalize = require("../server-lib/validations").normalize;
 const send_response = require("../server-lib/send_response");
 
+// eslint-disable-next-line no-unused-vars
 module.exports = (opts) => {
     var router = express.Router();
     router.post("/prepareConTx", function(req, res) {
@@ -37,7 +37,7 @@ module.exports = (opts) => {
             logger.log(
                 prelog +
                 "validation error on confirmation_code_plain: " +
-                confirmation_code_plain +
+                req.body.confirmation_code_plain +
                 ", err: " +
                 verr
             );

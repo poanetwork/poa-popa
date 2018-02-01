@@ -9,6 +9,7 @@ const post_api = require("../server-lib/post_api");
 const db = require("../server-lib/session_store");
 const send_response = require("../server-lib/send_response");
 
+// eslint-disable-next-line no-unused-vars
 module.exports = (opts) => {
     var router = express.Router();
     router.post("/notifyRegTx", function(req, res) {
@@ -104,7 +105,6 @@ module.exports = (opts) => {
 
             var get_tx_bn = () => {
                 config.web3.eth.getTransaction(tx_id, function(err, tx_details) {
-                    var err = null;
                     var fatal = false;
                     if (err) {
                         logger.error(
@@ -239,7 +239,6 @@ module.exports = (opts) => {
                             zip: adet1[4]
                         };
                         logger.log(prelog + "getting more address details from contract");
-                        var confirmation_code_plain = info.confirmation_code_plain;
                         config.contract.user_address_info(wallet, addr_index[1], function(
                             err,
                             adet2
