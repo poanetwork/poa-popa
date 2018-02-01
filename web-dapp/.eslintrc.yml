@@ -14,12 +14,15 @@ rules:
   quotes:
     - warn
     - single
+  comma-dangle:
+    - warn
+    - always-multiline
   semi:
     - error
     - always
   eqeqeq:
     - error
-    - always
+    - smart
   strict:
     - error
     - safe
