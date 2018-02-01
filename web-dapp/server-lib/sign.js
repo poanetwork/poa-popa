@@ -1,7 +1,7 @@
 'use strict';
 //const secp256k1 = require('secp256k1');
 const config = require('../server-config');
-const logger = require('../logger');
+const logger = require('./logger');
 const prelog = '[sign] ';
 /*
 function sign2(text) {

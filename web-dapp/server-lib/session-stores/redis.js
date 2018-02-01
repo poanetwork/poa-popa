@@ -1,6 +1,6 @@
 'use strict';
 const config = require('../../server-config');
-const logger = require('../../logger');
+const logger = require('../logger');
 const redis = require('redis'); // https://github.com/NodeRedis/node_redis
 const prelog = '[redis] ';
 

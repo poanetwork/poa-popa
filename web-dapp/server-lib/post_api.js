@@ -2,7 +2,7 @@
 const config = require('../server-config');
 const fs = require('fs');
 const path = require('path');
-const logger = require('../logger');
+const logger = require('./logger');
 const uuidv4 = require('uuid/v4');
 
 var prelog = '[post_api] ';
