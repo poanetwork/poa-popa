@@ -28,5 +28,5 @@ module.exports = {
     },
     normalize: {
         string: normalize_string,
-    }
+    },
 };
