@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('../server-config');
-const logger = require('../utils/logger');
+const logger = require('./logger');
 const prelog = '[recalc_price] ';
 
 var initialized = false;

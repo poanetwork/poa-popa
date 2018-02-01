@@ -3,7 +3,7 @@
 const express = require("express");
 const body_parser = require("body-parser");
 const helmet = require("helmet");
-const logger = require("./utils/logger");
+const logger = require("./server-lib/logger");
 const config = require("./server-config");
 const recalc_price = require("./server-lib/recalc_price");
 
@@ -19,7 +19,10 @@ app.use("/confirm", express.static("build"));
 // api
 app.use(body_parser.urlencoded({ extended: true }));
 app.use(body_parser.json());
-require("./routes")(app);
+
+const routes = require('./routes')({});
+app.use("/api", routes);
+app.use("/confirm/api", routes);
 
 recalc_price.init(() => {
   app.listen(port, () => {

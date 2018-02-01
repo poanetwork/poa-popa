@@ -1,5 +1,5 @@
 'use strict';
-const logger = require('../utils/logger');
+const logger = require('./logger');
 
 function send_response(res, obj) {
     if (res.req.x_id && typeof obj === 'object' && obj != null && !obj.x_id) {
