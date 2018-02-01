@@ -1,0 +1,25 @@
+env:
+  es6: true
+  node: true
+extends: 'eslint:recommended'
+parserOptions:
+  sourceType: script
+rules:
+  indent:
+    - warn
+    - 4
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - warn
+    - single
+  semi:
+    - error
+    - always
+  eqeqeq:
+    - error
+    - always
+  strict:
+    - error
+    - safe
