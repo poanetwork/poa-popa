@@ -13,13 +13,13 @@ module.exports = function () {
         },
         get: function (k, done) {
             setTimeout((k) => {
-                done(null, db[k])
+                done(null, db[k]);
             }, 1, k);
         },
         unset: function (k, done) {
             setTimeout((k) => {
                 delete db[k];
-                done()
+                done();
             }, 1, k);
         },
     };
