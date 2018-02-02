@@ -16,7 +16,7 @@ function req_id(req, res, next) {
     req.x_id = rnd_alphanum(config.req_id_length);
     var ip = req.headers && req.headers['x-forwarded-for'];
     if (ip) {
-        if ( ip && (ip.indexOf(':') >= 0) && (ip.split(':').length - 1 == 1) ) {
+        if ( ip && (ip.indexOf(':') >= 0) && (ip.split(':').length - 1 === 1) ) {
             ip = (ip.split(':'))[0];
         }
         if ( ip && (ip.indexOf(',') >= 0) ) {

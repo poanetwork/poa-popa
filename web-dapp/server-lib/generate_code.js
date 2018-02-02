@@ -7,7 +7,7 @@ const crbl = Math.ceil( config.code_length*256/(max_b+1) );
 
 function generate_code() {
     var code = '';
-    while (true) {
+    do {
         let rbytes = crypto.randomBytes(crbl);
         for (let i = 0; i < rbytes.length; i++) {
             let b = rbytes[i];
@@ -15,11 +15,10 @@ function generate_code() {
                 continue;
             }
             code += config.code_symbols[b%config.code_symbols.length];
-            if (code.length >= config.code_length) {
-                return code;
-            }
         }
-    }
+    } while (code.length < config.code_length);
+
+    return code;
 }
 
 module.exports = generate_code;

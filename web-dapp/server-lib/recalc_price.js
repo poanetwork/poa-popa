@@ -29,7 +29,7 @@ function recalc(done) {
         last_updated = new Date();
         return done();
     }, 500, done);
-};
+}
 
 module.exports = {
     init: function (done) {

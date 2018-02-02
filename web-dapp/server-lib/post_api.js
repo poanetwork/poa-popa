@@ -86,7 +86,7 @@ function create_postcard(wallet, address_details, tx_id, confirmation_code_plain
         back: pc_back,
         merge_variables: {
             code: confirmation_code_plain.toUpperCase(),
-            confirmation_page_url: config.confirmation_page_url
+            confirmation_page_url: config.confirmation_page_url,
         },
     }, {
         'idempotency-key': new_idempotency_key(),
@@ -104,5 +104,5 @@ module.exports = {
         countries: countries,
         states: states
         */
-    }
+    },
 };

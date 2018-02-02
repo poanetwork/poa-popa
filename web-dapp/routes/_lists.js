@@ -1,10 +1,11 @@
 'use strict';
-const logger = require('../logger');
+const logger = require('../logger'); // eslint-disable-line no-unused-vars
 const express = require('express');
 const post_api = require('../server-lib/post_api');
 
 const MIN_SEARCH_LEN = 2;
 
+// eslint-disable-next-line no-unused-vars
 module.exports = function (opts) {
     var router = express.Router();
 
