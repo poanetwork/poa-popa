@@ -5,7 +5,7 @@ trash.txt
 /.nvmrc
 /.nyc_output
 
-/coverage/
+coverage
 
 node_modules
 
