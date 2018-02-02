@@ -1,3 +1,5 @@
+'use strict';
+
 const shell = require('shelljs');
 const argv = require('yargs').argv;
 const { oneLine } = require('common-tags');

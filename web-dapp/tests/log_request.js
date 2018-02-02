@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 const should = require('should');
 const sinon = require('sinon');
 const logger = require('../server-lib/logger');
@@ -18,7 +19,7 @@ describe('Log Request', () => {
             method: 'POST',
             path: '/prepareRegTx',
             headers: {
-                "host": "localhost:3000"
+                'host': 'localhost:3000'
             }
         };
         const res = {};
@@ -26,6 +27,6 @@ describe('Log Request', () => {
 
         log_request(req, res, next);
 
-        should(logger.log.calledOnce).be.exactly(true)
+        should(logger.log.calledOnce).be.exactly(true);
     });
 });
