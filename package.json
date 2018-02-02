@@ -6,6 +6,7 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "deploy-on-test": "./scripts/deploy-on-test.sh",
+    "preinstall": "cp scripts/pre-push .git/hooks/ || true",
     "postinstall": "./scripts/postinstall.sh",
     "prestart": "npm run build",
     "start": "./scripts/start.sh",
