@@ -6,12 +6,14 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "deploy-on-test": "./scripts/deploy-on-test.sh",
+    "lint": "./scripts/lint.sh",
     "preinstall": "cp ./scripts/pre-push .git/hooks/ || true",
     "postinstall": "./scripts/postinstall.sh",
     "prestart": "npm run build",
     "start": "./scripts/start.sh",
     "start-testrpc": "./scripts/start_testrpc.sh",
-    "test": "node ./scripts/test.js"
+    "test": "./scripts/test.sh",
+    "test:api": "node ./scripts/test-api.js"
   },
   "author": "",
   "license": "MIT",
