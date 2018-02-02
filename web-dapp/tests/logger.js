@@ -10,7 +10,7 @@ describe('Logger', () => {
             logger.log.restore();
         });
         it('should show logger.log', () => {
-            sinon.stub(logger, 'log');
+            sinon.spy(logger, 'log');
 
             logger.log('lorem ipsum');
 
@@ -23,7 +23,7 @@ describe('Logger', () => {
             logger.error.restore();
         });
         it('should show logger.error', () => {
-            sinon.stub(logger, 'error');
+            sinon.spy(logger, 'error');
 
             logger.error('lorem ipsum');
 
