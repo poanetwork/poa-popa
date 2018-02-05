@@ -82,6 +82,23 @@ npm install -g truffle
 truffle test
 ```
 
+### Running javascript tests:
+1. run the test script
+```
+npm run test
+```
+It runs the API test and the linter test
+If you want run only API tests,
+```
+npm run test:api
+```
+for the linter test,
+```
+npm run lint
+```
+
+Note: Before to run the `npm install` script it will copy a `pre-push` hook to the `.git` folder, so, before to each `git push`, it will run the tests
+
 ## How to deploy to a real network
 1. download the latest version from master branch
 ```

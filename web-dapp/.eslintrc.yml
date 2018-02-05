@@ -4,6 +4,15 @@ env:
 extends: 'eslint:recommended'
 parserOptions:
   sourceType: script
+globals:
+  describe: false
+  xdescribe: false
+  it: false
+  xit: false
+  after: false
+  afterEach: false
+  before: false
+  beforeEach: false
 rules:
   indent:
     - warn
