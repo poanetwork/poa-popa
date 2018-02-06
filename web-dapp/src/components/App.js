@@ -22,7 +22,7 @@ class App extends Component {
         };
     }
 
-    check_web3 = () => {
+    check_web3() {
         console.log('check_web3');
         if (window.my_web3) {
             console.log('web3 found, getting contract');
@@ -44,15 +44,15 @@ class App extends Component {
         }
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         console.log('App.componentDidMount');
         if (!this.state.web3_checker) {
             console.log('Starting web3_checker');
-            this.setState({ web3_checker: setInterval(this.check_web3, WEB3_CHECKER_INTERV_MS) });
+            this.setState({ web3_checker: setInterval(this.check_web3.bind(this), WEB3_CHECKER_INTERV_MS) });
         }
     }
 
-    render = () => {
+    render() {
         if (this.state.my_web3 && this.state.contract) {
             return (
                 <BrowserRouter>

@@ -16,7 +16,7 @@ class RegisterAddressPage extends Component {
         };
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         console.log('RegisterAddressPage.componentDidMount');
 
         console.log('Add mySwipe');
@@ -43,14 +43,14 @@ class RegisterAddressPage extends Component {
         }
     }
 
-    on_change = (event) => {
+    on_change(event) {
         console.log('on_change ' + event.target.name + ': ' + event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         });
     }
 
-    check_wallet_same = (current_wallet, initial_wallet) => {
+    check_wallet_same(current_wallet, initial_wallet) {
         console.log('check_wallet current_wallet: ' + current_wallet);
         console.log('check_wallet initial_wallet: ' + initial_wallet);
         if (!current_wallet) {
@@ -62,7 +62,7 @@ class RegisterAddressPage extends Component {
         return '';
     }
 
-    check_user_exists = (opts, callback) => {
+    check_user_exists(opts, callback) {
         var contract = this.props.contract;
         var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
         if (wsame) return callback(wsame);
@@ -79,7 +79,7 @@ class RegisterAddressPage extends Component {
         });
     }
 
-    check_address_exists = (opts, callback) => {
+    check_address_exists(opts, callback) {
         var contract = this.props.contract;
         var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
         if (wsame) return callback(wsame);
@@ -116,7 +116,7 @@ class RegisterAddressPage extends Component {
         });
     }
 
-    register_address = (opts, callback) => {
+    register_address(opts, callback) {
         var contract = this.props.contract;
 
         console.log('Calling contract.register_address.estimateGas');
@@ -183,7 +183,7 @@ class RegisterAddressPage extends Component {
         });
     }
 
-    order_clicked = () => {
+    order_clicked() {
         console.log('Form data:');
         console.log('name = ' + this.state.name);
         console.log('country = ' + this.state.country);
@@ -371,7 +371,7 @@ class RegisterAddressPage extends Component {
         });
     }
 
-    render = () => {
+    render() {
         return (
             <div>
             <section className="content address table">
