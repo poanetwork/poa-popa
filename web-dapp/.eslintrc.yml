@@ -6,10 +6,9 @@ extends:
   - 'plugin:react/recommended'
 parserOptions:
   sourceType: script
-  ecmaFeatures:
-    - jsx: true
 plugins:
   - react
+  - plugin-jsx-a11y
 globals:
   describe: false
   xdescribe: false
@@ -41,7 +40,3 @@ rules:
   strict:
     - error
     - safe
-  no-undef:
-    - warn
-  'react/jsx-no-undef':
-    - warn
