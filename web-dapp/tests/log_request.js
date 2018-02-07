@@ -19,8 +19,8 @@ describe('Log Request', () => {
             method: 'POST',
             path: '/prepareRegTx',
             headers: {
-                'host': 'localhost:3000'
-            }
+                'host': 'localhost:3000',
+            },
         };
         const res = {};
         const next = () => {};
