@@ -8,7 +8,7 @@ parserOptions:
   sourceType: script
 plugins:
   - react
-  - plugin-jsx-a11y
+  - jsx-a11y
 globals:
   describe: false
   xdescribe: false
