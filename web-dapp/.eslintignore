@@ -1,2 +1,6 @@
-src
+build
+node_modules
+postcard
 public
+src
+server-config-private.js
