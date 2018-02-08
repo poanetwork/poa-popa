@@ -1,9 +1,14 @@
 env:
   es6: true
   node: true
-extends: 'eslint:recommended'
+extends:
+  - 'eslint:recommended'
+  - 'plugin:react/recommended'
 parserOptions:
   sourceType: script
+plugins:
+  - react
+  - jsx-a11y
 globals:
   describe: false
   xdescribe: false

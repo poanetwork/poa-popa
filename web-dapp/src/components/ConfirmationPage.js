@@ -11,9 +11,16 @@ class ConfirmationPage extends Component {
             confirmed_class: '',
             loading: false,
         };
+        this.on_change = this.on_change.bind(this);
+        this.check_wallet_same = this.check_wallet_same.bind(this);
+        this.check_user_exists = this.check_user_exists.bind(this);
+        this.find_address = this.find_address.bind(this);
+        this.confirm_address = this.confirm_address.bind(this);
+        this.confirm_clicked = this.confirm_clicked.bind(this);
+
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         console.log('ConfirmationPage.componentDidMount');
 
         var wallet = this.props.my_web3 && this.props.my_web3.eth.accounts[0];
@@ -23,13 +30,13 @@ class ConfirmationPage extends Component {
         }
     }
 
-    on_change = (event) => {
+    on_change(event) {
         this.setState({
             [event.target.name]: event.target.value
         });
     }
 
-    check_wallet_same = (current_wallet, initial_wallet) => {
+    check_wallet_same(current_wallet, initial_wallet) {
         console.log('check_wallet_same, current_wallet: ' + current_wallet);
         console.log('check_wallet_same, initial_wallet: ' + initial_wallet);
         if (!current_wallet) {
@@ -41,7 +48,7 @@ class ConfirmationPage extends Component {
         return '';
     }
 
-    check_user_exists = (opts, callback) => {
+    check_user_exists(opts, callback) {
         var contract = this.props.contract;
         var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
         if (wsame) return callback(wsame);
@@ -58,7 +65,7 @@ class ConfirmationPage extends Component {
         });
     }
 
-    find_address = (opts, callback) => {
+    find_address(opts, callback) {
         var contract = this.props.contract;
         var wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
         if (wsame) return callback(wsame);
@@ -97,7 +104,7 @@ class ConfirmationPage extends Component {
         });
     }
 
-    confirm_address = (opts, callback) => {
+    confirm_address(opts, callback) {
         var contract = this.props.contract;
 
         contract.confirm_address.estimateGas(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
@@ -127,7 +134,7 @@ class ConfirmationPage extends Component {
         });
     }
 
-    confirm_clicked = () => {
+    confirm_clicked() {
         var confirmation_code_plain = this.state.confirmation_code_plain.trim();
 
         if (!confirmation_code_plain) {
@@ -275,7 +282,7 @@ class ConfirmationPage extends Component {
         });
     }
 
-    render = () => {
+    render() {
         return (
             <div>
             <section className="content postcard-container table">

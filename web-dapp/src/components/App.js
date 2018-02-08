@@ -20,9 +20,10 @@ class App extends Component {
             web3_checker_dur: 0,
             contract: null,
         };
+        this.check_web3 = this.check_web3.bind(this);
     }
 
-    check_web3 = () => {
+    check_web3() {
         console.log('check_web3');
         if (window.my_web3) {
             console.log('web3 found, getting contract');
@@ -44,7 +45,7 @@ class App extends Component {
         }
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         console.log('App.componentDidMount');
         if (!this.state.web3_checker) {
             console.log('Starting web3_checker');
@@ -52,7 +53,7 @@ class App extends Component {
         }
     }
 
-    render = () => {
+    render() {
         if (this.state.my_web3 && this.state.contract) {
             return (
                 <BrowserRouter>
