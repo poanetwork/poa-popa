@@ -14,6 +14,12 @@ class RegisterAddressPage extends Component {
             zip: '',
             loading: false,
         };
+        this.on_change = this.on_change.bind(this);
+        this.check_wallet_same = this.check_wallet_same.bind(this);
+        this.check_user_exists = this.check_user_exists.bind(this);
+        this.check_address_exists = this.check_address_exists.bind(this);
+        this.register_address = this.register_address.bind(this);
+        this.order_clicked = this.order_clicked.bind(this);
     }
 
     componentDidMount() {

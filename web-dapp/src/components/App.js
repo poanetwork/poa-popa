@@ -20,6 +20,7 @@ class App extends Component {
             web3_checker_dur: 0,
             contract: null,
         };
+        this.check_web3 = this.check_web3.bind(this);
     }
 
     check_web3() {
@@ -48,7 +49,7 @@ class App extends Component {
         console.log('App.componentDidMount');
         if (!this.state.web3_checker) {
             console.log('Starting web3_checker');
-            this.setState({ web3_checker: setInterval(this.check_web3.bind(this), WEB3_CHECKER_INTERV_MS) });
+            this.setState({ web3_checker: setInterval(this.check_web3, WEB3_CHECKER_INTERV_MS) });
         }
     }
 

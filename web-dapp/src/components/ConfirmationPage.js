@@ -11,6 +11,13 @@ class ConfirmationPage extends Component {
             confirmed_class: '',
             loading: false,
         };
+        this.on_change = this.on_change.bind(this);
+        this.check_wallet_same = this.check_wallet_same.bind(this);
+        this.check_user_exists = this.check_user_exists.bind(this);
+        this.find_address = this.find_address.bind(this);
+        this.confirm_address = this.confirm_address.bind(this);
+        this.confirm_clicked = this.confirm_clicked.bind(this);
+
     }
 
     componentDidMount() {
