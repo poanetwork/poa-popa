@@ -105,7 +105,7 @@ const getTxBlocknumber = (opts) => {
                         logger.error(`${prelog} check tx_id: ${tx_id}, still not mined (empty tx.blockNumber)`);
                     }
                     logger.log(`${prelog} check tx_id: ${tx_id} again in: ${config.block_wait_interval_ms}ms`);
-                    setTimeout(getTxBn(opts), config.block_wait_interval_ms);
+                    setTimeout(this.getTxBn(opts), config.block_wait_interval_ms);
                 }
             } else {
                 tx_bn = tx_details.blockNumber;
@@ -200,7 +200,7 @@ const removeUsedSessionKey = (opts) => {
                 result: {
                     mail_type: postcard.mail_type,
                     expected_delivery_date: postcard.expected_delivery_date,
-                }
+                },
             };
         })
         .catch(err => {

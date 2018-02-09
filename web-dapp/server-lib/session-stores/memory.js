@@ -17,7 +17,7 @@ module.exports = function () {
         },
         unset: (k) => {
             return new Promise((resolve) => {
-                delete db[k]
+                delete db[k];
                 return resolve();
             });
         },
