@@ -1,7 +1,6 @@
 'use strict';
 
-var db = {};
-
+let db = {};
 module.exports = function () {
     return {
         set: function (k,v, done) {
@@ -11,10 +10,10 @@ module.exports = function () {
                 done();
             }, 1, k, v);
         },
-        get: function (k, done) {
-            setTimeout((k) => {
-                done(null, db[k]);
-            }, 1, k);
+        get: (k) => {
+            return new Promise((resolve) => {
+                return resolve(db[k]);
+            });
         },
         unset: function (k, done) {
             setTimeout((k) => {
