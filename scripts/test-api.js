@@ -6,7 +6,7 @@ const { oneLine } = require('common-tags');
 
 const coverage = {
     statements: 70,
-    branches: 70,
+    branches: 40,
     functions: 70,
     lines: 70
 };
