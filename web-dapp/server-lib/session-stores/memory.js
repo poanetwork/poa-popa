@@ -15,11 +15,11 @@ module.exports = function () {
                 return resolve(db[k]);
             });
         },
-        unset: function (k, done) {
-            setTimeout((k) => {
-                delete db[k];
-                done();
-            }, 1, k);
+        unset: (k) => {
+            return new Promise((resolve) => {
+                delete db[k]
+                return resolve();
+            });
         },
     };
 };

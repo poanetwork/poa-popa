@@ -188,26 +188,25 @@ const createPostCard = (opts) => {
     });
 };
 
-const removeUsedSessionKey = (opts) {
+const removeUsedSessionKey = (opts) => {
     const {session_key, postcard} = opts;
     const prelog = opts.prelog ? opts.prelog : '';
 
     logger.log(`${prelog} removing used session_key from memory: ${session_key}`);
-    return new Promise((resolve, reject) => {
-        db.unset(session_key, function(err) {
-            if (err) {
-                logger.error(`${prelog} error removing used session_key: ${err}`);
-                return reject(createResponseObject(false, 'error removing used session_key'));
-            }
-            return resolve({
+    return db.unset(session_key)
+        .then(() => {
+            return {
                 ok: true,
                 result: {
                     mail_type: postcard.mail_type,
                     expected_delivery_date: postcard.expected_delivery_date,
                 }
-            });
+            };
+        })
+        .catch(err => {
+            logger.error(`${prelog} error removing used session_key: ${err}`);
+            throw new Error(createResponseObject(false, 'error removing used session_key'));
         });
-    });
 };
 
 module.exports = {
@@ -218,5 +217,5 @@ module.exports = {
     getAddressTxBn,
     getAddressDetails,
     createPostCard,
-    removeUsedSessionKey
+    removeUsedSessionKey,
 };
