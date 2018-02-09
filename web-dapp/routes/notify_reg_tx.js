@@ -40,7 +40,7 @@ module.exports = (opts) => {
             })
             .then(postcard => {
                 logger.log(`${prelog} postcard: ${JSON.stringify(postcard)}`);
-                return notifyRegTxController.removeUsedSessionKey(session_key, postcard, prelog);
+                return notifyRegTxController.removeUsedSessionKey({session_key, postcard, prelog});
             })
             .then(result => {
                 return send_response(res, {ok: result.ok, result: result.result});
