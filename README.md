@@ -1,5 +1,16 @@
-# poa-popa
-DApp for proof of physical address
+# POA network - Proof of Physical Address (PoPA)
+
+## Identity DApps
+In POA Network, identity of individual validators plays a major role for selected consensus. We propose additional checks of identity, performed in a decentralized way. Proof of Identity DApps is a series of decentralized applications focused on connecting a user's identity to his/her wallet. Applications can be run on any Ethereum-compatible network.
+
+## Proof of Physical Address (PoPA)
+Using Proof of Physical Address, a user can confirm his/her physical address. It can be used to prove connection between residency and a network address (wallet).
+User submits a form with his physical address details (name, state, city, etc) on DApp main page. This data is added to the PoPA contract deployed to the network and thus a correspondence between a wallet and physical address is registered in the contract. However, this correspondence is not yet verified.
+
+To verify the address server sends a postcard (via post office) with confirmation code to the registered physical address. Confirmation code is used by the user to call one of contract's methods (via DApp confirmation page) to verify the correspondence between the confirmation code and the wallet used initially to register the physical address.
+
+A more detailed schematic view of the process:
+![popa-scheme](https://raw.githubusercontent.com/poanetwork/wiki/master/assets/imgs/poa/papers/whitepaper/proof-of-address.png)
 
 ## How to test the current version locally
 1. clone this repository
