@@ -2,8 +2,8 @@
 
 const should = require('should');
 const sinon = require('sinon');
-const logger = require('../server-lib/logger');
-const log_request = require('../server-lib/log_request');
+const logger = require('../../server-lib/logger');
+const log_request = require('../../server-lib/log_request');
 
 describe('Log Request', () => {
     after(() => {

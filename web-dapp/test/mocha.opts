@@ -1,0 +1,3 @@
+--require babel-core/register
+--require test/ui/.setup.js
+--reporter spec
