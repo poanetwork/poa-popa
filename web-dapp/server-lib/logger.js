@@ -1,3 +1,5 @@
+const logger = require('debug-logger')('poa-popa');
+
 module.exports = {
     log: (msg) => {
         let logDate = new Date().toISOString();
