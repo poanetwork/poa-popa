@@ -8,7 +8,10 @@ const {validate, normalize} = require('../server-lib/validations');
 const {createResponseObject} = require('../server-lib/utils');
 
 const validateData = (opts) => {
-    if (!opts.body) return createResponseObject('body', 'req.body', 'request body: empty');
+    if (!opts.body) {
+        return createResponseObject(false, 'request body: empty');
+    }
+
     const body = opts.body;
     const prelog = opts.prelog ? opts.prelog : '';
 

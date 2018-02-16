@@ -1,10 +1,7 @@
 'use strict';
 
-const createResponseObject = (ok, error) => {
-    return {
-        ok: false,
-        err: error,
-    };
+const createResponseObject = (ok, err) => {
+    return { ok, err };
 };
 
 module.exports = {
