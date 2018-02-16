@@ -56,7 +56,7 @@ leave this tab opened until your test is complete.
 
 6. in the first tab of your terminal deploy the contract
 ```
-npm run deploy-on-test
+npm run deploy-contract
 ```
 answer `yes` when confirmation appears.
 

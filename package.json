@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build --prefix web-dapp",
     "coverage": "npm run coverage --prefix web-dapp",
-    "deploy-on-test": "node utils/deploy_contract",
+    "deploy-contract": "node utils/deploy_contract",
     "lint": "npm run lint --prefix web-dapp",
     "postinstall": "npm install --prefix web-dapp",
     "prepush": "npm test",
