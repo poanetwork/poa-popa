@@ -2,5 +2,6 @@ build
 node_modules
 postcard
 public
-src
+src/assets
+src/components
 server-config-private.js
