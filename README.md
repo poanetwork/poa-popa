@@ -98,12 +98,8 @@ truffle test
 ```
 npm run test
 ```
-It runs the API test and the linter test
-If you want run only API tests,
-```
-npm run test:api
-```
-for the linter test,
+
+2. if you want to run linter test,
 ```
 npm run lint
 ```
