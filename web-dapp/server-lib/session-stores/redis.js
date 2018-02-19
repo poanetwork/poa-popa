@@ -24,8 +24,12 @@ module.exports = function () {
     });
 
     return {
-        set: function (k, v, done) {
-            client.set(k, JSON.stringify(v), done);
+        set: function (k, v) {
+            return new Promise((resolve) => {
+                client.set(k, JSON.stringify(v), () => {
+                    return resolve();
+                });
+            });
         },
         get: (k) => {
             return new Promise((resolve, reject) => {

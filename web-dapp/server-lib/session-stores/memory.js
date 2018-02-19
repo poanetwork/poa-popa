@@ -3,12 +3,11 @@
 let db = {};
 module.exports = function () {
     return {
-        set: function (k,v, done) {
-            db[k] = v;
-            setTimeout((k,v) => {
+        set: function (k,v) {
+            return new Promise((resolve) => {
                 db[k] = v;
-                done();
-            }, 1, k, v);
+                return resolve();
+            });
         },
         get: (k) => {
             return new Promise((resolve) => {
