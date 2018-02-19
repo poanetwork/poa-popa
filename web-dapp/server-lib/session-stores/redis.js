@@ -27,7 +27,7 @@ module.exports = function () {
         set: function (k, v) {
             return new Promise((resolve) => {
                 client.set(k, JSON.stringify(v), () => {
-                    return resolve();
+                    return resolve(true);
                 });
             });
         },
@@ -48,7 +48,7 @@ module.exports = function () {
         unset: (k) => {
             return new Promise((resolve) => {
                 client.del(k);
-                return resolve();
+                return resolve(true);
             });
         },
     };

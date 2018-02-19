@@ -6,7 +6,7 @@ module.exports = function () {
         set: function (k,v) {
             return new Promise((resolve) => {
                 db[k] = v;
-                return resolve();
+                return resolve(true);
             });
         },
         get: (k) => {
@@ -17,7 +17,7 @@ module.exports = function () {
         unset: (k) => {
             return new Promise((resolve) => {
                 delete db[k];
-                return resolve();
+                return resolve(true);
             });
         },
     };
