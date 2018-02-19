@@ -1,14 +1,12 @@
-'use strict';
+const logger = require('debug-logger')('poa-popa');
 
 module.exports = {
     log: (msg) => {
         let logDate = new Date().toISOString();
-        // eslint-disable-next-line no-console
-        console.log(logDate, msg);
+        logger.log(logDate, msg);
     },
     error: (msg) => {
         let logDate = new Date().toISOString();
-        // eslint-disable-next-line no-console
-        console.error(logDate, msg);
+        logger.error(logDate, msg);
     },
 };

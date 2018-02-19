@@ -1,16 +1,13 @@
 .DS_Store
 trash.txt
 
-/.idea
-/.nvmrc
-/.nyc_output
+.idea/
+.vscode/
+.nvmrc
 
-coverage
+build/
 
 node_modules
 
-web-dapp/node_modules
-web-dapp/coverage
-web-dapp/build
-web-dapp/server-config-private.js
-web-dapp/src/contract-output.json
+server-config-private.js
+contract-output.json

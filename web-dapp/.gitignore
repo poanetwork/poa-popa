@@ -5,6 +5,8 @@
 
 # testing
 /coverage
+/.nyc_output
+.coveralls.yml
 
 # production
 /build
