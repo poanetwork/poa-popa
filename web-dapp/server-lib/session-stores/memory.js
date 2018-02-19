@@ -3,12 +3,11 @@
 let db = {};
 module.exports = function () {
     return {
-        set: function (k,v, done) {
-            db[k] = v;
-            setTimeout((k,v) => {
+        set: function (k,v) {
+            return new Promise((resolve) => {
                 db[k] = v;
-                done();
-            }, 1, k, v);
+                return resolve(true);
+            });
         },
         get: (k) => {
             return new Promise((resolve) => {
@@ -18,7 +17,7 @@ module.exports = function () {
         unset: (k) => {
             return new Promise((resolve) => {
                 delete db[k];
-                return resolve();
+                return resolve(true);
             });
         },
     };
