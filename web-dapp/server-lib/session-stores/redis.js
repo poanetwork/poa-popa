@@ -27,20 +27,25 @@ module.exports = function () {
         set: function (k, v, done) {
             client.set(k, JSON.stringify(v), done);
         },
-        get: function (k, done) {
-            client.get(k, (err, v) => {
-                if (err) return done(err);
-                try {
-                    v = JSON.parse(v);
-                    return done(null, v);
-                }
-                catch (ex) {
-                    return done(ex);
-                }
+        get: (k) => {
+            return new Promise((resolve, reject) => {
+                client.get(k, (err, v) => {
+                    if (err) return reject(err);
+                    try {
+                        v = JSON.parse(v);
+                        return resolve(v);
+                    }
+                    catch (ex) {
+                        return reject(ex);
+                    }
+                });
             });
         },
-        unset: function (k, done) {
-            client.del(k, done);
+        unset: (k) => {
+            return new Promise((resolve) => {
+                client.del(k);
+                return resolve();
+            });
         },
     };
 };
