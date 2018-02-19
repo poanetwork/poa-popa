@@ -5,11 +5,9 @@ import RegisterAddressPage from './RegisterAddressPage';
 
 describe('<RegisterAddressPage />', () => {
   it('renders correctly', () => {
-    const page = mount(
-      <RegisterAddressPage/>
-    );
+    const page = mount(<RegisterAddressPage/>);
 
-    expect(page.root()).to.have.lengthOf(1);
+    expect(page.root()).toHaveLength(1);
   });
 });
 

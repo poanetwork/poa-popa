@@ -6,8 +6,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint routes/* server-lib/** src/**",
-    "test": "cross-env NODE_ENV=test nyc mocha test/server/**/*.js src/**/*.test.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "test": "react-scripts test --testMatch **/test/server/**/*.js **/src/**/*.test.js --env=jsdom --coverage",
+    "coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
@@ -25,64 +25,30 @@
     "web3": "^0.20.2"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-preset-env": "^1.6.1",
-    "chai": "^4.1.2",
     "coveralls": "^3.0.0",
-    "cross-env": "^5.1.3",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-15": "^1.0.5",
     "eslint": "^4.17.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.6.1",
-    "jsdom": "^11.6.2",
-    "mocha": "^5.0.1",
-    "nyc": "^11.4.1",
     "react-test-renderer": "^15.6.2",
-    "should": "^13.2.1",
     "sinon": "^4.3.0"
   },
-  "babel": {
-    "presets": [
-      "react",
-      "env"
+  "jest": {
+    "collectCoverageFrom": [
+      "**/routes/**/*.js",
+      "**/server-lib/**/*.js",
+      "**/src/components/**/*.js",
+      "!**/node_modules/**",
+      "!**/*.test.js"
     ],
-    "env": {
-      "test": {
-        "plugins": [
-          [
-            "istanbul",
-            {
-              "exclude": [
-                "**/*.test.js"
-              ]
-            }
-          ]
-        ]
+    "coverageThreshold": {
+      "global": {
+        "branches": 4,
+        "functions": 7,
+        "lines": 7,
+        "statements": 7
       }
     }
-  },
-  "nyc": {
-    "reporter": [
-      "lcovonly",
-      "text"
-    ],
-    "include": [
-      "routes",
-      "server-lib",
-      "src/components"
-    ],
-    "require": [
-      "babel-register"
-    ],
-    "all": true,
-    "sourceMap": false,
-    "instrument": false,
-    "check-coverage": false,
-    "lines": 70,
-    "statements": 70,
-    "functions": 70,
-    "branches": 40
   }
 }

@@ -7,6 +7,6 @@ describe('<Footer />', () => {
   it('renders correctly', () => {
     const wrapper = mount(<Footer/>);
 
-    expect(wrapper.find('.footer')).to.have.lengthOf(1);
+    expect(wrapper.find('.footer')).toHaveLength(1);
   });
 });

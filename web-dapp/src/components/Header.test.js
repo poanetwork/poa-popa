@@ -7,6 +7,6 @@ describe('<Header />', () => {
   it('renders correctly', () => {
     const wrapper = shallow(<Header/>);
 
-    expect(wrapper.find('.header')).to.have.lengthOf(1);
+    expect(wrapper.find('.header')).toHaveLength(1);
   });
 });
