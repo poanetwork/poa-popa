@@ -23,9 +23,6 @@ class RegisterAddressPage extends Component {
     }
 
     componentDidMount() {
-        console.log('RegisterAddressPage.componentDidMount');
-
-        console.log('Add mySwipe');
         window.mySwipe = new window.Swipe(document.getElementById('slider'), {
             startSlide: 0,
             speed: 500,
@@ -389,7 +386,7 @@ class RegisterAddressPage extends Component {
                         </p>
                         <form action="" className="address-form">
                             <div className="address-form-i">
-                                <label for="" className="label">
+                                <label htmlFor="" className="label">
                                     Name
                                     <span className="address-question">
                                         <span className="address-question-tooltip">
@@ -403,7 +400,7 @@ class RegisterAddressPage extends Component {
                             </div>
                             <div className="address-form-i">
                                 <div className="left">
-                                    <label for="" className="label">
+                                    <label htmlFor="" className="label">
                                         Country
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
@@ -416,7 +413,7 @@ class RegisterAddressPage extends Component {
                                     <input type="text" className="input" readOnly={true} name="country" value={this.state.country} onChange={this.on_change} />
                                 </div>
                                 <div className="right">
-                                    <label for="" className="label">
+                                    <label htmlFor="" className="label">
                                         State
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
@@ -497,7 +494,7 @@ class RegisterAddressPage extends Component {
                             </div>
                             <div className="address-form-i">
                                 <div className="left">
-                                    <label for="" className="label">
+                                    <label htmlFor="" className="label">
                                         City
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
@@ -510,7 +507,7 @@ class RegisterAddressPage extends Component {
                                     <input type="text" className="input" name="city" value={this.state.city} onChange={this.on_change} />
                                 </div>
                                 <div className="right">
-                                    <label for="" className="label">
+                                    <label htmlFor="" className="label">
                                         ZIP
                                         <span className="address-question">
                                             <span className="address-question-tooltip">
@@ -524,7 +521,7 @@ class RegisterAddressPage extends Component {
                                 </div>
                             </div>
                             <div className="address-form-i">
-                                <label for="" className="label">
+                                <label htmlFor="" className="label">
                                     Address
                                     <span className="address-question">
                                         <span className="address-question-tooltip">
