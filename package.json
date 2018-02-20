@@ -17,11 +17,11 @@
     "test": "npm test --prefix web-dapp"
   },
   "dependencies": {
-    "solc": "0.4.18",
+    "solc": "0.4.19",
     "web3": "^0.20.4"
   },
   "devDependencies": {
     "husky": "^0.14.3",
-    "truffle": "^4.0.6"
+    "truffle": "4.0.6"
   }
 }
