@@ -1,4 +1,19 @@
 const ProofOfPhysicalAddress = artifacts.require('ProofOfPhysicalAddress');
+const buildSignature = require('../../web-dapp/server-lib/buildSignature')
+
+// Private keys of accounts generated when running `npm run start-testrpc`
+const privateKeys = [
+  '68d90a98fc4b8e66a016f66cb8363904a4e521a2480602bd78cc67945676e9cd',
+  '1dd9083e16e190fa5413f87837025556063c546bf16e38cc53fd5d018a3acfbb',
+  'a2fbd494c3031335d595cc5ad89a9c97d3e5a7f6b00d191d91af915b8b039d34',
+  'ed8aa8f379bac1ff5eafc5f792c32b40a5419edf528a37addbfc8ce36c487463',
+  '81193e26e271a824fda36511b2814e9d47e0c16ebd31304e88c25a6d659286b8',
+  '6ee2f0da244d4eea41bd2d92eb8af046589956790ca83055d72d6cb3fe425a57',
+  'b66c237da44e8f9d4411fa9b15c6d6e2df81f93bc5f03430895ccb5cc0a6aff9',
+  '27d7d3598f704da770bb126df3f7b073809ce2ea8cd0d7b75a409e320bf31b05',
+  '9095ed8f4917235794b9c4fe9438fec29de759916bf216a8aa28f647664a35ff',
+  'ab470a1366c59dec4058af0110d6447addf1bad57965bff5b01059cbd80ac47f'
+]
 
 contract('ownership', (accounts) => {
   it('signer should be equal to owner', async () => {
@@ -13,7 +28,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should register an address', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs()
+      const args = buildRegisterAddressArgs(accounts[0])
 
       let addresses = await popa.total_addresses()
       assert.equal(+addresses, 0)
@@ -28,7 +43,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if name is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs({ name: '' })
+      const args = buildRegisterAddressArgs(accounts[0], { name: '' })
 
       await registerAddress(popa, args, accounts[0])
         .then(
@@ -44,7 +59,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if country is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs({ country: '' })
+      const args = buildRegisterAddressArgs(accounts[0], { country: '' })
 
       await registerAddress(popa, args, accounts[0])
         .then(
@@ -60,7 +75,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if state is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs({ state: '' })
+      const args = buildRegisterAddressArgs(accounts[0], { state: '' })
 
       await registerAddress(popa, args, accounts[0])
         .then(
@@ -76,7 +91,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if city is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs({ city: '' })
+      const args = buildRegisterAddressArgs(accounts[0], { city: '' })
 
       await registerAddress(popa, args, accounts[0])
         .then(
@@ -92,7 +107,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if address is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs({ location: '' })
+      const args = buildRegisterAddressArgs(accounts[0], { address: '' })
 
       await registerAddress(popa, args, accounts[0])
         .then(
@@ -108,7 +123,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if zip code is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs({ zip: '' })
+      const args = buildRegisterAddressArgs(accounts[0], { zip: '' })
 
       await registerAddress(popa, args, accounts[0])
         .then(
@@ -124,7 +139,7 @@ contract('address registration', function(accounts) {
   contract('', () => {
     it('register_address should fail if sent value is not enough', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
-      const args = buildRegisterAddressArgs()
+      const args = buildRegisterAddressArgs(accounts[0])
 
       await registerAddress(popa, args, accounts[0], '39999999999999999')
         .then(
@@ -145,23 +160,29 @@ contract('address registration', function(accounts) {
  * 1dd9083e16e190fa5413f87837025556063c546bf16e38cc53fd5d018a3acfbb, for the requester address
  * 0x7e7693f12bfd372042b754b729d1474572a2dd01
  */
-function buildRegisterAddressArgs(extraArgs = {}) {
+function buildRegisterAddressArgs(account, extraArgs = {}) {
   const baseArgs = {
+    wallet: account,
     name: 'john doe',
     country: 'us',
     state: 'ca',
     city: 'san francisco',
-    location: '185 berry st',
+    address: '185 berry st',
     zip: '94107',
-    price_wei: '40000000000000000', // bignumber
-    confirmation_code: '8hwpyynkd9',
-    confirmation_code_sha3: '0x94db87942fb1d72ad3dc465491a87a85714fcd3c913dc496c7810667a3155d8a', // buffer
-    sig_v: '27', // bignumber
-    sig_r: '0x2562ce89c06b2d22a3a797031c64ab41bd3e89fa73b899c9e61d4da1ac3b47ca', // buffer
-    sig_s: '0x11606e611465ecdad3fb0e4276aca50c63bccb061d53fff78b5527600904e8ff' // buffer
+    price_wei: '40000000000000000',
+    cc: '8hwpyynkd9'
   }
 
-  return Object.assign(baseArgs, extraArgs)
+  const args = Object.assign(baseArgs, extraArgs)
+
+  args.sha3cc = web3.sha3(args.cc)
+
+  const { v, r, s } = buildSignature(args, privateKeys[1])
+  args.sig_v = v
+  args.sig_r = r
+  args.sig_s = s
+
+  return args
 }
 
 function registerAddress(popa, args, account, value = args.price_wei) {
@@ -170,10 +191,10 @@ function registerAddress(popa, args, account, value = args.price_wei) {
     args.country,
     args.state,
     args.city,
-    args.location,
+    args.address,
     args.zip,
     args.price_wei,
-    args.confirmation_code_sha3,
+    args.sha3cc,
     args.sig_v,
     args.sig_r,
     args.sig_s,
