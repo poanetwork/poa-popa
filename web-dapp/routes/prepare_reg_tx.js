@@ -165,17 +165,8 @@ module.exports = (opts) => {
 
             var session_key = Math.random();
             logger.log(prelog + 'setting session_key: ' + session_key);
-            db.set(
-                session_key,
-                { wallet, date: new Date(), confirmation_code_plain },
-                function(err) {
-                    if (err) {
-                        logger.error(prelog + 'error setting session_key: ' + err);
-                        return send_response(res, {
-                            ok: false,
-                            err: 'error setting session_key',
-                        });
-                    }
+            db.set(session_key, { wallet, date: new Date(), confirmation_code_plain })
+                .then(() => {
                     return send_response(res, {
                         ok: true,
                         result: {
@@ -188,8 +179,14 @@ module.exports = (opts) => {
                             session_key: session_key,
                         },
                     });
-                }
-            );
+                })
+                .catch(err => {
+                    logger.error(prelog + 'error setting session_key: ' + err);
+                    return send_response(res, {
+                        ok: false,
+                        err: 'error setting session_key',
+                    });
+                });
         });
     });
 
