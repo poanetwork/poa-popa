@@ -48,7 +48,7 @@ function sign3(text) {
 
 var secp256k1 = require('secp256k1');
 
-function sign(text) {
+function sign(text, privateKey = config.signer_private_key) {
     logger.log(prelog + 'signer: ' + config.signer);
     logger.log(prelog + 'text (must be in hex): ' + text);
     var sha = config.web3.sha3(text, { encoding: 'hex' });
@@ -60,7 +60,7 @@ function sign(text) {
     var buff_message= Buffer.from(sha.substr(2), 'hex');
     var buff = Buffer.concat([buff_prefix, buff_length, buff_message]);
     var buff_sha3 = config.web3.sha3('0x' + buff.toString('hex'), { encoding: 'hex' });
-    var sig_obj = secp256k1.sign(Buffer.from(buff_sha3.substr(2), 'hex'), Buffer.from(config.signer_private_key, 'hex'));
+    var sig_obj = secp256k1.sign(Buffer.from(buff_sha3.substr(2), 'hex'), Buffer.from(privateKey, 'hex'));
     var sig = '0x' + sig_obj.signature.toString('hex') + (sig_obj.recovery? '01' : '00');
     logger.log(prelog + 'signature: ' + sig);
     sig = sig.substr(2, sig.length);
