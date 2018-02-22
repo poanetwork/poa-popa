@@ -48,7 +48,7 @@ function sign3(text) {
 
 var secp256k1 = require('secp256k1');
 
-function sign(text, privateKey = config.signer_private_key) {
+function sign(text, privateKey) {
     logger.log(prelog + 'signer: ' + config.signer);
     logger.log(prelog + 'text (must be in hex): ' + text);
     var sha = config.web3.sha3(text, { encoding: 'hex' });

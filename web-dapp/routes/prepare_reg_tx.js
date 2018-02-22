@@ -119,7 +119,7 @@ module.exports = (opts) => {
             try {
                 var signatureParams = Object.assign(params, { wallet, sha3cc });
 
-                var sign_output = buildSignature(signatureParams);
+                var sign_output = buildSignature(signatureParams, config.signer_private_key);
                 logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             } catch (e) {
                 logger.error(prelog + 'exception in sign(): ' + e.stack);

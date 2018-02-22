@@ -68,7 +68,7 @@ module.exports = (opts) => {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(text2sign);
+            var sign_output = sign(text2sign, config.signer_private_key);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             return send_response(res, {
                 ok: true,
