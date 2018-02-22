@@ -10,7 +10,7 @@ module.exports = (opts) => {
     const router = express.Router();
     const files = fs
         .readdirSync(__dirname)
-        .filter(f => f !== 'index.js' && f[0] !== '_');
+        .filter(f => f !== 'index.js' && f[0] !== '_' && f[0] !== '.');
 
     logger.log('Found ' + files.length + ' route(s): ' + JSON.stringify(files));
     for (let f of files) {
