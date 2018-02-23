@@ -22,28 +22,28 @@ module.exports = (opts) => {
         var verr;
 
         // wallet
-        verr = validate.old.wallet(req.body.wallet);
-        if (verr) {
+        verr = validate.wallet(req.body.wallet);
+        if (verr.ok) {
             logger.log(
-                prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr
+                prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr.msg
             );
-            return send_response(res, { ok: false, err: 'wallet: ' + verr });
+            return send_response(res, { ok: false, err: 'wallet: ' + verr.msg });
         }
         var wallet = req.body.wallet;
 
         // confirmation_code_plain
-        verr = validate.old.string(req.body.confirmation_code_plain);
-        if (verr) {
+        verr = validate.string(req.body.confirmation_code_plain);
+        if (!verr.ok) {
             logger.log(
                 prelog +
                 'validation error on confirmation_code_plain: ' +
                 req.body.confirmation_code_plain +
                 ', err: ' +
-                verr
+                verr.msg
             );
             return send_response(res, {
                 ok: false,
-                err: 'confirmation_code_plain: ' + verr,
+                err: 'confirmation_code_plain: ' + verr.msg,
             });
         }
         params.confirmation_code_plain = normalize.string(

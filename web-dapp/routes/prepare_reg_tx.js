@@ -26,66 +26,66 @@ module.exports = (opts) => {
         var verr;
 
         // wallet
-        verr = validate.old.wallet(req.body.wallet);
-        if (verr) {
+        verr = validate.wallet(req.body.wallet);
+        if (!verr.ok) {
             logger.log(
-                prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr
+                prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr.msg
             );
-            return send_response(res, { ok: false, err: 'wallet: ' + verr });
+            return send_response(res, { ok: false, err: 'wallet: ' + verr.msg });
         }
         var wallet = req.body.wallet;
 
         // name
-        verr = validate.old.string(req.body.name);
-        if (verr) {
-            logger.log(prelog + 'validation error on name: ' + req.body.name + ', err: ' + verr);
-            return send_response(res, { ok: false, err: 'name: ' + verr });
+        verr = validate.string(req.body.name);
+        if (!verr.ok) {
+            logger.log(prelog + 'validation error on name: ' + req.body.name + ', err: ' + verr.msg);
+            return send_response(res, { ok: false, err: 'name: ' + verr.msg });
         }
         params.name = normalize.string(req.body.name);
 
         // country
-        verr = validate.old.string(req.body.country);
-        if (verr) {
+        verr = validate.string(req.body.country);
+        if (!verr.ok) {
             logger.log(
-                prelog + 'validation error on country: ' + req.body.country + ', err: ' + verr
+                prelog + 'validation error on country: ' + req.body.country + ', err: ' + verr.msg
             );
-            return send_response(res, { ok: false, err: 'country: ' + verr });
+            return send_response(res, { ok: false, err: 'country: ' + verr.msg });
         }
         params.country = normalize.string(req.body.country);
 
         // state
-        verr = validate.old.string(req.body.state);
-        if (verr) {
+        verr = validate.string(req.body.state);
+        if (!verr.ok) {
             logger.log(
-                prelog + 'validation error on state: ' + req.body.state + ', err: ' + verr
+                prelog + 'validation error on state: ' + req.body.state + ', err: ' + verr.msg
             );
-            return send_response(res, { ok: false, err: 'state: ' + verr });
+            return send_response(res, { ok: false, err: 'state: ' + verr.msg });
         }
         params.state = normalize.string(req.body.state);
 
         // city
-        verr = validate.old.string(req.body.city);
-        if (verr) {
-            logger.log(prelog + 'validation error on city: ' + req.body.city + ', err: ' + verr);
-            return send_response(res, { ok: false, err: 'city: ' + verr });
+        verr = validate.string(req.body.city);
+        if (!verr.ok) {
+            logger.log(prelog + 'validation error on city: ' + req.body.city + ', err: ' + verr.msg);
+            return send_response(res, { ok: false, err: 'city: ' + verr.msg });
         }
         params.city = normalize.string(req.body.city);
 
         // address
-        verr = validate.old.string(req.body.address);
-        if (verr) {
+        verr = validate.string(req.body.address);
+        if (!verr.ok) {
             logger.log(
-                prelog + 'validation error on address: ' + req.body.address + ', err: ' + verr
+                prelog + 'validation error on address: ' + req.body.address + ', err: ' + verr.msg
             );
-            return send_response(res, { ok: false, err: 'address: ' + verr });
+            return send_response(res, { ok: false, err: 'address: ' + verr.msg });
         }
         params.address = normalize.string(req.body.address);
 
         // zip
-        verr = validate.old.string(req.body.zip);
-        if (verr) {
-            logger.log(prelog + 'validation error on zip: ' + req.body.zip + ', err: ' + verr);
-            return send_response(res, { ok: false, err: 'zip: ' + verr });
+        verr = validate.string(req.body.zip);
+        if (!verr.ok) {
+            logger.log(prelog + 'validation error on zip: ' + req.body.zip + ', err: ' + verr.msg);
+            return send_response(res, { ok: false, err: 'zip: ' + verr.msg });
         }
         params.zip = normalize.string(req.body.zip);
 
@@ -165,17 +165,8 @@ module.exports = (opts) => {
 
             var session_key = Math.random();
             logger.log(prelog + 'setting session_key: ' + session_key);
-            db.set(
-                session_key,
-                { wallet, date: new Date(), confirmation_code_plain },
-                function(err) {
-                    if (err) {
-                        logger.error(prelog + 'error setting session_key: ' + err);
-                        return send_response(res, {
-                            ok: false,
-                            err: 'error setting session_key',
-                        });
-                    }
+            db.set(session_key, { wallet, date: new Date(), confirmation_code_plain })
+                .then(() => {
                     return send_response(res, {
                         ok: true,
                         result: {
@@ -188,8 +179,14 @@ module.exports = (opts) => {
                             session_key: session_key,
                         },
                     });
-                }
-            );
+                })
+                .catch(err => {
+                    logger.error(prelog + 'error setting session_key: ' + err);
+                    return send_response(res, {
+                        ok: false,
+                        err: 'error setting session_key',
+                    });
+                });
         });
     });
 
