@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "build": "npm run build --prefix web-dapp",
-    "coverage": "npm run coverage --prefix web-dapp",
+    "coverage": "lcov-result-merger '?(blockchain|web-dapp)/coverage/lcov.info' | coveralls",
     "deploy-contract": "node utils/deploy_contract",
     "lint": "npm run lint --prefix web-dapp",
     "postinstall": "npm install --prefix web-dapp",
