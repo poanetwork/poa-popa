@@ -15,9 +15,12 @@ globals:
   it: false
   xit: false
   after: false
+  afterAll: false
   afterEach: false
   before: false
+  beforeAll: false
   beforeEach: false
+  expect: false
 rules:
   indent:
     - warn
