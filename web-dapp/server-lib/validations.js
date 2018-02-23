@@ -33,7 +33,20 @@ const isNotEmpty = (str) => {
     return {ok: true};
 };
 
-
+// Only for prepare_reg_tx and prepare_con_tx
+const oldString = (str) => {
+    if (typeof str !== 'string') return `incorrect type, expecting string, but got ${typeof str}`;
+    str = str.trim();
+    if (str === '') return 'empty';
+    return '';
+}
+const oldWallet = (str) => {
+    if (typeof str !== 'string') return `incorrect type, expecting string, but got ${typeof str}`;
+    str = str.trim();
+    if (str === '') return 'empty';
+    if (!web3.isAddress(str)) return 'not a valid hex-encoded ethereum address';
+    return '';
+}
 
 // these functions assume that their arguments have already been validated:
 const normalizeString = (str) => {
@@ -45,6 +58,10 @@ module.exports = {
         wallet: isWallet,
         string: isString,
         notEmpty: isNotEmpty,
+        old: {
+            string: oldString,
+            wallet: oldWallet,
+        },
     },
     normalize: {
         string: normalizeString,
