@@ -1,5 +1,14 @@
 const ProofOfPhysicalAddress = artifacts.require('ProofOfPhysicalAddress');
-const buildSignature = require('../../web-dapp/server-lib/buildSignature')
+
+// solidity-coverage copies all the files to a directory one level deeper, so
+// this is necessary for the tests to pass both when running `truffle test` and
+// `solidity-coverage`
+let buildSignature = null;
+try {
+  buildSignature = require('../../web-dapp/server-lib/buildSignature')
+} catch (e) {
+  buildSignature = require('../../../web-dapp/server-lib/buildSignature')
+}
 
 // Private keys of accounts generated when running `npm run start-testrpc`
 const privateKeys = [
