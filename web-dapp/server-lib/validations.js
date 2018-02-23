@@ -1,32 +1,52 @@
 'use strict';
+const config = require('../server-config');
+const web3 = config.web3;
 
-function validate_wallet(web3, wallet) {
-    if (typeof wallet !== 'string') return 'incorrect type, expecting string, but got ' + typeof wallet;
-    wallet = wallet.trim();
-    if (wallet === '') return 'empty';
-    if (!web3.isAddress(wallet)) return 'not a valid hex-encoded ethereum address';
-    return '';
-}
+const isString = (str) => {
+    if (typeof str !== 'string') {
+        return {
+            ok: false,
+            msg: `incorrect type, expecting string, but got ${typeof str}`,
+        };
+    }
+    return {ok: true};
+};
 
-function validate_string(str) {
-    if (typeof str !== 'string') return 'incorrect type, expecting string, but got ' + typeof str;
+const isWallet = (wallet) => {
+    if (!web3.isAddress(wallet)) {
+        return {
+            ok: false,
+            msg: 'not a valid hex-encoded ethereum address',
+        };
+    }
+    return {ok: true};
+};
+
+const isNotEmpty = (str) => {
     str = str.trim();
-    if (str === '') return 'empty';
-    return '';
-}
+    if (str === '') {
+        return {
+            ok: false,
+            msg: 'empty',
+        };
+    }
+    return {ok: true};
+};
+
+
 
 // these functions assume that their arguments have already been validated:
-
-function normalize_string(str) {
+const normalizeString = (str) => {
     return str.trim().toLowerCase();
-}
+};
 
 module.exports = {
     validate: {
-        wallet: validate_wallet,
-        string: validate_string,
+        wallet: isWallet,
+        string: isString,
+        notEmpty: isNotEmpty,
     },
     normalize: {
-        string: normalize_string,
+        string: normalizeString,
     },
 };
