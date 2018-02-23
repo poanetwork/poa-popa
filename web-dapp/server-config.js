@@ -27,8 +27,8 @@ var cfg = {
     price_upd_interval_ms: 60000,
 };
 
-if (fs.existsSync('./server-config-private.js')) {
-    let cfg_private = require('./server-config-private.js')(cfg);
+if (fs.existsSync(path.join(__dirname, './server-config-private.js'))) {
+    let cfg_private = require(path.join(__dirname, './server-config-private.js'))(cfg);
     for (let k in cfg_private) {
         cfg[k] = cfg_private[k];
     }
