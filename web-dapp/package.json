@@ -6,7 +6,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint routes/* server-lib/** src/**",
-    "test": "react-scripts test --testMatch **/test/server/**/*.js **/src/**/*.test.js --env=jsdom --coverage",
+    "test": "react-scripts test --testMatch **/test/server/**/*.spec.js **/src/**/*.test.js --env=jsdom --coverage",
     "coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
