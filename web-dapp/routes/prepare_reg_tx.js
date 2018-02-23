@@ -3,7 +3,7 @@
 const logger = require('../server-lib/logger');
 const express = require('express');
 const config = require('../server-config');
-const sign = require('../server-lib/sign');
+const buildSignature = require('../server-lib/buildSignature');
 const generate_code = require('../server-lib/generate_code');
 const validate = require('../server-lib/validations').validate;
 const normalize = require('../server-lib/validations').normalize;
@@ -108,52 +108,18 @@ module.exports = (opts) => {
             logger.log(prelog + 'confirmation_code_plain: ' + confirmation_code_plain);
             var sha3cc = config.web3.sha3(confirmation_code_plain);
 
-            // convert parameters to buffers
-            var buf_params = {};
-            Object.keys(params).forEach(p => {
-                buf_params[p] = Buffer.from(params[p], 'utf8');
-            });
-
             // get post card price
             params.price_wei = recalc_price.get_price_wei();
             logger.log(prelog + 'price_wei: ' + params.price_wei);
-            buf_params.price_wei = Buffer.from(
-                config.web3.padLeft(params.price_wei.toString(16), 64),
-                'hex'
-            );
 
             logger.log(prelog + 'combining into text2sign hex string:');
             logger.log(prelog + 'wallet:        ' + wallet);
-            logger.log(prelog + 'hex name:      0x' + buf_params.name.toString('hex'));
-            logger.log(
-                prelog + 'hex country:   0x' + buf_params.country.toString('hex')
-            );
-            logger.log(prelog + 'hex state:     0x' + buf_params.state.toString('hex'));
-            logger.log(prelog + 'hex city:      0x' + buf_params.city.toString('hex'));
-            logger.log(
-                prelog + 'hex address:   0x' + buf_params.address.toString('hex')
-            );
-            logger.log(prelog + 'hex zip:       0x' + buf_params.zip.toString('hex'));
-            logger.log(
-                prelog + 'hex price_wei: 0x' + buf_params.price_wei.toString('hex')
-            );
             logger.log(prelog + 'sha3(cc):      ' + sha3cc);
-            var text2sign =
-                wallet +
-                Buffer.concat([
-                    buf_params.name,
-                    buf_params.country,
-                    buf_params.state,
-                    buf_params.city,
-                    buf_params.address,
-                    buf_params.zip,
-                    buf_params.price_wei,
-                    Buffer.from(sha3cc.substr(2), 'hex'),
-                ]).toString('hex');
-            logger.log(prelog + 'calling sign() with text2sign: ' + text2sign);
 
             try {
-                var sign_output = sign(text2sign);
+                var signatureParams = Object.assign(params, { wallet, sha3cc });
+
+                var sign_output = buildSignature(signatureParams, config.signer_private_key);
                 logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             } catch (e) {
                 logger.error(prelog + 'exception in sign(): ' + e.stack);

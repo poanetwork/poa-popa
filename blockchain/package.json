@@ -1,0 +1,11 @@
+{
+  "name": "proof-of-address-truffle",
+  "version": "1.0.0",
+  "scripts": {
+    "coverage": "solidity-coverage"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "solidity-coverage": "^0.4.9"
+  }
+}
