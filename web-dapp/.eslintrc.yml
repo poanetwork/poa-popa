@@ -10,6 +10,7 @@ plugins:
   - react
   - jsx-a11y
 globals:
+  jest: false
   describe: false
   xdescribe: false
   it: false

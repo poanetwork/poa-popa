@@ -36,9 +36,11 @@
   },
   "jest": {
     "collectCoverageFrom": [
+      "**/controllers/**/*.js",
       "**/routes/**/*.js",
       "**/server-lib/**/*.js",
       "**/src/components/**/*.js",
+      "!**/src/components/**/_utils/*.js",
       "!**/node_modules/**",
       "!**/*.test.js"
     ],
