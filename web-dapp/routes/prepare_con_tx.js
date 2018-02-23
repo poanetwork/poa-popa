@@ -22,7 +22,7 @@ module.exports = (opts) => {
         var verr;
 
         // wallet
-        verr = validate.wallet(config.web3, req.body.wallet);
+        verr = validate.old.wallet(req.body.wallet);
         if (verr) {
             logger.log(
                 prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr
@@ -32,7 +32,7 @@ module.exports = (opts) => {
         var wallet = req.body.wallet;
 
         // confirmation_code_plain
-        verr = validate.string(req.body.confirmation_code_plain);
+        verr = validate.old.string(req.body.confirmation_code_plain);
         if (verr) {
             logger.log(
                 prelog +

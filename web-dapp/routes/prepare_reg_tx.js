@@ -26,7 +26,7 @@ module.exports = (opts) => {
         var verr;
 
         // wallet
-        verr = validate.wallet(config.web3, req.body.wallet);
+        verr = validate.old.wallet(req.body.wallet);
         if (verr) {
             logger.log(
                 prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr
@@ -36,7 +36,7 @@ module.exports = (opts) => {
         var wallet = req.body.wallet;
 
         // name
-        verr = validate.string(req.body.name);
+        verr = validate.old.string(req.body.name);
         if (verr) {
             logger.log(prelog + 'validation error on name: ' + req.body.name + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'name: ' + verr });
@@ -44,7 +44,7 @@ module.exports = (opts) => {
         params.name = normalize.string(req.body.name);
 
         // country
-        verr = validate.string(req.body.country);
+        verr = validate.old.string(req.body.country);
         if (verr) {
             logger.log(
                 prelog + 'validation error on country: ' + req.body.country + ', err: ' + verr
@@ -54,7 +54,7 @@ module.exports = (opts) => {
         params.country = normalize.string(req.body.country);
 
         // state
-        verr = validate.string(req.body.state);
+        verr = validate.old.string(req.body.state);
         if (verr) {
             logger.log(
                 prelog + 'validation error on state: ' + req.body.state + ', err: ' + verr
@@ -64,7 +64,7 @@ module.exports = (opts) => {
         params.state = normalize.string(req.body.state);
 
         // city
-        verr = validate.string(req.body.city);
+        verr = validate.old.string(req.body.city);
         if (verr) {
             logger.log(prelog + 'validation error on city: ' + req.body.city + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'city: ' + verr });
@@ -72,7 +72,7 @@ module.exports = (opts) => {
         params.city = normalize.string(req.body.city);
 
         // address
-        verr = validate.string(req.body.address);
+        verr = validate.old.string(req.body.address);
         if (verr) {
             logger.log(
                 prelog + 'validation error on address: ' + req.body.address + ', err: ' + verr
@@ -82,7 +82,7 @@ module.exports = (opts) => {
         params.address = normalize.string(req.body.address);
 
         // zip
-        verr = validate.string(req.body.zip);
+        verr = validate.old.string(req.body.zip);
         if (verr) {
             logger.log(prelog + 'validation error on zip: ' + req.body.zip + ', err: ' + verr);
             return send_response(res, { ok: false, err: 'zip: ' + verr });
