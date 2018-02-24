@@ -2,6 +2,7 @@
 
 const logger = require('../server-lib/logger');
 const express = require('express');
+const config = require('../server-config');
 const send_response = require('../server-lib/send_response');
 const notifyRegTxController = require('../controllers/notifyRegTx');
 
@@ -13,21 +14,19 @@ module.exports = (opts) => {
         const prelog = `[notifyRegTx] (${log_prfx})`;
 
         const body = req.body;
-        const isValidData = notifyRegTxController.validateData({body, prelog});
-        if (!isValidData.ok) {
-            return send_response(res, { ok: isValidData.ok, err: isValidData.err });
-        }
+        const isValidData = notifyRegTxController.validateData({body}, prelog);
+        if (!isValidData.ok) return send_response(res, { ok: false, err: isValidData.err });
 
         const {wallet, tx_id, session_key} = notifyRegTxController.normalizeData(body);
 
-        logger.log(`${prelog} fetching info by session_key: ${session_key}`);
-
         let confirmationCodePlain;
-        return notifyRegTxController.getInfo({session_key, wallet, prelog})
+        return notifyRegTxController.getTxInfo(session_key)
             .then(info => {
                 confirmationCodePlain = info.confirmation_code_plain;
-                logger.log(`${prelog} fetching tx_details from blockchain by tx_id: ${tx_id}`);
-                return notifyRegTxController.getTxBlocknumber({tx_id, wallet, prelog});
+                const contractAddress = config.cconf.address;
+                const waitMaxTime = config.block_wait_max_time_ms;
+                const waitInterval = config.block_wait_interval_ms;
+                return notifyRegTxController.getTxBlockNumber({tx_id, wallet, contractAddress, waitMaxTime, waitInterval}, prelog)
             })
             .then(tx_bn => {
                 return notifyRegTxController.getAddressTxBn({wallet, tx_bn, prelog});
@@ -46,7 +45,8 @@ module.exports = (opts) => {
                 return send_response(res, {ok: result.ok, result: result.result});
             })
             .catch(error => {
-                return send_response(res, { ok: error.ok, err: error.err });
+                logger.error(`${prelog} ${error.msg}`);
+                return send_response(res, { ok: false, err: error.msg });
             });
     });
 
