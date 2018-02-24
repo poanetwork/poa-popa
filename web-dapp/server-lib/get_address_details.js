@@ -1,6 +1,6 @@
 'use strict';
 const config = require('../server-config');
-const {createResponseObject} = require('./server-lib/utils');
+const {createResponseObject} = require('./utils');
 
 module.exports = (address_index, wallet) => {
     const addressDetails1Pr = new Promise((resolve, reject) => {

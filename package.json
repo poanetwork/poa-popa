@@ -14,6 +14,7 @@
     "prestart": "npm run build",
     "start": "node web-dapp/server",
     "start-testrpc": "./scripts/start_testrpc.sh",
+    "server": "node web-dapp/server",
     "test": "npm test --prefix web-dapp"
   },
   "dependencies": {

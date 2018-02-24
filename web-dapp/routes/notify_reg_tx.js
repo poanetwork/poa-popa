@@ -20,7 +20,7 @@ module.exports = (opts) => {
         const {wallet, tx_id, session_key} = notifyRegTxController.normalizeData(body);
 
         let confirmationCodePlain;
-        return notifyRegTxController.getTxInfo(session_key)
+        return notifyRegTxController.getTxInfo({ session_key, wallet }, prelog)
             .then(info => {
                 confirmationCodePlain = info.confirmation_code_plain;
                 const contractAddress = config.cconf.address;
