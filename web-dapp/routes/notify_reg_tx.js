@@ -69,7 +69,6 @@ module.exports = function (opts) {
 
             var get_tx_bn = () => {
                 config.web3.eth.getTransaction(tx_id, function (err, tx_details) {
-                    var err = null;
                     var fatal = false;
                     if (err) {
                         logger.error(prelog + 'error getting details from blockchain about tx: ' + tx_id + ', err: ' + err);
