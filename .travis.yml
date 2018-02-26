@@ -1,3 +1,8 @@
 language: node_js
+
+script:
+  - npm run --prefix=blockchain coverage
+  - npm test
+
 after_success:
   - npm run coverage
