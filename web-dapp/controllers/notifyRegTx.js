@@ -96,7 +96,7 @@ const getAddressByBN = (opts, prelog = '') => {
         });
 };
 
-const createPostCard = (opts) => {
+const createPostCard = (opts, prelog) => {
     const {wallet, tx_id, address, confirmationCodePlain} = opts;
 
     return new Promise((resolve, reject) => {
@@ -110,7 +110,7 @@ const createPostCard = (opts) => {
     });
 };
 
-const removeUsedSessionKey = (opts) => {
+const removeUsedSessionKey = (opts, prelog) => {
     const {session_key, postcard} = opts;
 
     logger.log(`${prelog} removing used session_key from memory: ${session_key}`);
@@ -136,7 +136,6 @@ module.exports = {
     getTxInfo,
     getTxBlockNumber,
     getAddressByBN,
-    getAddressDetails,
     createPostCard,
     removeUsedSessionKey,
 };

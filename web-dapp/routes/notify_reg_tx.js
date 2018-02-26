@@ -29,17 +29,14 @@ module.exports = (opts) => {
                 return notifyRegTxController.getTxBlockNumber({tx_id, wallet, contractAddress, waitMaxTime, waitInterval}, prelog)
             })
             .then(tx_bn => {
-                return notifyRegTxController.getAddressTxBn({wallet, tx_bn, prelog});
-            })
-            .then(address_index => {
-                return notifyRegTxController.getAddressDetails({address_index, wallet, prelog});
+                return notifyRegTxController.getAddressByBN({wallet, tx_bn}, prelog);
             })
             .then(address => {
-                return notifyRegTxController.createPostCard({wallet, tx_id, address, confirmationCodePlain, prelog});
+                return notifyRegTxController.createPostCard({wallet, tx_id, address, confirmationCodePlain}, prelog);
             })
             .then(postcard => {
                 logger.log(`${prelog} postcard: ${JSON.stringify(postcard)}`);
-                return notifyRegTxController.removeUsedSessionKey({session_key, postcard, prelog});
+                return notifyRegTxController.removeUsedSessionKey({session_key, postcard}, prelog);
             })
             .then(result => {
                 return send_response(res, {ok: result.ok, result: result.result});
