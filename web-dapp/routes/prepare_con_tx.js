@@ -23,7 +23,7 @@ module.exports = (opts) => {
 
         // wallet
         verr = validate.wallet(req.body.wallet);
-        if (verr.ok) {
+        if (!verr.ok) {
             logger.log(
                 prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr.msg
             );
