@@ -2,7 +2,8 @@
   "name": "proof-of-address-truffle",
   "version": "1.0.0",
   "scripts": {
-    "coverage": "solidity-coverage"
+    "coverage": "NODE_ENV=test solidity-coverage",
+    "test": "NODE_ENV=test truffle test"
   },
   "dependencies": {},
   "devDependencies": {
