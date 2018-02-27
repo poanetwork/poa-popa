@@ -1,15 +1,11 @@
 'use strict';
-const {wallets, mockUserAddressByCreationBlock} = require('./_utils/mocks');
-const [wallet] = wallets
-jest.mock('../../server-config', () => ({contract: {user_address_by_creation_block: jest.fn(mockUserAddressByCreationBlock)}}));
-const getAddressIndex = require('../../server-lib/get_address_index');
+const {txIds, mockWeb3GetTx} = require('./_utils/mocks');
+const [tx_id] = txIds;
+jest.mock('../../server-config', () => ({web3: {eth: {getTransaction: jest.fn(mockWeb3GetTx)}}}));
+const getTransaction = require('../../server-lib/get_transaction');
 
 describe('Get Address Index', () => {
     it('should return the user address index', () => {
-        const opts = {
-            wallet,
-            tx_bn: 10,
-        };
-        expect(getAddressIndex(opts)).resolves.toBeTruthy();
+        expect(getTransaction(tx_id)).resolves.toBeTruthy();
     });
 });
