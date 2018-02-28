@@ -1,7 +1,5 @@
 'use strict';
-const {txIds, mockWeb3GetTx} = require('./_utils/mocks');
-const [tx_id] = txIds;
-jest.mock('../../server-config', () => ({web3: {eth: {getTransaction: jest.fn(mockWeb3GetTx)}}}));
+const [tx_id] = require('./_utils/mocks').txIds;
 const getTransaction = require('../../server-lib/get_transaction');
 
 describe('Get Address Index', () => {
