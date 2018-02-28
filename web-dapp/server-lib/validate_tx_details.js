@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (error, txDetails, contractAddress, wallet) => {
-    const tx_id = txDetails.hash;
+    const tx_id = (txDetails && txDetails.hash) || null;
     return new Promise((resolve, reject) => {
         if (error) {
             return reject({msg: `error getting details from blockchain about tx: ${tx_id}`});

@@ -111,6 +111,23 @@ const mockGetAddressDetails = () => {
     });
 };
 
+const mockUserAddressByCreationBlock = (wallet, tx_bn, cb) => {
+    const err = null;
+    const addressIndex = [true, 10, false];
+    return cb(err, addressIndex);
+};
+
+const mockWeb3GetTx = (tx_id, cb) => {
+    const err = null;
+    const txDetails = {
+        hash: tx_id,
+        to: wallets[1],
+        from: wallets[0],
+        blockNumber: 10,
+    };
+    return cb(err, txDetails);
+};
+
 module.exports = {
     wallets,
     badWallets,
@@ -123,4 +140,6 @@ module.exports = {
     mockGetTransaction,
     mockGetAddressIndex,
     mockGetAddressDetails,
+    mockUserAddressByCreationBlock,
+    mockWeb3GetTx,
 };
