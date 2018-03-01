@@ -7,7 +7,6 @@ if (process.env.NODE_ENV !== 'test') {
     // Console transport
     const consoleTransport = new winston.transports.Console({
         level: process.env.LOG_LEVEL || 'debug',
-        colorize: true,
         handleExceptions: true,
         humanReadableUnhandledException: true
     });
