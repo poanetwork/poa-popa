@@ -130,20 +130,13 @@ describe('Prepare Reg Transaction', () => {
             };
 
             expect(prepareRegTx.sign(params, wallet)).resolves.toBeTruthy();
-            return prepareRegTx.sign(params, wallet)
-                .then(result => {
-                    expect(result).toHaveProperty('confirmationCodePlain');
-                    expect(result).toHaveProperty('sha3cc');
-                    expect(result).toHaveProperty('priceWei');
-                    expect(result).toHaveProperty('signOutput');
-                });
         });
     });
 
     describe('Set Session Key', () => {
         it('should return the session key', () => {
             const confirmationCodePlain = 'sxxsndac7y7';
-            expect(prepareRegTx.setSessionKey((wallet, confirmationCodePlain))).resolves.toBeTruthy();
+            expect(prepareRegTx.setSessionKey(wallet, confirmationCodePlain)).resolves.toBeTruthy();
         });
     });
 });
