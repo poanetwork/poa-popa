@@ -7,11 +7,11 @@ const prepareRegTx = require('../../controllers/prepareRegTx');
 describe('Prepare Reg Transaction', () => {
     describe('Validate Data', () => {
         it('should reject if data is empty', () => {
-            expect(prepareRegTx.validateData()).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData()).rejects.toBeTruthy();
         });
         it('should reject if wallet is not valid', () => {
             const data = {
-                wallet: badWallet,
+                wallet: badWallet + 'qweqw',
                 name: 'John Doe',
                 country: 'us',
                 state: 'ca',
@@ -19,7 +19,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should reject if name is not valid', () => {
             const data = {
@@ -31,7 +31,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should reject if country is not valid', () => {
             const data = {
@@ -43,7 +43,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should reject if state is not valid', () => {
             const data = {
@@ -55,7 +55,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should reject if city is not valid', () => {
             const data = {
@@ -67,7 +67,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should reject if address is not valid', () => {
             const data = {
@@ -79,7 +79,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should reject if zip is not valid', () => {
             const data = {
@@ -91,7 +91,7 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '',
             };
-            expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
+            return expect(prepareRegTx.validateData(data)).rejects.toBeTruthy();
         });
         it('should return wallet and params', () => {
             const data = {
@@ -103,7 +103,6 @@ describe('Prepare Reg Transaction', () => {
                 address: '1219 Diane Street',
                 zip: '90013',
             };
-            expect(prepareRegTx.validateData(data)).resolves.toBeTruthy();
             return prepareRegTx.validateData(data)
                 .then(({wallet, params}) => {
                     expect(wallet).toEqual(data.wallet);
@@ -129,14 +128,14 @@ describe('Prepare Reg Transaction', () => {
                 zip: '90013',
             };
 
-            expect(prepareRegTx.sign(params, wallet)).resolves.toBeTruthy();
+            return expect(prepareRegTx.sign(params, wallet)).resolves.toBeTruthy();
         });
     });
 
     describe('Set Session Key', () => {
         it('should return the session key', () => {
             const confirmationCodePlain = 'sxxsndac7y7';
-            expect(prepareRegTx.setSessionKey(wallet, confirmationCodePlain)).resolves.toBeTruthy();
+            return expect(prepareRegTx.setSessionKey(wallet, confirmationCodePlain)).resolves.toBeTruthy();
         });
     });
 });

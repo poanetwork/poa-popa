@@ -8,6 +8,6 @@ describe('Get Address Index', () => {
             wallet,
             tx_bn: 10,
         };
-        expect(getAddressIndex(opts)).resolves.toBeTruthy();
+        return expect(getAddressIndex(opts)).resolves.toBeTruthy();
     });
 });

@@ -5,6 +5,6 @@ const getAddressDetails = require('../../server-lib/get_address_details');
 describe('Get Address Details', () => {
     it('should return the user address details', () => {
         const addressIndex = [true, 10, false];
-        expect(getAddressDetails(addressIndex, wallet)).resolves.toBeTruthy();
+        return expect(getAddressDetails(addressIndex, wallet)).resolves.toBeTruthy();
     });
 });

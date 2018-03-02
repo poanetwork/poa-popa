@@ -4,6 +4,6 @@ const getTransaction = require('../../server-lib/get_transaction');
 
 describe('Get Address Index', () => {
     it('should return the user address index', () => {
-        expect(getTransaction(tx_id)).resolves.toBeTruthy();
+        return expect(getTransaction(tx_id)).resolves.toBeTruthy();
     });
 });
