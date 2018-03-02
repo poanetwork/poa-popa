@@ -88,11 +88,14 @@ const sign = (params, wallet) => {
     const confirmationCodePlain = generateCode();
     const sha3cc = config.web3.sha3(confirmationCodePlain);
     const priceWei = recalcPrice.get_price_wei();
+    console.log("🦄 sha3cc", sha3cc);
     
     return new Promise((resolve, reject) => {
         try {
             const signatureParams = Object.assign(params, {wallet, sha3cc});
             const signOutput = buildSignature(signatureParams, signerPrivateKey);
+            console.log("🦄 signOutput", signOutput);
+            
             return resolve ({confirmationCodePlain, sha3cc, priceWei, signOutput});
         } catch(err) {
             console.log("🦄 err.stack", err.stack);

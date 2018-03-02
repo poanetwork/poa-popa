@@ -123,6 +123,18 @@ describe('Prepare Reg Transaction', () => {
     });
 
     describe('Sign', () => {
+        beforeAll(() => {
+            jest.mock('../../server-config', () => ({
+                web3: {
+                    sha3: jest.fn(() => ('0x7aa84861ca411119c0413b7bd6d5d4970b351900cfa4d2d7b88b399b6fef1af9')),
+                },
+            }));
+            jest.mock('../../server-lib/buildSignature', () => ({
+                v: 28,
+                r: '0xe96cb9bb53cb3652f587161ad5f4edd6aef683210660601444f37860f20f7bb9',
+                s: '0x1d2aed920f79979468fb2c069c2fd5f6af54331d0df353bba0c1d847f525905c',
+            }));
+        });
         it('should return the sign output, the price wei and the confirmation code (sha3 and plain)', () => {
             const params = {
                 name: 'John Doe',
