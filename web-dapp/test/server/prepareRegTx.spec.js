@@ -2,6 +2,11 @@
 const {wallets, badWallets} = require('./_utils/mocks');
 const [wallet] = wallets;
 const [badWallet] = badWallets;
+
+jest.mock('../../server-lib/post_api', () => ({
+    verify_address: jest.fn(() => (Promise.resolve(true))),
+}));
+
 const prepareRegTx = require('../../controllers/prepareRegTx');
 
 describe('Prepare Reg Transaction', () => {
