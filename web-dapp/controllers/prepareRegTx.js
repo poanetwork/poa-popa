@@ -95,7 +95,9 @@ const sign = (params, wallet) => {
             const signOutput = buildSignature(signatureParams, signerPrivateKey);
             return resolve ({confirmationCodePlain, sha3cc, priceWei, signOutput});
         } catch(err) {
-            const log = `exception in sign(): ${e.stack}`;
+            console.log("🦄 err.stack", err.stack);
+
+            const log = `exception in sign(): ${err.stack}`;
             const msg = 'exception occured during signature calculation';
             return reject({ok: false, log, msg});
         }
