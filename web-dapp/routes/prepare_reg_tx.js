@@ -13,17 +13,21 @@ module.exports = (opts) => {
         const prelog = `[prepareRegTx] (${req.log_prfx}) `;
         let params;
         let wallet;
-        let confirmation_code_sha3;
+        let confirmationCodePlain;
+        let sha3cc;
         let sign_output;
         return prepareRegTx.validateData(req.body)
             .then(data => {
                 wallet = data.wallet;
                 params = data.params;
                 logger.log(`${prelog} normalized params: ${JSON.stringify(params)}`);
-                return prepareRegTx.sign(params, wallet);
+                const confirmationCodes = prepareRegTx.getConfirmationCodes();
+                confirmationCodePlain = confirmationCodes.confirmationCodePlain;
+                sha3cc = confirmationCodes.sha3cc;
+                return prepareRegTx.sign(params, wallet, sha3cc);
             })
-            .then(({confirmationCodePlain, sha3cc, priceWei, signOutput}) => {
-                confirmation_code_sha3 = sha3cc;
+            .then(({sha3cc, signOutput}) => {
+                const priceWei = prepareRegTx.getPriceWei();
                 sign_output = signOutput;
 
                 logger.log(`${prelog} confirmation code plain: ${confirmationCodePlain}`);
@@ -44,7 +48,7 @@ module.exports = (opts) => {
                     result: {
                         wallet,
                         params,
-                        confirmation_code_sha3,
+                        confirmation_code_sha3: sha3cc,
                         v: sign_output.v,
                         r: sign_output.r,
                         s: sign_output.s,

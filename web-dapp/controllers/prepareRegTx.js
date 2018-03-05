@@ -81,16 +81,23 @@ const normalizeData = (data) => {
     return Promise.resolve({wallet, params});
 };
 
-const sign = (params, wallet) => {
+const getConfirmationCodes = () => {
     const confirmationCodePlain = generateCode();
     const sha3cc = config.web3.sha3(confirmationCodePlain);
-    const priceWei = recalcPrice.get_price_wei();
-    
+
+    return {confirmationCodePlain, sha3cc};
+};
+
+const getPriceWei = () => {
+    return recalcPrice.get_price_wei();
+};
+
+const sign = (params, wallet, sha3cc) => {
     return new Promise((resolve, reject) => {
         try {
             const signatureParams = Object.assign(params, {wallet, sha3cc});
             const signOutput = buildSignature(signatureParams, signerPrivateKey);
-            return resolve ({confirmationCodePlain, sha3cc, priceWei, signOutput});
+            return resolve ({sha3cc, signOutput});
         } catch(err) {
             const log = `exception in sign(): ${err.stack}`;
             const msg = 'exception occured during signature calculation';
@@ -112,6 +119,8 @@ const setSessionKey = (wallet, confirmationCodePlain) => {
 
 module.exports = {
     validateData,
+    getConfirmationCodes,
+    getPriceWei,
     sign,
     setSessionKey,
 };
