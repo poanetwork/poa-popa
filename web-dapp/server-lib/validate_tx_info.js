@@ -3,7 +3,7 @@
 module.exports = (opts) => {
     const {info, session_key, wallet} = opts;
     return new Promise((resolve, reject) => {
-        if (!info || Object.keys(info).length === 0 || !info.wallet || !info.confirmation_code_plain) {
+        if (!info || Object.keys(info).length === 0 || !info.wallet || !info.confirmationCodePlain) {
             return reject(`no info for this session_key: ${session_key}`);
         }
         if (info.wallet !== wallet) {

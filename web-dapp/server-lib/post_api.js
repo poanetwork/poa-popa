@@ -55,14 +55,19 @@ function new_idempotency_key() {
     return uuidv4();
 }
 
-function verify_address(address_details, done) {
-    Lob.usVerifications.verify({
-        state: address_details.state.toUpperCase(),
-        city: address_details.city.toUpperCase(),
-        primary_line: address_details.location.toUpperCase(),
-        zip_code: address_details.zip.toUpperCase(),
-    }, function (err, result) {
-        return done(!err && result && result.deliverability && result.deliverability.trim().toLowerCase() === 'deliverable');
+function verify_address(address) {
+    return new Promise((resolve, reject) => {
+        Lob.usVerifications.verify({
+            state: address.state.toUpperCase(),
+            city: address.city.toUpperCase(),
+            primary_line: address.location.toUpperCase(),
+            zip_code: address.zip.toUpperCase(),
+        }, function (err, result) {
+            if (err || !result || !result.deliverability || result.deliverability.trim().toLowerCase() !== 'deliverable') {
+                return reject({ok: false, msg: 'address is invalid', log: 'address is invalid'});
+            }
+            return resolve(address);
+        });
     });
 }
 
