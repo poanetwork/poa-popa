@@ -32,8 +32,8 @@ const validateData = (data = {}) => {
 
 const hexParams = (params) => {
     return Object.keys(params)
-            .map(p => ([p, Buffer.from(params[p], 'utf8')]))
-            .reduce((o, [key, value]) => Object.assign(o, {[key]: value}), {});
+        .map(p => ([p, Buffer.from(params[p], 'utf8')]))
+        .reduce((o, [key, value]) => Object.assign(o, {[key]: value}), {});
 };
 
 const text2sign = (wallet, hexParams) => {
