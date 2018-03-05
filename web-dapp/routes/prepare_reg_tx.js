@@ -15,6 +15,7 @@ module.exports = (opts) => {
         let wallet;
         let confirmationCodePlain;
         let sha3cc;
+        let priceWei;
         let sign_output;
         return prepareRegTx.validateData(req.body)
             .then(data => {
@@ -24,10 +25,10 @@ module.exports = (opts) => {
                 const confirmationCodes = prepareRegTx.getConfirmationCodes();
                 confirmationCodePlain = confirmationCodes.confirmationCodePlain;
                 sha3cc = confirmationCodes.sha3cc;
-                return prepareRegTx.sign(params, wallet, sha3cc);
+                priceWei = prepareRegTx.getPriceWei();
+                return prepareRegTx.sign(params, wallet, sha3cc, priceWei);
             })
             .then(({sha3cc, signOutput}) => {
-                const priceWei = prepareRegTx.getPriceWei();
                 sign_output = signOutput;
 
                 logger.log(`${prelog} confirmation code plain: ${confirmationCodePlain}`);

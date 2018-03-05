@@ -92,10 +92,10 @@ const getPriceWei = () => {
     return recalcPrice.get_price_wei();
 };
 
-const sign = (params, wallet, sha3cc) => {
+const sign = (params, wallet, sha3cc, price_wei) => {
     return new Promise((resolve, reject) => {
         try {
-            const signatureParams = Object.assign(params, {wallet, sha3cc});
+            const signatureParams = Object.assign(params, {wallet, sha3cc, price_wei});
             const signOutput = buildSignature(signatureParams, signerPrivateKey);
             return resolve ({sha3cc, signOutput});
         } catch(err) {
