@@ -20,7 +20,7 @@ describe('Prepare Reg Transaction', () => {
         });
         it('should reject if wallet is not valid', () => {
             const data = {
-                wallet: badWallet + 'qweqw',
+                wallet: badWallet,
                 name: 'John Doe',
                 country: 'us',
                 state: 'ca',
