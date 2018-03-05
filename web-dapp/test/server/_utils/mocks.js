@@ -42,7 +42,7 @@ const mockDb = {
         }
         return Promise.resolve({
             wallet: wallets[0],
-            confirmation_code_plain: confirmationCodes[0],
+            confirmationCodePlain: confirmationCodes[0],
         });
     },
 };
