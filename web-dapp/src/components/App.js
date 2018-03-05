@@ -6,8 +6,6 @@ import Footer from './Footer';
 import RegisterAddressPage from './RegisterAddressPage';
 import ConfirmationPage from './ConfirmationPage';
 
-import ContractOutput from '../contract-output';
-
 import '../assets/javascripts/init-my-web3.js';
 import '../assets/javascripts/show-alert.js';
 
@@ -64,7 +62,7 @@ class App extends Component {
         if (window.my_web3) {
             console.log('web3 found, getting contract');
             clearInterval(this.state.web3_checker);
-            var cconf = ContractOutput.ProofOfPhysicalAddress;
+            var cconf = require('../contract-output').ProofOfPhysicalAddress;
             this.check_contract(cconf, (contract) => {
                 if (contract) {
                     console.log('contract is ok, saving to state');
