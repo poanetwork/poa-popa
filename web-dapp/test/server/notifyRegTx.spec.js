@@ -109,15 +109,15 @@ describe('Notify Register Transactions', () => {
     describe('Get Info', () => {
         it('should return info for the session_key', () => {
             const opts = {session_key: sessionKey, wallet: walletA};
-            expect(notifyRegTx.getTxInfo(opts)).resolves.toBeTruthy()
+            return expect(notifyRegTx.getTxInfo(opts)).resolves.toBeTruthy()
         });
         it('should return an error there is not info for the session_key', () => {
             const opts = {session_key: badSessionKey, wallet: walletA};
-            expect(notifyRegTx.getTxInfo(opts)).rejects.toBeTruthy();
+            return expect(notifyRegTx.getTxInfo(opts)).rejects.toBeTruthy();
         });
         it('should return an error if the wallet does not match', () => {
             const opts = {session_key: sessionKey, wallet: walletB};
-            expect(notifyRegTx.getTxInfo(opts)).rejects.toBeTruthy();
+            return expect(notifyRegTx.getTxInfo(opts)).rejects.toBeTruthy();
         });
     });
 
@@ -130,7 +130,7 @@ describe('Notify Register Transactions', () => {
                 waitMaxTime: 10000,
                 waitInterval: 3000,
             };
-            expect(notifyRegTx.getTxBlockNumber(opts)).resolves.toBeTruthy();
+            return expect(notifyRegTx.getTxBlockNumber(opts)).resolves.toBeTruthy();
         });
         it('should return fatal error if txDetails.to does not match with contract address', () => {
             const opts = {
@@ -140,7 +140,7 @@ describe('Notify Register Transactions', () => {
                 waitMaxTime: 10000,
                 waitInterval: 3000,
             };
-            expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
+            return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
         });
         it('should return fatal error if txDetails.from does not match with wallet', () => {
             const opts = {
@@ -150,7 +150,7 @@ describe('Notify Register Transactions', () => {
                 waitMaxTime: 10000,
                 waitInterval: 3000,
             };
-            expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
+            return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
         });
     });
 
@@ -160,7 +160,7 @@ describe('Notify Register Transactions', () => {
                 tx_bn: 10,
                 wallet: walletA,
             };
-            expect(notifyRegTx.getAddressByBN(opts)).resolves.toBeTruthy();
+            return expect(notifyRegTx.getAddressByBN(opts)).resolves.toBeTruthy();
         });
     });
 });

@@ -9,14 +9,14 @@ describe('Validate transaction details', () => {
         const txDetails = null;
         const contractAddress = null;
         const wallet = null;
-        expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
+        return expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
     });
     it('should reject if txDetails does not exist', () => {
         const error = null;
         const txDetails = null;
         const contractAddress = null;
         const wallet = null;
-        expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
+        return expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
     });
     it('should reject txDetails.to is different to contractAddress', () => {
         const error = null;
@@ -28,7 +28,7 @@ describe('Validate transaction details', () => {
         };
         const contractAddress = walletB;
         const wallet = walletC;
-        expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
+        return expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
     });
     it('should reject if txDetails.from is different to wallet', () => {
         const error = null;
@@ -40,7 +40,7 @@ describe('Validate transaction details', () => {
         };
         const contractAddress = walletB;
         const wallet = walletA;
-        expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
+        return expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
     });
     it('should reject if txDetails.blocknumber does not exist', () => {
         const error = null;
@@ -52,7 +52,7 @@ describe('Validate transaction details', () => {
         };
         const contractAddress = walletB;
         const wallet = walletA;
-        expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
+        return expect(validateTxDetails(error, txDetails, contractAddress, wallet)).rejects.toBeTruthy();
     });
     it('should resolves transaction details', () => {
         const error = null;
@@ -64,6 +64,6 @@ describe('Validate transaction details', () => {
         };
         const contractAddress = walletB;
         const wallet = walletA;
-        expect(validateTxDetails(error, txDetails, contractAddress, wallet)).resolves.toBeTruthy();
+        return expect(validateTxDetails(error, txDetails, contractAddress, wallet)).resolves.toBeTruthy();
     });
 });
