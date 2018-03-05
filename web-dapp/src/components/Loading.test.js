@@ -4,9 +4,9 @@ import { mount } from 'enzyme';
 import { Loading } from './Loading';
 
 describe('<Loading />', () => {
-  it('renders correctly', () => {
-    const wrapper = mount(<Loading show={true}/>);
+    it('renders correctly', () => {
+        const wrapper = mount(<Loading show={true}/>);
 
-    expect(wrapper.find('.loading-container')).toHaveLength(1);
-  });
+        expect(wrapper.find('.loading-container')).toHaveLength(1);
+    });
 });
