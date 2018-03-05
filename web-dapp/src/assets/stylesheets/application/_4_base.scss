@@ -28,6 +28,10 @@ body {
   width: $container-width;
   margin: 0 auto;
   box-sizing: border-box;
+
+  &.page {
+    padding: 20px 0;
+  }
 }
 
 .title {
