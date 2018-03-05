@@ -27,7 +27,7 @@ module.exports = (opts) => {
                 logger.log(`${prelog} hex confirmation_code_plain:       0x${hexParams.confirmation_code_plain.toString('hex')}`);
                 const text2sign = prepareConTx.text2sign(wallet, hexParams);
                 logger.log(`${prelog} => text2sign: ${text2sign}`);
-                return prepareConTx.sign(text2sign);
+                return prepareConTx.getSign(text2sign);
             })
             .then(signOutput => {
                 logger.log(`${prelog} sign() output: ${JSON.stringify(signOutput)}`);

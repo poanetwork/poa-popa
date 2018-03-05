@@ -41,7 +41,7 @@ const text2sign = (wallet, hexParams) => {
     return wallet + Buffer.concat([ccp]).toString('hex');
 };
 
-const sign = (text2sign) => {
+const getSign = (text2sign) => {
     return new Promise((resolve, reject) => {
         try {
             const signOutput = sign(text2sign, signerPrivateKey);
@@ -58,5 +58,5 @@ module.exports = {
     validateData,
     hexParams,
     text2sign,
-    sign,
+    getSign,
 };
