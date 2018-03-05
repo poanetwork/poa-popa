@@ -1,26 +1,10 @@
 'use strict';
-const {validate, normalize} = require('../server-lib/validations');
+const {normalize, validateParams} = require('../server-lib/validations');
+const sign = require('../server-lib/sign');
 const config = require('../server-config');
 
 const signerPrivateKey = config.signer_private_key;
 
-const validateParams = (body, param) => {
-    return new Promise((resolve, reject) => {
-        const result = (param === 'wallet') ? validate.wallet(body[param]) : validate.string(body[param]);
-        if (!result.ok) {
-            const log = `validation error on ${param}: ${body[param]}, err: ${result.msg}`;
-            return reject({...result, log});
-        }
-        return resolve(body)
-    });
-};
-
-const validateBody = (body) => {
-    return new Promise((resolve, reject) => {
-        if (!body) return reject({msg: 'request body empty'});
-        return resolve(body);
-    });
-};
 const validateWallet = (body) => {
     return validateParams(body, 'wallet');
 };
@@ -37,7 +21,10 @@ const normalizeData = (data) => {
 };
 
 const validateData = (data = {}) => {
-    return validateBody(data)
+    return new Promise((resolve, reject) => {
+        if (!data) return reject({msg: 'request body empty'});
+        return resolve(data);
+    })
         .then(validateWallet)
         .then(validateConfirmationCodePlain)
         .then(normalizeData);
