@@ -7,7 +7,7 @@ const uuidv4 = require('uuid/v4');
 
 var prelog = '[post_api] ';
 logger.log(prelog + 'loading Lob');
-const Lob = require('lob')(config.lob_api_key, { apiVersion: '2017-06-16' });
+const Lob = require('lob')(config.lob_api_key, { apiVersion: config.lob_api_version || '2017-06-16' });
 
 logger.log(prelog + 'reading postcard templates');
 const pc_front = fs.readFileSync(path.join(__dirname, '../postcard/front.html'), 'utf8');

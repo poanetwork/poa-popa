@@ -22,28 +22,28 @@ module.exports = (opts) => {
         var verr;
 
         // wallet
-        verr = validate.wallet(config.web3, req.body.wallet);
-        if (verr) {
+        verr = validate.wallet(req.body.wallet);
+        if (!verr.ok) {
             logger.log(
-                prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr
+                prelog + 'validation error on wallet: ' + wallet + ', err: ' + verr.msg
             );
-            return send_response(res, { ok: false, err: 'wallet: ' + verr });
+            return send_response(res, { ok: false, err: 'wallet: ' + verr.msg });
         }
         var wallet = req.body.wallet;
 
         // confirmation_code_plain
         verr = validate.string(req.body.confirmation_code_plain);
-        if (verr) {
+        if (!verr.ok) {
             logger.log(
                 prelog +
                 'validation error on confirmation_code_plain: ' +
                 req.body.confirmation_code_plain +
                 ', err: ' +
-                verr
+                verr.msg
             );
             return send_response(res, {
                 ok: false,
-                err: 'confirmation_code_plain: ' + verr,
+                err: 'confirmation_code_plain: ' + verr.msg,
             });
         }
         params.confirmation_code_plain = normalize.string(
@@ -68,7 +68,7 @@ module.exports = (opts) => {
         logger.log(prelog + '=> text2sign: ' + text2sign);
 
         try {
-            var sign_output = sign(text2sign);
+            var sign_output = sign(text2sign, config.signer_private_key);
             logger.log(prelog + 'sign() output: ' + JSON.stringify(sign_output));
             return send_response(res, {
                 ok: true,

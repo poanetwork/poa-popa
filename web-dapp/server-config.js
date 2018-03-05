@@ -27,8 +27,8 @@ var cfg = {
     price_upd_interval_ms: 60000,
 };
 
-if (fs.existsSync('./server-config-private.js')) {
-    let cfg_private = require('./server-config-private.js')(cfg);
+if (fs.existsSync(path.join(__dirname, './server-config-private.js'))) {
+    let cfg_private = require(path.join(__dirname, './server-config-private.js'))(cfg);
     for (let k in cfg_private) {
         cfg[k] = cfg_private[k];
     }
@@ -39,7 +39,12 @@ var web3 = new Web3(network);
 cfg.network = network;
 cfg.web3 = web3;
 
-var contract_output = path.join(__dirname, './src/contract-output.json');
+var contract_output = '';
+if (process.env.NODE_ENV === 'test') {
+    contract_output = path.join(__dirname, './test/server/_utils/mock-contract-output.json');
+} else {
+    contract_output = path.join(__dirname, './src/contract-output.json');
+}
 var cconf = require(contract_output).ProofOfPhysicalAddress;
 cfg.contract_output = contract_output;
 cfg.cconf = cconf;

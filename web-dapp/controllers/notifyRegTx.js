@@ -6,182 +6,101 @@ const post_api = require('../server-lib/post_api');
 const logger = require('../server-lib/logger');
 const {validate, normalize} = require('../server-lib/validations');
 const {createResponseObject} = require('../server-lib/utils');
+const getTransaction = require('../server-lib/get_transaction');
+const validateTxInfo = require('../server-lib/validate_tx_info');
+const validateTxDetails = require('../server-lib/validate_tx_details');
+const validateAddressIndex = require('../server-lib/validate_address_index');
+const getAddressIndex = require('../server-lib/get_address_index');
+const getAddressDetails = require('../server-lib/get_address_details');
 
-const validateData = (opts) => {
-    if (!opts.body) {
-        return createResponseObject(false, 'request body: empty');
-    }
-
-    const body = opts.body;
-    const prelog = opts.prelog ? opts.prelog : '';
+const validateData = (opts, prelog = '') => {
+    if (!opts.body) return createResponseObject(false, 'request body: empty');
+    const {body} = opts;
 
     // wallet
-    const walletError = validate.wallet(config.web3, body.wallet);
+    if (!validate.wallet(body.wallet).ok) {
+        logger.log(`${prelog} validation error on wallet: body.wallet, error: ${validate.wallet(body.wallet).msg}`);
+        return createResponseObject(false, validate.wallet(body.wallet).msg);
+    }
     // tx_id
-    const txIdError = validate.string(body.tx_id);
+    if (!validate.string(body.tx_id).ok) {
+        logger.log(`${prelog} validation error on tx_id: body.tx_id, error: ${validate.string(body.tx_id).msg}`);
+        return createResponseObject(false, validate.string(body.tx_id).msg);
+    }
     // session_key
-    const sessionKeyError = validate.string(body.session_key);
-
-    if (walletError) {
-        logger.log(`${prelog} validation error on wallet: body.wallet, error: ${walletError}`);
-        return createResponseObject(false, walletError);
+    if (!validate.string(body.session_key).ok) {
+        logger.log(`${prelog} validation error on session_key: body.session_key, error: ${validate.string(body.session_key).msg}`);
+        return createResponseObject(false, validate.string(body.session_key).msg);
     }
-    if (txIdError) {
-        logger.log(`${prelog} validation error on tx_id: body.tx_id, error: ${txIdError}`);
-        return createResponseObject(false, txIdError);
-    }
-    if (sessionKeyError) {
-        logger.log(`${prelog} validation error on session_key: body.session_key, error: ${sessionKeyError}`);
-        return createResponseObject(false, sessionKeyError);
-    }
-    return {ok: true};
+    return createResponseObject(true, '');
 };
 
 const normalizeData = (body) => {
     const wallet = body.wallet;
     const tx_id = normalize.string(body.tx_id);
     const session_key = normalize.string(body.session_key);
-
     return {wallet, tx_id, session_key};
 };
 
-const getInfo = (opts) => {
+const getTxInfo = (opts, prelog = '') => {
     const {session_key, wallet} = opts;
-    const prelog = opts.prelog ? opts.prelog : '';
+    logger.log(`${prelog} fetching info by session_key: ${session_key}`);
+
     return db.get(session_key)
-        .then(info => {
-            if (!info || Object.keys(info).length === 0 || !info.wallet || !info.confirmation_code_plain) {
-                logger.error(`${prelog} no info for this session_key: ${session_key}`);
-                throw new Error(createResponseObject(false, 'no info for this session_key'));
-            }
+        .then(info => (validateTxInfo({info, session_key, wallet})));
+};
 
-            if (info.wallet !== wallet) {
-                logger.error(`${prelog} wallets do not match: info.wallet: ${info.wallet}, but wallet: ${wallet}`);
-                throw new Error(createResponseObject(false, 'wallets do not match'));
-            }
-            return info;
+const getTxBlockNumber = (opts, prelog = '') => {
+    const {tx_id, wallet, contractAddress, waitInterval, waitMaxTime} = opts;
+    const startedAt = new Date();
+
+    logger.log(`${prelog} fetching tx_details from blockchain by tx_id: ${tx_id}`);
+    return getTransaction(tx_id)
+        .then((result) => {
+            const {error, txDetails} = result;
+            return validateTxDetails(error, txDetails, contractAddress, wallet);
         })
-        .catch(err => {
-            logger.error(`${prelog} error getting info by session_key: ${session_key}, error: ${err}`);
-            throw new Error(createResponseObject(false, 'error getting info by session_key'));
-        });
-};
-
-const getTxBlocknumber = (opts) => {
-    const {tx_id, wallet} = opts;
-    const prelog = opts.prelog ? opts.prelog : '';
-    let tx_bn = null;
-    let get_bn_job = {
-        id: null,
-        started_at: new Date(),
-    };
-    return new Promise((resolve, reject) => {
-        config.web3.eth.getTransaction(tx_id, function(err, tx_details) {
-            let error = {
-                fatal: false,
-                msg: '',
-            };
-            if (err) {
-                logger.error(`${prelog} error getting details from blockchain about tx: ${tx_id}, error: ${err}`);
-                error.msg = 'error getting details from blockchain';
-            } else if(!tx_details) {
-                logger.error(`${prelog} no details for tx with this hash: ${tx_id}`);
-                error.msg = `no details for tx with this hash: ${tx_id}`;
-            } else if (tx_details.to !== config.cconf.address) {
-                logger.error(`${prelog} tx_details.to does not match contract address: tx_details.to = ${tx_details.to}, but config.cconf.address = ${config.cconf.address}`);
-                error.fatal = true;
-                error.msg = 'to-address in transaction does not match contract address';
-            } else if (tx_details.from !== wallet) {
-                logger.error(`${prelog} tx_details.from does not match user wallet: tx_details.from = ${tx_details.from}, but wallet = ${wallet}`);
-                error.fatal = true;
-                error.msg = 'from-address in transaction does not match user wallet';
+        .then(txDetails => {
+            logger.log(`${prelog} got block number for tx_id: ${tx_id}, tx_bn: ${txDetails.blockNumber}`);
+            return txDetails.blockNumber;
+        })
+        .catch((error) => {
+            if (error.fatal || new Date() - startedAt > waitMaxTime) {
+                throw new Error(error);
             }
-
-            if (error.msg || !tx_details.blockNumber) {
-                if (error.fatal || new Date() - get_bn_job.started_at > config.block_wait_max_time_ms) {
-                    logger.error(`${prelog} giving up on tx_id: ${tx_id}`);
-                    return reject(createResponseObject(false, error.msg || 'Empty tx.blockNumber'));
-                } else {
-                    if (error.msg) {
-                        logger.error(`${prelog} check tx_id: ${tx_id}, error: ${error.msg}`);
-                    } else if (!tx_details.blockNumber) {
-                        logger.error(`${prelog} check tx_id: ${tx_id}, still not mined (empty tx.blockNumber)`);
-                    }
-                    logger.log(`${prelog} check tx_id: ${tx_id} again in: ${config.block_wait_interval_ms}ms`);
-                    setTimeout(this.getTxBn(opts), config.block_wait_interval_ms);
-                }
-            } else {
-                tx_bn = tx_details.blockNumber;
-                logger.log(`${prelog} got block number for tx_id: ${tx_id}, tx_bn: ${tx_bn}`);
-                return resolve(tx_bn);
-            }
-        });
-    });
-};
-
-const getAddressTxBn = (opts) => {
-    const {wallet, tx_bn} = opts;
-    const prelog = opts.prelog ? opts.prelog : '';
-
-    return new Promise((resolve, reject) => {
-        config.contract.user_address_by_creation_block(wallet, tx_bn, function(err, addr_index) {
-            if (err) {
-                logger.error(prelog + 'error getting address by tx_bn: ' + err);
-                return reject(createResponseObject(false, 'error getting address from transaction'));
-            }
-            logger.log(`${prelog} addr_index: ${JSON.stringify(addr_index)}`);
-            if (!addr_index[0]) {
-                logger.log(`${prelog} address not found by creation block number`);
-                return reject(createResponseObject(false, 'address not found by creation block number'));
-            }
-
-            if (addr_index[2]) {
-                logger.log(`${prelog} address already confirmed`);
-                return reject(createResponseObject(false, 'address already confirmed'));
-            }
-            return resolve(addr_index);
-        });
-    });
-};
-
-const getAddressDetails = (opts) => {
-    const {address_index, wallet} = opts;
-    const prelog = opts.prelog ? opts.prelog : '';
-
-    return new Promise((resolve, reject) => {
-        logger.log(`${prelog} getting address details from contract`);
-        config.contract.user_address(wallet, address_index[1], function(err, details) {
-            if (err) {
-                logger.error(`${prelog} error getting address details from contract: ${err}`);
-                return reject(createResponseObject(false, 'error getting address details from contract'));
-            }
-            let address_details = {
-                country: details[0],
-                state: details[1],
-                city: details[2],
-                location: details[3],
-                zip: details[4],
-            };
-            logger.log(`${prelog} getting more address details from contract`);
-            config.contract.user_address_info(wallet, address_index[1], function(err, details) {
-                if (err) {
-                    logger.error(`${prelog} error getting address details from contract: ${err}`);
-                    return reject(createResponseObject(false, 'error getting address details from contract'));
-                }
-                address_details.name = details[0];
-                logger.log(`${prelog} full address: ${JSON.stringify(address_details)}`);
-                return resolve(address_details);
+            logger.error(`${prelog} ${error.msg}`);
+            logger.log(`${prelog} check tx_id: ${tx_id} again in: ${waitInterval}ms`);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(this.getTxBlockNumber(opts));
+                }, waitInterval);
             });
         });
-    });
 };
 
-const createPostCard = (opts) => {
+const getAddressByBN = (opts, prelog = '') => {
+    const {wallet} = opts;
+
+    return getAddressIndex(opts)
+        .then(result => {
+            const {err, addressIndex} = result;
+            return validateAddressIndex(err, addressIndex);
+        })
+        .then(addressIndex => {
+            logger.log(`${prelog} getting address details from contract`);
+            return getAddressDetails(addressIndex, wallet);
+        })
+        .then(addressDetails => {
+            logger.log(`${prelog} full address: ${JSON.stringify(addressDetails)}`);
+            return addressDetails;
+        });
+};
+
+const createPostCard = (opts, prelog) => {
     const {wallet, tx_id, address, confirmationCodePlain} = opts;
-    const prelog = opts.prelog ? opts.prelog : '';
 
     return new Promise((resolve, reject) => {
-        post_api.create_postcard(wallet, address, tx_id, confirmationCodePlain, function(err, result) {
+        post_api.create_postcard(wallet, address, tx_id, confirmationCodePlain, function (err, result) {
             if (err) {
                 logger.error(`${prelog} error returned by create_postcard: ${err}`);
                 return reject(createResponseObject(false, 'error while sending postcard'));
@@ -191,9 +110,8 @@ const createPostCard = (opts) => {
     });
 };
 
-const removeUsedSessionKey = (opts) => {
+const removeUsedSessionKey = (opts, prelog) => {
     const {session_key, postcard} = opts;
-    const prelog = opts.prelog ? opts.prelog : '';
 
     logger.log(`${prelog} removing used session_key from memory: ${session_key}`);
     return db.unset(session_key)
@@ -215,10 +133,9 @@ const removeUsedSessionKey = (opts) => {
 module.exports = {
     validateData,
     normalizeData,
-    getInfo,
-    getTxBlocknumber,
-    getAddressTxBn,
-    getAddressDetails,
+    getTxInfo,
+    getTxBlockNumber,
+    getAddressByBN,
     createPostCard,
     removeUsedSessionKey,
 };

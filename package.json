@@ -6,14 +6,15 @@
   "main": "server.js",
   "scripts": {
     "build": "npm run build --prefix web-dapp",
-    "coverage": "npm run coverage --prefix web-dapp",
+    "coverage": "lcov-result-merger '?(blockchain|web-dapp)/coverage/lcov.info' | coveralls",
     "deploy-contract": "node utils/deploy_contract",
     "lint": "npm run lint --prefix web-dapp",
-    "postinstall": "npm install --prefix web-dapp",
+    "postinstall": "npm install --prefix web-dapp && npm install --prefix blockchain",
     "prepush": "npm test",
     "prestart": "npm run build",
     "start": "node web-dapp/server",
     "start-testrpc": "./scripts/start_testrpc.sh",
+    "server": "node web-dapp/server",
     "test": "npm test --prefix web-dapp"
   },
   "dependencies": {
@@ -21,7 +22,8 @@
     "web3": "^0.20.4"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "husky": "^0.14.3",
-    "truffle": "4.0.6"
+    "lcov-result-merger": "^2.0.0"
   }
 }
