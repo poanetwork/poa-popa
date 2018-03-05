@@ -9,12 +9,6 @@ const postAPI = require('../server-lib/post_api');
 
 const signerPrivateKey = config.signer_private_key;
 
-const validateBody = (body) => {
-    return new Promise((resolve, reject) => {
-        if (!body) return reject({msg: 'request body empty'});
-        return resolve(body);
-    });
-};
 const validateWallet = (body) => {
     return validateParams(body, 'wallet');
 };
@@ -48,16 +42,19 @@ const validateParams = (body, param) => {
 };
 
 const validateData = (data = {}) => {
-    return validateBody(data)
-        .then(validateWallet)
-        .then(validateName)
-        .then(validateCountry)
-        .then(validateState)
-        .then(validateCity)
-        .then(validateAddress)
-        .then(validateZip)
-        .then(verifyAddress)
-        .then(normalizeData);
+    return new Promise((resolve, reject) => {
+        if (!data) return reject({msg: 'request body empty'});
+        return resolve(data);
+    })
+    .then(validateWallet)
+    .then(validateName)
+    .then(validateCountry)
+    .then(validateState)
+    .then(validateCity)
+    .then(validateAddress)
+    .then(validateZip)
+    .then(verifyAddress)
+    .then(normalizeData);
 };
 
 const verifyAddress = (params) => {
@@ -84,16 +81,23 @@ const normalizeData = (data) => {
     return Promise.resolve({wallet, params});
 };
 
-const sign = (params, wallet) => {
+const getConfirmationCodes = () => {
     const confirmationCodePlain = generateCode();
     const sha3cc = config.web3.sha3(confirmationCodePlain);
-    const priceWei = recalcPrice.get_price_wei();
-    
+
+    return {confirmationCodePlain, sha3cc};
+};
+
+const getPriceWei = () => {
+    return recalcPrice.get_price_wei();
+};
+
+const sign = (params, wallet, sha3cc, price_wei) => {
     return new Promise((resolve, reject) => {
         try {
-            const signatureParams = Object.assign(params, {wallet, sha3cc});
+            const signatureParams = Object.assign(params, {wallet, sha3cc, price_wei});
             const signOutput = buildSignature(signatureParams, signerPrivateKey);
-            return resolve ({confirmationCodePlain, sha3cc, priceWei, signOutput});
+            return resolve ({sha3cc, signOutput});
         } catch(err) {
             const log = `exception in sign(): ${err.stack}`;
             const msg = 'exception occured during signature calculation';
@@ -115,6 +119,8 @@ const setSessionKey = (wallet, confirmationCodePlain) => {
 
 module.exports = {
     validateData,
+    getConfirmationCodes,
+    getPriceWei,
     sign,
     setSessionKey,
 };
