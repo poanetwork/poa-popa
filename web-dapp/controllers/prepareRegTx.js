@@ -9,12 +9,6 @@ const postAPI = require('../server-lib/post_api');
 
 const signerPrivateKey = config.signer_private_key;
 
-const validateBody = (body) => {
-    return new Promise((resolve, reject) => {
-        if (!body) return reject({msg: 'request body empty'});
-        return resolve(body);
-    });
-};
 const validateWallet = (body) => {
     return validateParams(body, 'wallet');
 };
@@ -48,16 +42,19 @@ const validateParams = (body, param) => {
 };
 
 const validateData = (data = {}) => {
-    return validateBody(data)
-        .then(validateWallet)
-        .then(validateName)
-        .then(validateCountry)
-        .then(validateState)
-        .then(validateCity)
-        .then(validateAddress)
-        .then(validateZip)
-        .then(verifyAddress)
-        .then(normalizeData);
+    return new Promise((resolve, reject) => {
+        if (!body) return reject({msg: 'request body empty'});
+        return resolve(body);
+    })
+    .then(validateWallet)
+    .then(validateName)
+    .then(validateCountry)
+    .then(validateState)
+    .then(validateCity)
+    .then(validateAddress)
+    .then(validateZip)
+    .then(verifyAddress)
+    .then(normalizeData);
 };
 
 const verifyAddress = (params) => {
