@@ -22,7 +22,7 @@ module.exports = (opts) => {
         let confirmationCodePlain;
         return notifyRegTxController.getTxInfo({ session_key, wallet }, prelog)
             .then(info => {
-                confirmationCodePlain = info.confirmation_code_plain;
+                confirmationCodePlain = info.confirmationCodePlain;
                 const contractAddress = config.cconf.address;
                 const waitMaxTime = config.block_wait_max_time_ms;
                 const waitInterval = config.block_wait_interval_ms;
