@@ -15,6 +15,10 @@ function generate_code() {
                 continue;
             }
             code += config.code_symbols[b%config.code_symbols.length];
+
+            if (code.length >= config.code_length) {
+                break;
+            }
         }
     } while (code.length < config.code_length);
 
