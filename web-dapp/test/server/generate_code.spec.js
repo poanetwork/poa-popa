@@ -4,6 +4,7 @@ const generate_code = require('../../server-lib/generate_code');
 const config = require('../../server-config');
 
 const TRIES = 1e4;
+
 const EXPECTED_FREQ = 1.0/config.code_symbols.length;
 const MAX_DIFF = EXPECTED_FREQ*5e-2;
 
@@ -15,7 +16,7 @@ function safe_inc(obj, key, val = 1) {
 }
 
 function a_in_b(a,b) {
-    for (var j = 0; j < a.length; j++) {
+    for (let j = 0; j < a.length; j++) {
         if (b.indexOf(a[j]) < 0) return false;
     }
     return true;
@@ -23,7 +24,7 @@ function a_in_b(a,b) {
 
 describe('Confirmation code', () => {
     it('cc length should be equal to the one in config', () => {
-        var pass = true;
+        let pass = true;
 
         for (let i = 0; i < TRIES; i++) {
             let code = generate_code();
