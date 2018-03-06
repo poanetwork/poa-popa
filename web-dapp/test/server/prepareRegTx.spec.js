@@ -1,7 +1,8 @@
 'use strict';
-const {wallets, badWallets} = require('./_utils/mocks');
+const {wallets, badWallets, confirmationCodesSha3} = require('./_utils/mocks');
 const [wallet] = wallets;
 const [badWallet] = badWallets;
+const priceWei = '1';
 
 jest.mock('../../server-lib/post_api', () => ({
     verify_address: jest.fn(() => (Promise.resolve(true))),
@@ -137,7 +138,7 @@ describe('Prepare Reg Transaction', () => {
                 zip: '90013',
             };
 
-            return expect(prepareRegTx.sign(params, wallet)).resolves.toBeTruthy();
+            return expect(prepareRegTx.sign(params, wallet, confirmationCodesSha3[0], priceWei)).resolves.toBeTruthy();
         });
     });
 
