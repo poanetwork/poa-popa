@@ -60,7 +60,6 @@ describe('Confirmation code', () => {
         let freqs = Object.keys(freqs_stat);
 
         let max_diff = 0;
-        let EXPECTED_FREQ = 1.0/config.code_symbols.length;
         for (let i = 0; i < freqs.length; i++) {
             let diff = Math.abs( freqs_stat[freqs[i]] - EXPECTED_FREQ );
             if (diff > max_diff) {
