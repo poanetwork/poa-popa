@@ -33,6 +33,17 @@ const normalizeString = (str) => {
     return str.trim().toLowerCase();
 };
 
+const validateParams = (body, param) => {
+    return new Promise((resolve, reject) => {
+        const result = (param === 'wallet') ? validWallet(body[param]) : validString(body[param]);
+        if (!result.ok) {
+            const log = `validation error on ${param}: ${body[param]}, err: ${result.msg}`;
+            return reject({...result, log});
+        }
+        return resolve(body)
+    });
+};
+
 module.exports = {
     validate: {
         wallet: validWallet,
@@ -41,4 +52,5 @@ module.exports = {
     normalize: {
         string: normalizeString,
     },
+    validateParams
 };

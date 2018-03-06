@@ -14,6 +14,10 @@ const confirmationCodes = [
     'h44hh7n5545',
 ];
 
+const confirmationCodesSha3 = [
+    '0x8c4d9d5a199f6619fe6ab0a3e319122048f0b10c10ace064d39657cbd37f123f'
+];
+
 const sessionKeys = [
     '0.8177204204187007',
 ];
@@ -132,6 +136,7 @@ module.exports = {
     wallets,
     badWallets,
     confirmationCodes,
+    confirmationCodesSha3,
     sessionKeys,
     badSessionKeys,
     txIds,
