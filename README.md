@@ -49,8 +49,9 @@ module.exports = function (cfg_public) {
         confirmation_page_url: '******************************',
     };
 };
-
 ```
+_Note:_ you can get the `lob_api_key` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**
+
 If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
 
 5. open new tab in your terminal, and start testrpc with a set of predefined acounts
@@ -87,6 +88,20 @@ To find response details from Lob, including links to the postcard, look for a l
 ```
 in server logs
 
+_Note:_ in the property `thumbnails` you can found the url of the front and back sides of the postcard with the confirmation code:
+```json
+"thumbnails": [
+    {
+      "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
+      "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
+      "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..."
+    },
+    {
+      "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
+      "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
+      "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_.."
+    }
+```
 ### Running tests on test network:
 1. make sure you have truffle installed
 ```
