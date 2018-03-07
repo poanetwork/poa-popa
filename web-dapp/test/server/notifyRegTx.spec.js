@@ -131,6 +131,7 @@ describe('Notify Register Transactions', () => {
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
+                startedAt: new Date(),
             };
             return expect(notifyRegTx.getTxBlockNumber(opts)).resolves.toBeTruthy();
         });
@@ -141,6 +142,7 @@ describe('Notify Register Transactions', () => {
                 contractAddress: walletC,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
+                startedAt: new Date(),
             };
             return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
         });
@@ -151,6 +153,7 @@ describe('Notify Register Transactions', () => {
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
+                startedAt: new Date(),
             };
             return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
         });
@@ -161,6 +164,7 @@ describe('Notify Register Transactions', () => {
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
+                startedAt: new Date(),
             };
             return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
         });
