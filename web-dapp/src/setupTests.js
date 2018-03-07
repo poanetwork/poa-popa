@@ -6,5 +6,15 @@ Enzyme.configure({ adapter: new EnzymeAdapter() });
 
 // External libraries stubs
 global.swal = jest.fn();
-global.Swipe = jest.fn();
-global.$ = jest.fn(() => ({ on: jest.fn() }));
+global.Swipe = jest.fn((element, { callback }) => callback(0));
+global.$ = jest.fn(() => {
+    const jQuery = {
+        on: jest.fn(),
+        ajax: jest.fn(),
+        removeClass: jest.fn(() => jQuery),
+        eq: jest.fn(() => jQuery),
+        addClass: jest.fn(() => jQuery)
+    };
+
+    return jQuery;
+});

@@ -15,7 +15,7 @@ const [badWallet] = badWallets;
 const [confCodePlain] = confirmationCodes;
 const [sessionKey] = sessionKeys;
 const [badSessionKey] = badSessionKeys;
-const [txIdA, txIdB, txIdC, txIdD, txIdE, txIdF] = txIds;
+const [txIdA, txIdB, txIdC, txIdD, txIdE, txIdF, txIdG] = txIds;
 const [badTxId] = badTxIds;
 
 const info = {
@@ -26,6 +26,7 @@ const info = {
 const {
     mockDb,
     mockGetTransaction,
+    mockGetTxReceipt,
     mockGetAddressIndex,
     mockGetAddressDetails } = require('./_utils/mocks');
 
@@ -33,6 +34,7 @@ jest.mock('../../server-lib/session_store', () => ({
     get: jest.fn(mockDb.get)
 }));
 jest.mock('../../server-lib/get_transaction', () => jest.fn(mockGetTransaction));
+jest.mock('../../server-lib/get_tx_receipt', () => jest.fn(mockGetTxReceipt));
 jest.mock('../../server-lib/get_address_index', () => jest.fn(mockGetAddressIndex));
 jest.mock('../../server-lib/get_address_details', () => jest.fn(mockGetAddressDetails));
 
@@ -129,6 +131,7 @@ describe('Notify Register Transactions', () => {
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
+                startedAt: new Date(),
             };
             return expect(notifyRegTx.getTxBlockNumber(opts)).resolves.toBeTruthy();
         });
@@ -139,6 +142,7 @@ describe('Notify Register Transactions', () => {
                 contractAddress: walletC,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
+                startedAt: new Date(),
             };
             return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
         });
@@ -146,6 +150,28 @@ describe('Notify Register Transactions', () => {
             const opts = {
                 wallet: walletC,
                 tx_id: txIdA,
+                contractAddress: walletB,
+                waitMaxTime: 10000,
+                waitInterval: 3000,
+                startedAt: new Date(),
+            };
+            return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
+        });
+        it('should return fatal error if txReceipt.status is 0', () => {
+            const opts = {
+                wallet: walletA,
+                tx_id: txIdG,
+                contractAddress: walletB,
+                waitMaxTime: 10000,
+                waitInterval: 3000,
+                startedAt: new Date(),
+            };
+            return expect(notifyRegTx.getTxBlockNumber(opts)).rejects.toBeTruthy();
+        });
+        it('should return fatal error if txReceipt.status is 0', () => {
+            const opts = {
+                wallet: walletA,
+                tx_id: txIdG,
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
