@@ -53,8 +53,8 @@ const getTxInfo = (opts, prelog = '') => {
 };
 
 const getTxBlockNumber = (opts, prelog = '') => {
-    const {tx_id, wallet, contractAddress, waitInterval, waitMaxTime} = opts;
-    const startedAt = new Date();
+    const {tx_id, wallet, contractAddress, waitInterval, waitMaxTime, startedAt} = opts;
+
 
     logger.log(`${prelog} fetching tx_details from blockchain by tx_id: ${tx_id}`);
     return getTransaction(tx_id)
