@@ -7,8 +7,10 @@ const logger = require('../server-lib/logger');
 const {validate, normalize} = require('../server-lib/validations');
 const {createResponseObject} = require('../server-lib/utils');
 const getTransaction = require('../server-lib/get_transaction');
+const getTxReceipt = require('../server-lib/get_tx_receipt');
 const validateTxInfo = require('../server-lib/validate_tx_info');
 const validateTxDetails = require('../server-lib/validate_tx_details');
+const validateTxReceipt = require('../server-lib/validate_tx_receipt');
 const validateAddressIndex = require('../server-lib/validate_address_index');
 const getAddressIndex = require('../server-lib/get_address_index');
 const getAddressDetails = require('../server-lib/get_address_details');
@@ -64,6 +66,14 @@ const getTxBlockNumber = (opts, prelog = '') => {
             logger.log(`${prelog} got block number for tx_id: ${tx_id}, tx_bn: ${txDetails.blockNumber}`);
             return txDetails.blockNumber;
         })
+        .then((blockNumber) => {
+            logger.log(`${prelog} checking tx receipt for status`);
+            return getTxReceipt(tx_id);
+        })
+        .then((result) => {
+            const {error, txReceipt} = result;
+            return validateTxReceipt(tx_id, error, txReceipt);
+        })
         .catch((error) => {
             if (error.fatal || new Date() - startedAt > waitMaxTime) {
                 throw new Error(error);
@@ -72,7 +82,7 @@ const getTxBlockNumber = (opts, prelog = '') => {
             logger.log(`${prelog} check tx_id: ${tx_id} again in: ${waitInterval}ms`);
             return new Promise((resolve) => {
                 setTimeout(() => {
-                    resolve(this.getTxBlockNumber(opts));
+                    resolve(getTxBlockNumber(opts));
                 }, waitInterval);
             });
         });
