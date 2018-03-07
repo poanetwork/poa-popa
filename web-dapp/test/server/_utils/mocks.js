@@ -33,6 +33,7 @@ const txIds = [
     '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786294',
     '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786295',
     '0x4d7af99cbbdb777d28c4586f71f5839d2b4839601d3ef6f51acab56a84d9c2d6',
+    '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786297',
 ];
 
 const badTxIds = [
@@ -80,7 +81,7 @@ const mockGetTransaction = (txId) => {
             from: wallets[0],
         };
     }
-    if (txId === txIds[0]) {
+    if (txId === txIds[0] || txId === txIds[6]) {
         response.txDetails = {
             hash: txId,
             to: wallets[1],
@@ -91,6 +92,27 @@ const mockGetTransaction = (txId) => {
     return new Promise((resolve) => {
         return resolve(response);
     });
+};
+
+const mockGetTxReceipt = (txId) => {
+    if (txId === txIds[0]) {
+        return new Promise((resolve) => {
+            return resolve({
+                txReceipt: {
+                    status: 1,
+                },
+            });
+        });
+    }
+    else {
+        return new Promise((resolve) => {
+            return resolve({
+                txReceipt: {
+                    status: 0,
+                },
+            });
+        });
+    }
 };
 
 const mockGetAddressIndex = () => {
@@ -143,6 +165,7 @@ module.exports = {
     badTxIds,
     mockDb,
     mockGetTransaction,
+    mockGetTxReceipt,
     mockGetAddressIndex,
     mockGetAddressDetails,
     mockUserAddressByCreationBlock,
