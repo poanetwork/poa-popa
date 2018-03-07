@@ -512,7 +512,7 @@ describe('<ConfirmationPage />', () => {
             'success',
             'Address confirmed!',
             [
-                ['Transaction to confirm address was mined'],
+                ['Transaction to confirm address was submitted'],
                 ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
                 ['Country', 'US'],
                 ['State', 'NM'],
@@ -555,7 +555,7 @@ describe('<ConfirmationPage />', () => {
             'success',
             'Address confirmed!',
             [
-                ['Transaction to confirm address was mined'],
+                ['Transaction to confirm address was submitted'],
                 ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
                 ['Country', 'US'],
                 ['State', 'NM'],
