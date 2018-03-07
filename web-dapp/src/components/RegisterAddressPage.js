@@ -306,7 +306,7 @@ class RegisterAddressPage extends Component {
                             window.show_alert('error', 'Register address', [['Error', err.message]]);
                         }
                         else if (tx_id) {
-                            console.log('Transaction mined: ' + tx_id);
+                            console.log('Transaction submitted: ' + tx_id);
                             window.$.ajax({
                                 type: 'post',
                                 url: './api/notifyRegTx',

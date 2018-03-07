@@ -72,7 +72,7 @@ const getTxBlockNumber = (opts, prelog = '') => {
             logger.log(`${prelog} check tx_id: ${tx_id} again in: ${waitInterval}ms`);
             return new Promise((resolve) => {
                 setTimeout(() => {
-                    resolve(this.getTxBlockNumber(opts));
+                    resolve(getTxBlockNumber(opts));
                 }, waitInterval);
             });
         });

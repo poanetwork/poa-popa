@@ -253,9 +253,9 @@ class ConfirmationPage extends Component {
                                 window.show_alert('error', 'Confirming address', [['Error', err.message]]);
                             }
                             else if (tx_id) {
-                                console.log('Transaction mined: ' + tx_id);
+                                console.log('Transaction submitted: ' + tx_id);
                                 window.show_alert('success', 'Address confirmed!', [
-                                    ['Transaction to confirm address was mined'],
+                                    ['Transaction to confirm address was submitted'],
                                     ['Transaction ID', tx_id],
                                     ['Country', address_details.country.toUpperCase()],
                                     ['State', address_details.state.toUpperCase()],
