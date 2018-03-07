@@ -74,9 +74,6 @@ const getTxBlockNumber = (opts, prelog = '') => {
             const {error, txReceipt} = result;
             return validateTxReceipt(tx_id, error, txReceipt);
         })
-        .then((blockNumber) => {
-            return blockNumber;
-        })
         .catch((error) => {
             if (error.fatal || new Date() - startedAt > waitMaxTime) {
                 throw new Error(error);

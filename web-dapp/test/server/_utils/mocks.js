@@ -100,6 +100,7 @@ const mockGetTxReceipt = (txId) => {
             return resolve({
                 txReceipt: {
                     status: 1,
+                    blockNumber: 10,
                 },
             });
         });
@@ -109,6 +110,7 @@ const mockGetTxReceipt = (txId) => {
             return resolve({
                 txReceipt: {
                     status: 0,
+                    blockNumber: 10,
                 },
             });
         });
