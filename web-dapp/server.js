@@ -11,4 +11,4 @@ recalc_price.init(() => {
     app.listen(port, () => {
         logger.log(`Listening on ${port}`);
     });
-}
+});
