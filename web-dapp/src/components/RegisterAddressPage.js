@@ -312,7 +312,7 @@ class RegisterAddressPage extends React.Component {
                             this.setState({ loading: false });
                             window.show_alert('error', 'Register address', [['Error', err.message]]);
                         } else if (tx_id) {
-                            logger.debug('Transaction mined: ' + tx_id);
+                            logger.debug('Transaction submitted: ' + tx_id);
                             window.$.ajax({
                                 type: 'post',
                                 url: './api/notifyRegTx',

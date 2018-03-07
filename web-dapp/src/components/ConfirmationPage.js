@@ -260,9 +260,9 @@ class ConfirmationPage extends React.Component {
                                 logger.debug('Error occured in confirm_address: ', err);
                                 window.show_alert('error', 'Confirming address', [['Error', err.message]]);
                             } else if (tx_id) {
-                                logger.debug('Transaction mined: ' + tx_id);
+                                logger.debug('Transaction submitted: ' + tx_id);
                                 window.show_alert('success', 'Address confirmed!', [
-                                    ['Transaction to confirm address was mined'],
+                                    ['Transaction to confirm address was submitted'],
                                     ['Transaction ID', tx_id],
                                     ['Country', address_details.country.toUpperCase()],
                                     ['State', address_details.state.toUpperCase()],
