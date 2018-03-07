@@ -550,7 +550,7 @@ describe('<RegisterAddressPage />', () => {
         );
     });
 
-    it('displays a message when register address was mined but postcard was not sent', () => {
+    it('displays a message when register address was submitted but postcard was not sent', () => {
         const page = mount(
             <RegisterAddressPage
                 my_web3={web3}
@@ -612,7 +612,7 @@ describe('<RegisterAddressPage />', () => {
             'error',
             'Postcard sending',
             [
-                ['Transaction to register address was mined, but postcard was not sent'],
+                ['Transaction to register address was submitted, but postcard was not sent'],
                 ['Request ID', 'test'],
                 ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
                 ['Error', 'error message'],
@@ -620,7 +620,7 @@ describe('<RegisterAddressPage />', () => {
         );
     });
 
-    it('displays a message when register address was mined and postcard was sent', () => {
+    it('displays a message when register address was submitted and postcard was sent', () => {
         const page = mount(
             <RegisterAddressPage
                 my_web3={web3}
@@ -685,7 +685,7 @@ describe('<RegisterAddressPage />', () => {
             'success',
             'Address registered!',
             [
-                ['Transaction to register address was mined and postcard was sent'],
+                ['Transaction to register address was submitted and postcard was sent'],
                 ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
                 ['Expected delivery date', 'tomorrow'],
                 ['Mail type', 'none']
