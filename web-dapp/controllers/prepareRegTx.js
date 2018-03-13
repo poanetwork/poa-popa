@@ -43,7 +43,7 @@ const validateParams = (body, param) => {
 
 const validateData = (data = {}) => {
     return new Promise((resolve, reject) => {
-        if (!data) return reject({msg: 'request body empty'});
+        if (!data || !Object.keys(data).length) return reject({ok: false, log: 'request body empty', msg: 'request body empty'});
         return resolve(data);
     })
     .then(validateWallet)
