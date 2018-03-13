@@ -6,7 +6,9 @@ function send_response(res, obj) {
         obj.x_id = res.req.x_id;
     }
     logger.log('[response] (' + res.req.log_prfx + ') ' + JSON.stringify(obj));
-    return res.json(obj);
+    const status = (obj.ok) ? 200 : 400;
+    return res.status(status)
+        .json(obj);
 }
 
 module.exports = send_response;
