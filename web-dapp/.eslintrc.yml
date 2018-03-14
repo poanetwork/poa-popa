@@ -5,10 +5,15 @@ extends:
   - 'eslint:recommended'
   - 'plugin:react/recommended'
 parserOptions:
-  sourceType: script
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
+    modules: true
+    experimentalObjectRestSpread: true
 plugins:
   - react
   - jsx-a11y
+  - json
 globals:
   jest: false
   describe: false
@@ -22,6 +27,11 @@ globals:
   beforeAll: false
   beforeEach: false
   expect: false
+  document: false
+  window: false
+  navigator: false
+  fetch: false
+  URL: false
 rules:
   indent:
     - warn

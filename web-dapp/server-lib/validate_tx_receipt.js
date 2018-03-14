@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = (tx_id, error, txReceipt) => {
     return new Promise((resolve, reject) => {
@@ -15,4 +15,4 @@ module.exports = (tx_id, error, txReceipt) => {
             return reject({msg: `tx was unsuccessfull, receipt status: ${txReceipt.status}`, fatal: true});
         }
     });
-}
+};

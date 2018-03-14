@@ -1,4 +1,4 @@
-'use strict';
+
 const config = require('../server-config');
 
 module.exports = (tx_id) => {
@@ -7,4 +7,4 @@ module.exports = (tx_id) => {
             return resolve({error, txReceipt});
         });
     });
-}
+};

@@ -1,4 +1,4 @@
-'use strict';
+
 const winston = require('winston');
 
 const transports = [];
@@ -8,13 +8,13 @@ if (process.env.NODE_ENV !== 'test') {
     const consoleTransport = new winston.transports.Console({
         level: process.env.LOG_LEVEL || 'debug',
         handleExceptions: true,
-        humanReadableUnhandledException: true
+        humanReadableUnhandledException: true,
     });
     transports.push(consoleTransport);
 }
 
 const logger = new winston.Logger({
-    transports: transports
+    transports: transports,
 });
 
 module.exports = {

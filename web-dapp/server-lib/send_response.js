@@ -1,4 +1,4 @@
-'use strict';
+
 const logger = require('./logger');
 
 function send_response(res, obj) {

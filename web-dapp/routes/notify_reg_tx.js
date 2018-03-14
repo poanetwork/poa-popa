@@ -1,4 +1,4 @@
-'use strict';
+
 
 const logger = require('../server-lib/logger');
 const express = require('express');
@@ -27,7 +27,7 @@ module.exports = (opts) => {
                 const waitMaxTime = config.block_wait_max_time_ms;
                 const waitInterval = config.block_wait_interval_ms;
                 const startedAt = new Date();
-                return notifyRegTxController.getTxBlockNumber({tx_id, wallet, contractAddress, waitMaxTime, waitInterval, startedAt}, prelog)
+                return notifyRegTxController.getTxBlockNumber({tx_id, wallet, contractAddress, waitMaxTime, waitInterval, startedAt}, prelog);
             })
             .then(tx_bn => {
                 return notifyRegTxController.getAddressByBN({wallet, tx_bn}, prelog);

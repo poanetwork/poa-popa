@@ -1,9 +1,7 @@
-'use strict';
+
 
 const logger = require('../server-lib/logger');
 const express = require('express');
-const config = require('../server-config');
-const sign = require('../server-lib/sign');
 const send_response = require('../server-lib/send_response');
 
 const prepareConTx = require('../controllers/prepareConTx');

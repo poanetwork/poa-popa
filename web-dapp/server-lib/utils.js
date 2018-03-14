@@ -1,4 +1,4 @@
-'use strict';
+
 
 const createResponseObject = (ok, err) => {
     return { ok, err };

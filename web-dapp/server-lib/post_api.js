@@ -1,4 +1,4 @@
-'use strict';
+
 const config = require('../server-config');
 const fs = require('fs');
 const path = require('path');

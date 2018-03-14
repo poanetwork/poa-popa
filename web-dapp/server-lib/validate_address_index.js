@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = (err, addressIndex) => {
     return new Promise((resolve, reject) => {
