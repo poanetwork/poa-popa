@@ -23,10 +23,6 @@ describe('prepare_reg_tx', () => {
                 address: '1234, Balboa Drive',
                 zip: '90210',
             })
-            .then(res => {
-                console.log("🦄 res.body", res.body);
-                
-            })
-            // .expect(200);
+            .expect(200);
     });
 });
