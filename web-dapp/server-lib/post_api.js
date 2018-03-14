@@ -64,6 +64,9 @@ function verify_address(address) {
             zip_code: address.zip.toUpperCase(),
         }, function (err, result) {
             if (err || !result || !result.deliverability || result.deliverability.trim().toLowerCase() !== 'deliverable') {
+                console.log("🦄 err.stack", err.stack);
+                console.log("🦄 err", errg);
+
                 return reject({ok: false, msg: 'address is invalid', log: 'address is invalid'});
             }
             return resolve(address);

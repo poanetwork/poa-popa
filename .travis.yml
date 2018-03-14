@@ -1,5 +1,8 @@
 language: node_js
 
+before_script:
+  - cp web-dapp/test/server/_utils/server-config-private.js web-dapp/
+
 script:
   - npm run --prefix=blockchain coverage
   - npm test

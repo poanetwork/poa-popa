@@ -3,6 +3,9 @@
 const request = require('supertest');
 const app = require('../../app');
 
+jest.mock('../../server-lib/post_api', () => ({
+    verify_address: jest.fn(() => (Promise.resolve(true))),
+}));
 
 describe('prepare_reg_tx', () => {
     it('should return error if body is empty', () => {
