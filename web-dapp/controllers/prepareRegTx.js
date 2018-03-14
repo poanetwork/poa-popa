@@ -93,6 +93,12 @@ const getPriceWei = () => {
 };
 
 const sign = (params, wallet, sha3cc, price_wei) => {
+    console.log("🦄 params", params);
+    console.log("🦄 wallet", wallet);
+    console.log("🦄 sha3cc", sha3cc);
+    console.log("🦄 price_wei", price_wei);
+    console.log("🦄 signerPrivateKey", signerPrivateKey);
+
     return new Promise((resolve, reject) => {
         try {
             const signatureParams = Object.assign(params, {wallet, sha3cc, price_wei});
