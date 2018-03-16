@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import RegisterAddressPage from './RegisterAddressPage';
 
 const web3 = { eth: { accounts: ['0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1'] } };
-const contract = require('../../test/server/_utils/mock-contract-output');
+const contract = require('../../test/server/_utils/contract-output');
 
 const componentDidMount = jest.spyOn(RegisterAddressPage.prototype, 'componentDidMount');
 const checkAddressExists = jest.spyOn(RegisterAddressPage.prototype, 'check_address_exists');

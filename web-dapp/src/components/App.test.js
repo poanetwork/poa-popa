@@ -10,12 +10,12 @@ import RegisterAddressPage from './RegisterAddressPage';
 import ConfirmationPage from './ConfirmationPage';
 
 const web3 = new Web3(new FakeProvider());
-const contract = require('../../test/server/_utils/mock-contract-output');
+const contract = require('../../test/server/_utils/contract-output');
 
 const checkContract = jest.spyOn(App.prototype, 'check_contract');
 
 jest.mock('../contract-output', () => {
-    return require('../../test/server/_utils/mock-contract-output');
+    return require('../../test/server/_utils/contract-output');
 });
 
 describe('<App/>', () => {

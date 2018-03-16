@@ -41,7 +41,7 @@ cfg.web3 = web3;
 
 var contract_output = '';
 if (process.env.NODE_ENV === 'test') {
-    contract_output = path.join(__dirname, './test/server/_utils/mock-contract-output.json');
+    contract_output = path.join(__dirname, './test/server/_utils/contract-output.json');
 } else {
     contract_output = path.join(__dirname, './src/contract-output.json');
 }
