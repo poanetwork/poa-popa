@@ -11,7 +11,9 @@ describe('prepare_reg_tx', () => {
     it('should return error if body is empty', () => {
         return request(app)
             .post('/api/prepareRegTx')
-            .expect(400);
+            .then(res => {
+                return expect(res.body.ok).toBeFalsy();
+            });
     });
 
     it('should return a valid response if the input data is valid', () => {
@@ -26,6 +28,8 @@ describe('prepare_reg_tx', () => {
                 address: '1234, Balboa Drive',
                 zip: '90210',
             })
-            .expect(200);
+            .then(res => {
+                return expect(res.body.ok).toBeTruthy();
+            });
     });
 });
