@@ -11,4 +11,4 @@ coverage/
 node_modules
 
 web-dapp/server-config-private.js
-contract-output.json
+web-dapp/src/contract-output.json
