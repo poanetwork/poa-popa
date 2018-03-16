@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import ConfirmationPage from './ConfirmationPage';
 
 const web3 = { eth: { accounts: ['0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1'] } };
-const contract = require('../../test/server/_utils/mock-contract-output');
+const contract = require('../../test/server/_utils/contract-output');
 
 window.$ = { ajax: jest.fn() };
 const ajaxCall = jest.spyOn(window.$, 'ajax');
