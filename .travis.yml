@@ -1,7 +1,7 @@
 language: node_js
 
 before_script:
-  - cp web-dapp/test/server/_utils/contract-output.js web-dapp/src/
+  - cp web-dapp/test/server/_utils/contract-output.json web-dapp/src/
   - cp web-dapp/test/server/_utils/server-config-private.js web-dapp/
 
 script:
