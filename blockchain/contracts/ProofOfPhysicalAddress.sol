@@ -146,8 +146,9 @@ contract ProofOfPhysicalAddress
     public constant returns(bool, uint256, bool)
     {
         require(user_exists(wallet));
+        bytes32 keccak_identifier = keccak256(country, state, city, location, zip);
         for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
-            if (users[wallet].physical_addresses[ai].keccak_identifier == keccak256(country, state, city, location, zip)) {
+            if (users[wallet].physical_addresses[ai].keccak_identifier == keccak_identifier) {
                 return (true, ai, user_address_confirmed(wallet, ai));
             }
         }
