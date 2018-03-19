@@ -7,7 +7,7 @@ module.exports = (opts) => {
             return reject(`no info for this session_key: ${session_key}`);
         }
         if (info.wallet !== wallet) {
-            return reject(`wallets do not match: info.wallet: ${info.wallet}, but wallet: ${wallet}`)
+            return reject(`wallets do not match: info.wallet: ${info.wallet}, but wallet: ${wallet}`);
         }
 
         return resolve(info);

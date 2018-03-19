@@ -15,4 +15,4 @@ module.exports = (tx_id, error, txReceipt) => {
             return reject({msg: `tx was unsuccessfull, receipt status: ${txReceipt.status}`, fatal: true});
         }
     });
-}
+};

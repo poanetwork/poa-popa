@@ -40,7 +40,7 @@ const validateParams = (body, param) => {
             const log = `validation error on ${param}: ${body[param]}, err: ${result.msg}`;
             return reject({...result, log});
         }
-        return resolve(body)
+        return resolve(body);
     });
 };
 
@@ -52,5 +52,5 @@ module.exports = {
     normalize: {
         string: normalizeString,
     },
-    validateParams
+    validateParams,
 };

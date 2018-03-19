@@ -1,4 +1,5 @@
 'use strict';
+
 const config = require('../server-config');
 const crypto = require('crypto');
 

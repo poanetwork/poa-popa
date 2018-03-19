@@ -13,7 +13,7 @@ global.$ = jest.fn(() => {
         ajax: jest.fn(),
         removeClass: jest.fn(() => jQuery),
         eq: jest.fn(() => jQuery),
-        addClass: jest.fn(() => jQuery)
+        addClass: jest.fn(() => jQuery),
     };
 
     return jQuery;

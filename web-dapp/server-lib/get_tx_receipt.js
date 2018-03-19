@@ -7,4 +7,4 @@ module.exports = (tx_id) => {
             return resolve({error, txReceipt});
         });
     });
-}
+};

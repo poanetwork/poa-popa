@@ -1,4 +1,5 @@
 'use strict';
+
 const config = require('../server-config');
 const {createResponseObject} = require('./utils');
 
@@ -14,7 +15,7 @@ module.exports = (address_index, wallet) => {
                 zip: details[4],
             };
             return resolve(address_details);
-        })
+        });
     });
     const addressDetails2Pr = new Promise((resolve, reject) => {
         config.contract.user_address_info(wallet, address_index[1], function (err, details) {
