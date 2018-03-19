@@ -1,4 +1,4 @@
-
+'use strict';
 
 module.exports = (error, txDetails, contractAddress, wallet) => {
     const tx_id = (txDetails && txDetails.hash) || null;

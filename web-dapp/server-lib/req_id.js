@@ -1,4 +1,4 @@
-
+'use strict';
 
 const config = require('../server-config');
 const alphanum_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

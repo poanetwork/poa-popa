@@ -1,3 +1,5 @@
+'use strict';
+
 const sign = require('./sign');
 const Web3 = require('web3');
 

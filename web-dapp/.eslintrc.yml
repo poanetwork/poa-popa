@@ -5,7 +5,7 @@ extends:
   - 'eslint:recommended'
   - 'plugin:react/recommended'
 parserOptions:
-  sourceType: module
+  sourceType: script
   ecmaFeatures:
     jsx: true
     modules: true

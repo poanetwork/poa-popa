@@ -1,4 +1,4 @@
-
+'use strict';
 //const secp256k1 = require('secp256k1');
 const config = require('../server-config');
 const logger = require('./logger');

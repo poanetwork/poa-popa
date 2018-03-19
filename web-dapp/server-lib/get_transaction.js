@@ -1,4 +1,4 @@
-
+'use strict';
 const config = require('../server-config');
 
 module.exports = (tx_id) => {

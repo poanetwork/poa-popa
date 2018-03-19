@@ -1,4 +1,4 @@
-
+'use strict';
 
 const logger = require('../server-lib/logger');
 const express = require('express');

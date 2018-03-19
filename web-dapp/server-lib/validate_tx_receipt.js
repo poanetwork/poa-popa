@@ -1,4 +1,4 @@
-
+'use strict';
 
 module.exports = (tx_id, error, txReceipt) => {
     return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-
+'use strict';
 const config = require('../server-config');
 const web3 = config.web3;
 

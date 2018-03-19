@@ -1,4 +1,4 @@
-
+'use strict';
 
 module.exports = (opts) => {
     const {info, session_key, wallet} = opts;

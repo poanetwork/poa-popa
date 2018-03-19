@@ -1,3 +1,4 @@
+'use strict';
 
 const logger = require('../logger'); // eslint-disable-line no-unused-vars
 const express = require('express');
