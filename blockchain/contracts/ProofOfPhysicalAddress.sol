@@ -8,9 +8,7 @@ contract ProofOfPhysicalAddress
     address public signer;
 
     // Main structures:
-
-    struct PhysicalAddress
-    {
+    struct PhysicalAddress {
         string name;
 
         string country;
@@ -20,6 +18,7 @@ contract ProofOfPhysicalAddress
         string zip;
 
         uint256 creation_block;
+        bytes32 keccak_identifier;
         bytes32 confirmation_code_sha3;
         uint256 confirmation_block;
     }
@@ -147,15 +146,9 @@ contract ProofOfPhysicalAddress
     public constant returns(bool, uint256, bool)
     {
         require(user_exists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1)
-        {
-            if (
-                   str_eq(users[wallet].physical_addresses[ai].country, country)
-                && str_eq(users[wallet].physical_addresses[ai].state, state)
-                && str_eq(users[wallet].physical_addresses[ai].city, city)
-                && str_eq(users[wallet].physical_addresses[ai].location, location)
-                && str_eq(users[wallet].physical_addresses[ai].zip, zip))
-            {
+        bytes32 keccak_identifier = keccak256(country, state, city, location, zip);
+        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
+            if (users[wallet].physical_addresses[ai].keccak_identifier == keccak_identifier) {
                 return (true, ai, user_address_confirmed(wallet, ai));
             }
         }
@@ -233,47 +226,34 @@ contract ProofOfPhysicalAddress
         );
         require(signer_is_valid(data, sig_v, sig_r, sig_s));
 
-        PhysicalAddress memory pa;
-        if (user_exists(msg.sender))
-        {
+        if (user_exists(msg.sender)) {
             // check if this address is already registered
             bool found;
             (found, , ) = user_address_by_address(msg.sender, country, state, city, location, zip);
 
-            if (found) revert();
-
-            // not registered yet:
-            pa.name = name;
-            pa.country = country;
-            pa.state = state;
-            pa.city = city;
-            pa.location = location;
-            pa.zip = zip;
-            pa.creation_block = block.number;
-            pa.confirmation_code_sha3 = confirmation_code_sha3;
-            pa.confirmation_block = 0;
-            users[msg.sender].physical_addresses.push(pa);
-
-            total_addresses += 1;
-        }
-        else
-        {
+            require(!found);
+        } else {
             // new user
             users[msg.sender].creation_block = block.number;
-            pa.name = name;
-            pa.country = country;
-            pa.state = state;
-            pa.city = city;
-            pa.location = location;
-            pa.zip = zip;
-            pa.creation_block = block.number;
-            pa.confirmation_code_sha3 = confirmation_code_sha3;
-            pa.confirmation_block = 0;
-            users[msg.sender].physical_addresses.push(pa);
 
             total_users += 1;
-            total_addresses += 1;
         }
+
+        PhysicalAddress memory pa;
+
+        pa.name = name;
+        pa.country = country;
+        pa.state = state;
+        pa.city = city;
+        pa.location = location;
+        pa.zip = zip;
+        pa.creation_block = block.number;
+        pa.confirmation_code_sha3 = confirmation_code_sha3;
+        pa.keccak_identifier = keccak256(country, state, city, location, zip);
+        pa.confirmation_block = 0;
+        users[msg.sender].physical_addresses.push(pa);
+
+        total_addresses += 1;
     }
 
     function confirm_address(string confirmation_code_plain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
