@@ -198,7 +198,7 @@ Contract source file is `blockchain/contracts/ProofOfPhysicalAddress.sol`.
         string zip;
 
         uint256 creation_block;
-        bytes32 confirmation_code_sha3;
+        bytes32 confirmationCodeSha3;
         uint256 confirmation_block;
     }
 
@@ -230,7 +230,7 @@ Contract source file is `blockchain/contracts/ProofOfPhysicalAddress.sol`.
         string name,
         string country, string state, string city, string location, string zip,
         uint256 price_wei,
-        bytes32 confirmation_code_sha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
+        bytes32 confirmationCodeSha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public payable
  ```
  used to register a new address, and

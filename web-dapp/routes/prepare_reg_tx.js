@@ -49,7 +49,7 @@ module.exports = (opts) => {
                     result: {
                         wallet,
                         params,
-                        confirmation_code_sha3: sha3cc,
+                        confirmationCodeSha3: sha3cc,
                         v: sign_output.v,
                         r: sign_output.r,
                         s: sign_output.s,

@@ -16,10 +16,10 @@ contract ProofOfPhysicalAddress {
         string location;
         string zip;
 
-        uint256 creation_block;
-        bytes32 keccak_identifier;
-        bytes32 confirmation_code_sha3;
-        uint256 confirmation_block;
+        uint256 creationBlock;
+        bytes32 keccakIdentifier;
+        bytes32 confirmationCodeSha3;
+        uint256 confirmationBlock;
     }
 
     function ProofOfPhysicalAddress() public
@@ -29,17 +29,17 @@ contract ProofOfPhysicalAddress {
     }
 
     struct User {
-        uint256 creation_block;
-        PhysicalAddress[] physical_addresses;
+        uint256 creationBlock;
+        PhysicalAddress[] physicalAddresses;
     }
 
     mapping (address => User) public users;
 
     // Stats:
 
-    uint64 public total_users;
-    uint64 public total_addresses;
-    uint64 public total_confirmed;
+    uint64 public totalUsers;
+    uint64 public totalAddresses;
+    uint64 public totalConfirmed;
 
     // Helpers:
     function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
@@ -81,14 +81,14 @@ contract ProofOfPhysicalAddress {
     function userExists(address wallet)
     public constant returns (bool)
     {
-        return (users[wallet].creation_block > 0);
+        return (users[wallet].creationBlock > 0);
     }
 
     function userAddressConfirmed(address wallet, uint256 address_index)
     public constant returns (bool)
     {
         require(userExists(wallet));
-        return (users[wallet].physical_addresses[address_index].confirmation_block > 0);
+        return (users[wallet].physicalAddresses[address_index].confirmationBlock > 0);
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
@@ -97,7 +97,7 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
         for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
-            if (users[wallet].physical_addresses[ai].creation_block == creation_block) {
+            if (users[wallet].physicalAddresses[ai].creationBlock == creation_block) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
         }
@@ -110,7 +110,7 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
         for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
-            if (users[wallet].physical_addresses[ai].confirmation_code_sha3 == confirmation_code_sha3) {
+            if (users[wallet].physicalAddresses[ai].confirmationCodeSha3 == confirmation_code_sha3) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
         }
@@ -122,9 +122,9 @@ contract ProofOfPhysicalAddress {
     public constant returns(bool, uint256, bool)
     {
         require(userExists(wallet));
-        bytes32 keccak_identifier = keccak256(country, state, city, location, zip);
+        bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
         for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
-            if (users[wallet].physical_addresses[ai].keccak_identifier == keccak_identifier) {
+            if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
         }
@@ -135,14 +135,14 @@ contract ProofOfPhysicalAddress {
     public constant returns (string)
     {
         require(userExists(wallet));
-        return users[wallet].physical_addresses[users[wallet].physical_addresses.length-1].name;
+        return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
     }
 
     // if user does not exist, returns 0
     function userAddressesCount(address wallet)
     public constant returns (uint256)
     {
-        return users[wallet].physical_addresses.length;
+        return users[wallet].physicalAddresses.length;
     }
 
     function userAddress(address wallet, uint256 address_index)
@@ -151,11 +151,11 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
         return (
-            users[wallet].physical_addresses[address_index].country,
-            users[wallet].physical_addresses[address_index].state,
-            users[wallet].physical_addresses[address_index].city,
-            users[wallet].physical_addresses[address_index].location,
-            users[wallet].physical_addresses[address_index].zip
+            users[wallet].physicalAddresses[address_index].country,
+            users[wallet].physicalAddresses[address_index].state,
+            users[wallet].physicalAddresses[address_index].city,
+            users[wallet].physicalAddresses[address_index].location,
+            users[wallet].physicalAddresses[address_index].zip
         );
     }
 
@@ -166,9 +166,9 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
         return (
-            users[wallet].physical_addresses[address_index].name,
-            users[wallet].physical_addresses[address_index].creation_block,
-            users[wallet].physical_addresses[address_index].confirmation_block
+            users[wallet].physicalAddresses[address_index].name,
+            users[wallet].physicalAddresses[address_index].creationBlock,
+            users[wallet].physicalAddresses[address_index].confirmationBlock
         );
     }
 
@@ -209,9 +209,9 @@ contract ProofOfPhysicalAddress {
             require(!found);
         } else {
             // new user
-            users[msg.sender].creation_block = block.number;
+            users[msg.sender].creationBlock = block.number;
 
-            total_users += 1;
+            totalUsers += 1;
         }
 
         PhysicalAddress memory pa;
@@ -228,7 +228,7 @@ contract ProofOfPhysicalAddress {
         pa.confirmation_block = 0;
         users[msg.sender].physical_addresses.push(pa);
 
-        total_addresses += 1;
+        totalAddresses += 1;
     }
 
     function confirmAddress(string confirmation_code_plain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
@@ -252,8 +252,8 @@ contract ProofOfPhysicalAddress {
         if (confirmed) {
             revert();
         } else {
-            users[msg.sender].physical_addresses[ai].confirmation_block = block.number;
-            total_confirmed += 1;
+            users[msg.sender].physicalAddresses[ai].confirmationBlock = block.number;
+            totalConfirmed += 1;
         }
     }
 }

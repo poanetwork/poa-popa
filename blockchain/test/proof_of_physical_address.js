@@ -39,12 +39,12 @@ contract('address registration', function(accounts) {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0])
 
-      let addresses = await popa.total_addresses()
+      let addresses = await popa.totalAddresses()
       assert.equal(+addresses, 0)
 
       await registerAddress(popa, args, accounts[0])
 
-      addresses = await popa.total_addresses()
+      addresses = await popa.totalAddresses()
       assert.equal(+addresses, 1)
     })
   })
@@ -58,7 +58,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -74,7 +74,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -90,7 +90,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -106,7 +106,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -122,7 +122,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -138,7 +138,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -154,7 +154,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
