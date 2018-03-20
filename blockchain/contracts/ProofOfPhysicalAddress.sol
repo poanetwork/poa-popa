@@ -44,23 +44,6 @@ contract ProofOfPhysicalAddress
     uint64 public total_confirmed;
 
     // Helpers:
-
-    function str_eq(string s, string m)
-    internal pure returns(bool)
-    {
-        bytes memory _s = bytes(s);
-        bytes memory _m = bytes(m);
-
-        if (_s.length != _m.length) return false;
-        if (_s.length == 0 && _m.length == 0) return true;
-
-        for (uint256 i = 0; i < _s.length; i += 1)
-        {
-            if (_s[i] != _m[i]) return false;
-        }
-        return true;
-    }
-
     function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
     {
@@ -205,12 +188,12 @@ contract ProofOfPhysicalAddress
         bytes32 confirmation_code_sha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public payable
     {
-        require(!str_eq(name, ''));
-        require(!str_eq(country, ''));
-        require(!str_eq(state, ''));
-        require(!str_eq(city, ''));
-        require(!str_eq(location, ''));
-        require(!str_eq(zip, ''));
+        require(bytes(name).length > 0);
+        require(bytes(country).length > 0);
+        require(bytes(state).length > 0);
+        require(bytes(city).length > 0);
+        require(bytes(location).length > 0);
+        require(bytes(zip).length > 0);
         require(msg.value >= price_wei);
 
         bytes32 data = keccak256(
@@ -259,7 +242,7 @@ contract ProofOfPhysicalAddress
     function confirm_address(string confirmation_code_plain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public
     {
-        require(!str_eq(confirmation_code_plain, ''));
+        require(bytes(confirmation_code_plain).length > 0);
         require(user_exists(msg.sender));
 
         bytes32 data = keccak256(
