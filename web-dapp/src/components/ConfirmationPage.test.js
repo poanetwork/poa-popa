@@ -11,7 +11,7 @@ const ajaxCall = jest.spyOn(window.$, 'ajax');
 const componentDidMount = jest.spyOn(ConfirmationPage.prototype, 'componentDidMount');
 const checkUserExists = jest.spyOn(ConfirmationPage.prototype, 'check_user_exists');
 const checkWalletSame = jest.spyOn(ConfirmationPage.prototype, 'check_wallet_same');
-const confirmAddress = jest.spyOn(ConfirmationPage.prototype, 'confirm_address');
+const confirmAddress = jest.spyOn(ConfirmationPage.prototype, 'confirmAddress');
 const confirmClicked = jest.spyOn(ConfirmationPage.prototype, 'confirm_clicked');
 const findAddress = jest.spyOn(ConfirmationPage.prototype, 'find_address');
 const onChange = jest.spyOn(ConfirmationPage.prototype, 'on_change');
@@ -103,7 +103,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback({ message: 'fake error' })) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback({ message: 'fake error' })) }}
             />
         );
 
@@ -124,7 +124,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, false)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, false)) }}
             />
         );
 
@@ -145,7 +145,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -171,7 +171,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -197,7 +197,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -223,7 +223,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -249,7 +249,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -280,7 +280,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -314,7 +314,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -353,7 +353,7 @@ describe('<ConfirmationPage />', () => {
             <ConfirmationPage
                 my_web3={web3}
                 contract={{
-                    user_exists: jest.fn((wallet, opts, callback) => callback(null, true))
+                    userExists: jest.fn((wallet, opts, callback) => callback(null, true))
                 }}
             />
         );
@@ -389,7 +389,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -425,8 +425,8 @@ describe('<ConfirmationPage />', () => {
             <ConfirmationPage
                 my_web3={web3}
                 contract={{
-                    user_exists: jest.fn((wallet, opts, callback) => callback(null, true)),
-                    confirm_address: {
+                    userExists: jest.fn((wallet, opts, callback) => callback(null, true)),
+                    confirmAddress: {
                         estimateGas: jest.fn((code, v, r, s, opts, callback) => {
                             return callback({ message: 'fake error' });
                         })
@@ -469,13 +469,13 @@ describe('<ConfirmationPage />', () => {
 
     it('displays a message when a address was confirmed successfully', () => {
         const contract = {
-            user_exists: jest.fn((wallet, opts, callback) => callback(null, true)),
-            confirm_address: jest.fn((code, v, r, s, opts, callback) => {
+            userExists: jest.fn((wallet, opts, callback) => callback(null, true)),
+            confirmAddress: jest.fn((code, v, r, s, opts, callback) => {
                 return callback(null, '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291');
             })
         };
 
-        contract.confirm_address.estimateGas = jest.fn((code, v, r, s, opts, callback) => {
+        contract.confirmAddress.estimateGas = jest.fn((code, v, r, s, opts, callback) => {
             return callback(null, 1);
         });
 
@@ -527,7 +527,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 

@@ -23,7 +23,7 @@ class RegisterAddressPage extends React.Component {
         this.check_wallet_same = this.check_wallet_same.bind(this);
         this.check_user_exists = this.check_user_exists.bind(this);
         this.check_address_exists = this.check_address_exists.bind(this);
-        this.register_address = this.register_address.bind(this);
+        this.registerAddress = this.registerAddress.bind(this);
         this.order_clicked = this.order_clicked.bind(this);
     }
 
@@ -85,7 +85,7 @@ class RegisterAddressPage extends React.Component {
 
         logger.debug('calling contract.check_user_exists');
 
-        contract.user_exists(opts.wallet, { from: opts.wallet }, (err, result) => {
+        contract.userExists(opts.wallet, { from: opts.wallet }, (err, result) => {
             if (err) {
                 logger.debug('Error calling contract.check_user_exists:', err);
                 return callback(err);
@@ -115,8 +115,8 @@ class RegisterAddressPage extends React.Component {
                 return callback(null, false);
             }
 
-            logger.debug('call contract.user_address_by_address');
-            contract.user_address_by_address(
+            logger.debug('call contract.userAddressByAddress');
+            contract.userAddressByAddress(
                 opts.wallet,
                 opts.params.country,
                 opts.params.state,
@@ -125,25 +125,25 @@ class RegisterAddressPage extends React.Component {
                 opts.params.zip,
                 { from: opts.wallet }, (err, result) => {
                     if (err) {
-                        logger.debug('Error calling contract.user_address_by_address:', err);
+                        logger.debug('Error calling contract.userAddressByAddress:', err);
                         return callback(err);
                     }
 
-                    logger.debug('contract.user_address_by_address result =', result);
+                    logger.debug('contract.userAddressByAddress result =', result);
                     return callback(null, result[0]);
                 });
         });
     };
 
-    register_address(opts, callback) {
+    registerAddress(opts, callback) {
         const contract = this.props.contract;
 
-        logger.debug('Calling contract.register_address.estimateGas');
+        logger.debug('Calling contract.registerAddress.estimateGas');
         logger.debug('opts = ' + JSON.stringify(opts));
 
         opts.params.price_wei = new this.props.my_web3.BigNumber(opts.params.price_wei);
         logger.debug('Price for the postcard (in wei): ' + opts.params.price_wei);
-        contract.register_address.estimateGas(
+        contract.registerAddress.estimateGas(
             opts.params.name,
             opts.params.country,
             opts.params.state,
@@ -178,8 +178,8 @@ class RegisterAddressPage extends React.Component {
                     return callback('Account was switched');
                 }
 
-                logger.debug('Calling contract.register_address');
-                contract.register_address(
+                logger.debug('Calling contract.registerAddress');
+                contract.registerAddress(
                     opts.params.name,
                     opts.params.country,
                     opts.params.state,
@@ -194,10 +194,10 @@ class RegisterAddressPage extends React.Component {
                     { from: opts.wallet, value: opts.params.price_wei, gas: ugas }, (err, tx_id) => {
 
                         if (err) {
-                            logger.debug('Error calling contract.register_address:', err);
+                            logger.debug('Error calling contract.registerAddress:', err);
                             return callback(err);
                         }
-                        logger.debug('contract.register_address, tx_id = ' + tx_id);
+                        logger.debug('contract.registerAddress, tx_id = ' + tx_id);
 
                         return callback(null, tx_id);
                     });
@@ -305,10 +305,10 @@ class RegisterAddressPage extends React.Component {
                         return;
                     }
 
-                    logger.debug('calling register_address');
-                    this.register_address(res.result, (err, tx_id) => {
+                    logger.debug('calling registerAddress');
+                    this.registerAddress(res.result, (err, tx_id) => {
                         if (err) {
-                            logger.debug('Error occured in register_address: ', err);
+                            logger.debug('Error occured in registerAddress: ', err);
                             this.setState({ loading: false });
                             window.show_alert('error', 'Register address', [['Error', err.message]]);
                         } else if (tx_id) {

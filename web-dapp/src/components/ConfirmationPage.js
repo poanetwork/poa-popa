@@ -20,7 +20,7 @@ class ConfirmationPage extends React.Component {
         this.check_wallet_same = this.check_wallet_same.bind(this);
         this.check_user_exists = this.check_user_exists.bind(this);
         this.find_address = this.find_address.bind(this);
-        this.confirm_address = this.confirm_address.bind(this);
+        this.confirmAddress = this.confirmAddress.bind(this);
         this.confirm_clicked = this.confirm_clicked.bind(this);
     }
 
@@ -65,7 +65,7 @@ class ConfirmationPage extends React.Component {
 
         logger.debug('calling contract.check_user_exists');
 
-        contract.user_exists(opts.wallet, { from: opts.wallet }, (err, result) => {
+        contract.userExists(opts.wallet, { from: opts.wallet }, (err, result) => {
             if (err) {
                 logger.debug('Error calling contract.check_user_exists:', err);
                 return callback(err);
@@ -81,15 +81,15 @@ class ConfirmationPage extends React.Component {
         const wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
         if (wsame) return callback(wsame);
 
-        logger.debug('calling contract.user_address_by_confirmation_code');
+        logger.debug('calling contract.userAddressByConfirmationCode');
 
-        contract.user_address_by_confirmation_code(opts.wallet, this.props.my_web3.sha3(opts.params.confirmation_code_plain), (err, result) => {
+        contract.userAddressByConfirmationCode(opts.wallet, this.props.my_web3.sha3(opts.params.confirmation_code_plain), (err, result) => {
             if (err) {
-                logger.debug('Error calling contract.user_address_by_confirmation_code:', err);
+                logger.debug('Error calling contract.userAddressByConfirmationCode:', err);
                 return callback(err);
             }
 
-            logger.debug('contract.user_address_by_confirmation_code result =', result);
+            logger.debug('contract.userAddressByConfirmationCode result =', result);
             const address_details = {};
             address_details.found = result[0];
             address_details.confirmed = result[2];
@@ -98,10 +98,10 @@ class ConfirmationPage extends React.Component {
             }
 
             // TODO: check wallet here + handle possible errors
-            logger.debug('calling contract.user_address');
-            contract.user_address(opts.wallet, result[1], (err, result) => {
+            logger.debug('calling contract.userAddress');
+            contract.userAddress(opts.wallet, result[1], (err, result) => {
                 if (err) {
-                    logger.debug('Error calling contract.user_address:', err);
+                    logger.debug('Error calling contract.userAddress:', err);
                     return callback(err);
                 }
                 logger.debug('***** RESULT=', result);
@@ -115,10 +115,10 @@ class ConfirmationPage extends React.Component {
         });
     }
 
-    confirm_address(opts, callback) {
+    confirmAddress(opts, callback) {
         const contract = this.props.contract;
 
-        contract.confirm_address.estimateGas(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
+        contract.confirmAddress.estimateGas(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
             if (err) {
                 logger.debug('Estimate gas callback error:', err);
                 return callback(err);
@@ -135,14 +135,14 @@ class ConfirmationPage extends React.Component {
                 return callback(wsame);
             }
 
-            logger.debug('calling contract.confirm_address');
+            logger.debug('calling contract.confirmAddress');
 
-            contract.confirm_address(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, {
+            contract.confirmAddress(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, {
                 from: opts.wallet,
                 gas: ugas
             }, (err, tx_id) => {
                 if (err) {
-                    logger.debug('Error calling contract.confirm_address:', err);
+                    logger.debug('Error calling contract.confirmAddress:', err);
                     return callback(err);
                 }
                 logger.debug('tx_id = ' + tx_id);
@@ -251,13 +251,13 @@ class ConfirmationPage extends React.Component {
                             return;
                         }
 
-                        logger.debug('calling confirm_address');
+                        logger.debug('calling confirmAddress');
 
-                        this.confirm_address(res.result, (err, tx_id) => {
+                        this.confirmAddress(res.result, (err, tx_id) => {
                             this.setState({ loading: false });
 
                             if (err) {
-                                logger.debug('Error occured in confirm_address: ', err);
+                                logger.debug('Error occured in confirmAddress: ', err);
                                 window.show_alert('error', 'Confirming address', [['Error', err.message]]);
                             } else if (tx_id) {
                                 logger.debug('Transaction submitted: ' + tx_id);
