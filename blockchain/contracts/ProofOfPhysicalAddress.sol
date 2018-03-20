@@ -51,7 +51,6 @@ contract ProofOfPhysicalAddress {
     }
 
     // Methods:
-
     // set address that is used on server-side to calculate signatures
     // and on contract-side to verify them
     function set_signer(address new_signer)
@@ -174,7 +173,6 @@ contract ProofOfPhysicalAddress {
     }
 
     // Main methods:
-
     function register_address(
         string name,
         string country, string state, string city, string location, string zip,
