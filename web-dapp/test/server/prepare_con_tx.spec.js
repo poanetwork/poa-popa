@@ -18,7 +18,7 @@ describe('prepare_con_tx', () => {
             .post('/api/prepareConTx')
             .send({
                 wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
-                confirmation_code_plain: 'sxxsndac7y7'
+                confirmationCodePlain: 'sxxsndac7y7'
             })
             .then(res => {
                 return expect(res.body.ok).toBeTruthy();

@@ -9,13 +9,13 @@ const validateWallet = (body) => {
     return validateParams(body, 'wallet');
 };
 const validateConfirmationCodePlain = (body) => {
-    return validateParams(body, 'confirmation_code_plain');
+    return validateParams(body, 'confirmationCodePlain');
 };
 
 const normalizeData = (data) => {
     const wallet = data.wallet;
     const params = {
-        confirmation_code_plain: normalize.string(data.confirmation_code_plain),
+        confirmationCodePlain: normalize.string(data.confirmationCodePlain),
     };
     return Promise.resolve({wallet, params});
 };
@@ -37,7 +37,7 @@ const hexParams = (params) => {
 };
 
 const text2sign = (wallet, hexParams) => {
-    const ccp = hexParams.confirmation_code_plain;
+    const ccp = hexParams.confirmationCodePlain;
     return wallet + Buffer.concat([ccp]).toString('hex');
 };
 

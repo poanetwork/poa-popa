@@ -64,7 +64,7 @@ describe('<ConfirmationPage />', () => {
         input.simulate('change');
 
         expect(onChange).toHaveBeenCalled();
-        expect(page.state('confirmation_code_plain')).toBe('12345');
+        expect(page.state('confirmationCodePlain')).toBe('12345');
     });
 
     it('displays a message if the form is sent empty', () => {
@@ -107,7 +107,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
         page.find('.postcard-button').simulate('click');
 
         expect(checkUserExists).toHaveBeenCalled();
@@ -128,7 +128,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
         page.find('.postcard-button').simulate('click');
 
         expect(checkUserExists).toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ error }) => {
             return error({ statusText: 'Server Error', status: 500 });
@@ -175,7 +175,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success();
@@ -201,7 +201,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ x_id: 'test', err: 'fake error' });
@@ -227,7 +227,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test' });
@@ -253,7 +253,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
@@ -292,7 +292,7 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: false });
         });
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         page.find('.postcard-button').simulate('click');
 
@@ -326,7 +326,7 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: true, confirmed: true, ...addressDetails });
         });
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         page.find('.postcard-button').simulate('click');
 
@@ -358,7 +358,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
@@ -393,7 +393,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
@@ -435,7 +435,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({
@@ -444,7 +444,7 @@ describe('<ConfirmationPage />', () => {
                 result: {
                     wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
                     params: {
-                        confirmation_code_plain: 'h44hh7n5545'
+                        confirmationCodePlain: 'h44hh7n5545'
                     }
                 }
             });
@@ -483,7 +483,7 @@ describe('<ConfirmationPage />', () => {
             <ConfirmationPage my_web3={web3} contract={contract}/>
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({
@@ -492,7 +492,7 @@ describe('<ConfirmationPage />', () => {
                 result: {
                     wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
                     params: {
-                        confirmation_code_plain: 'h44hh7n5545'
+                        confirmationCodePlain: 'h44hh7n5545'
                     }
                 }
             });
@@ -531,7 +531,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });

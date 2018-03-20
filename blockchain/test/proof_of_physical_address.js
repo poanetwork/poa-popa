@@ -178,7 +178,7 @@ function buildRegisterAddressArgs(account, extraArgs = {}) {
     city: 'san francisco',
     address: '185 berry st',
     zip: '94107',
-    price_wei: '40000000000000000',
+    priceWei: '40000000000000000',
     cc: '8hwpyynkd9'
   }
 
@@ -187,14 +187,14 @@ function buildRegisterAddressArgs(account, extraArgs = {}) {
   args.sha3cc = web3.sha3(args.cc)
 
   const { v, r, s } = buildSignature(args, privateKeys[1])
-  args.sig_v = v
-  args.sig_r = r
-  args.sig_s = s
+  args.sigV = v
+  args.sigR = r
+  args.sigS = s
 
   return args
 }
 
-function registerAddress(popa, args, account, value = args.price_wei) {
+function registerAddress(popa, args, account, value = args.priceWei) {
   return popa.registerAddress(
     args.name,
     args.country,
@@ -202,11 +202,11 @@ function registerAddress(popa, args, account, value = args.price_wei) {
     args.city,
     args.address,
     args.zip,
-    args.price_wei,
+    args.priceWei,
     args.sha3cc,
-    args.sig_v,
-    args.sig_r,
-    args.sig_s,
+    args.sigV,
+    args.sigR,
+    args.sigS,
     {
       from: account,
       value: value

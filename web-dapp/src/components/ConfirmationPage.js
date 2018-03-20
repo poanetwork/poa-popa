@@ -12,7 +12,7 @@ class ConfirmationPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            confirmation_code_plain: '',
+            confirmationCodePlain: '',
             confirmed_class: '',
             loading: false,
         };
@@ -83,7 +83,7 @@ class ConfirmationPage extends React.Component {
 
         logger.debug('calling contract.userAddressByConfirmationCode');
 
-        contract.userAddressByConfirmationCode(opts.wallet, this.props.my_web3.sha3(opts.params.confirmation_code_plain), (err, result) => {
+        contract.userAddressByConfirmationCode(opts.wallet, this.props.my_web3.sha3(opts.params.confirmationCodePlain), (err, result) => {
             if (err) {
                 logger.debug('Error calling contract.userAddressByConfirmationCode:', err);
                 return callback(err);
@@ -118,7 +118,7 @@ class ConfirmationPage extends React.Component {
     confirmAddress(opts, callback) {
         const contract = this.props.contract;
 
-        contract.confirmAddress.estimateGas(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
+        contract.confirmAddress.estimateGas(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
             if (err) {
                 logger.debug('Estimate gas callback error:', err);
                 return callback(err);
@@ -137,7 +137,7 @@ class ConfirmationPage extends React.Component {
 
             logger.debug('calling contract.confirmAddress');
 
-            contract.confirmAddress(opts.params.confirmation_code_plain, opts.v, opts.r, opts.s, {
+            contract.confirmAddress(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, {
                 from: opts.wallet,
                 gas: ugas
             }, (err, tx_id) => {
@@ -153,9 +153,9 @@ class ConfirmationPage extends React.Component {
     }
 
     confirm_clicked() {
-        const confirmation_code_plain = this.state.confirmation_code_plain.trim();
+        const confirmationCodePlain = this.state.confirmationCodePlain.trim();
 
-        if (!confirmation_code_plain) {
+        if (!confirmationCodePlain) {
             window.show_alert('warning', 'Verification', 'Please enter the confirmation code first');
             return;
         }
@@ -191,7 +191,7 @@ class ConfirmationPage extends React.Component {
                 url: './api/prepareConTx',
                 data: {
                     wallet: wallet,
-                    confirmation_code_plain: this.state.confirmation_code_plain
+                    confirmationCodePlain: this.state.confirmationCodePlain
                 },
                 success: (res) => {
                     if (!res) {
@@ -298,8 +298,8 @@ class ConfirmationPage extends React.Component {
                                     <input
                                         className={'postcard-input ' + this.state.confirmed_class}
                                         type="text"
-                                        name="confirmation_code_plain"
-                                        value={this.state.confirmation_code_plain}
+                                        name="confirmationCodePlain"
+                                        value={this.state.confirmationCodePlain}
                                         onChange={this.on_change}
                                     />
                                     <button type="button" className="postcard-button" onClick={this.confirm_clicked}/>

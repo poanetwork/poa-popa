@@ -22,7 +22,7 @@ module.exports = (opts) => {
                 const hexParams = prepareConTx.hexParams(params);
                 logger.log(`${prelog} combining into text2sign hex string:`);
                 logger.log(`${prelog} wallet:                              ${wallet}`);
-                logger.log(`${prelog} hex confirmation_code_plain:       0x${hexParams.confirmation_code_plain.toString('hex')}`);
+                logger.log(`${prelog} hex confirmationCodePlain:       0x${hexParams.confirmationCodePlain.toString('hex')}`);
                 const text2sign = prepareConTx.text2sign(wallet, hexParams);
                 logger.log(`${prelog} => text2sign: ${text2sign}`);
                 return prepareConTx.getSign(text2sign);

@@ -141,8 +141,8 @@ class RegisterAddressPage extends React.Component {
         logger.debug('Calling contract.registerAddress.estimateGas');
         logger.debug('opts = ' + JSON.stringify(opts));
 
-        opts.params.price_wei = new this.props.my_web3.BigNumber(opts.params.price_wei);
-        logger.debug('Price for the postcard (in wei): ' + opts.params.price_wei);
+        opts.params.priceWei = new this.props.my_web3.BigNumber(opts.params.priceWei);
+        logger.debug('Price for the postcard (in wei): ' + opts.params.priceWei);
         contract.registerAddress.estimateGas(
             opts.params.name,
             opts.params.country,
@@ -150,12 +150,12 @@ class RegisterAddressPage extends React.Component {
             opts.params.city,
             opts.params.address,
             opts.params.zip,
-            opts.params.price_wei,
+            opts.params.priceWei,
             opts.confirmationCodeSha3,
             opts.v,
             opts.r,
             opts.s,
-            { from: opts.wallet, value: opts.params.price_wei }, (err, result) => {
+            { from: opts.wallet, value: opts.params.priceWei }, (err, result) => {
 
                 if (err) {
                     logger.debug('Estimate gas callback error:', err);
@@ -186,12 +186,12 @@ class RegisterAddressPage extends React.Component {
                     opts.params.city,
                     opts.params.address,
                     opts.params.zip,
-                    opts.params.price_wei,
+                    opts.params.priceWei,
                     opts.confirmationCodeSha3,
                     opts.v,
                     opts.r,
                     opts.s,
-                    { from: opts.wallet, value: opts.params.price_wei, gas: ugas }, (err, tx_id) => {
+                    { from: opts.wallet, value: opts.params.priceWei, gas: ugas }, (err, tx_id) => {
 
                         if (err) {
                             logger.debug('Error calling contract.registerAddress:', err);

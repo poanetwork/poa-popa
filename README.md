@@ -78,7 +78,7 @@ wait until a build is ready and `Listening on 3000` is printed in terminal
 
 To find out confirmation code, look for a line like
 ```
-[prepareRegTx] confirmation confirmation_code_plain: y8t44s8yrt
+[prepareRegTx] confirmation confirmationCodePlain: y8t44s8yrt
 ```
 in server logs
 
@@ -229,13 +229,13 @@ Contract source file is `blockchain/contracts/ProofOfPhysicalAddress.sol`.
     function register_address(
         string name,
         string country, string state, string city, string location, string zip,
-        uint256 price_wei,
+        uint256 priceWei,
         bytes32 confirmationCodeSha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public payable
  ```
  used to register a new address, and
  ```
-    function confirm_address(string confirmation_code_plain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
+    function confirm_address(string confirmationCodePlain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
     public
 ```
 used to confirm an address.
@@ -250,7 +250,7 @@ used to confirm an address.
 First, all relevant parameters for `register_address` and `confirm_address` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`), e.g.
 
 ```
-    var text2sign = wallet + Buffer.from(confirmation_code_plain, 'utf8').toString('hex');
+    var text2sign = wallet + Buffer.from(confirmationCodePlain, 'utf8').toString('hex');
     try {
         var sign_output = sign(web3, text2sign);
 ```

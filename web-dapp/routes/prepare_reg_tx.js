@@ -32,14 +32,14 @@ module.exports = (opts) => {
                 sign_output = signOutput;
 
                 logger.log(`${prelog} confirmation code plain: ${confirmationCodePlain}`);
-                logger.log(`${prelog} price_wei: ${priceWei}`);
+                logger.log(`${prelog} priceWei: ${priceWei}`);
                 logger.log(`${prelog} combining into text2sign hex string:`);
                 logger.log(`${prelog} wallet:        ${wallet}`);
                 logger.log(`${prelog} sha3(cc):      ${sha3cc}`);
 
                 logger.log(`${prelog} sign() output: ${JSON.stringify(sign_output)}`);
 
-                params = Object.assign(params, {price_wei: priceWei});
+                params = Object.assign(params, {priceWei: priceWei});
                 return prepareRegTx.setSessionKey(wallet, confirmationCodePlain);
             })
             .then(session_key => {

@@ -4,7 +4,7 @@ const sign = require('./sign');
 const Web3 = require('web3');
 
 function buildSignature(params, privateKey) {
-    const priceWei = Web3.prototype.padLeft(Web3.prototype.toBigNumber(params.price_wei).toString(16), 64);
+    const priceWei = Web3.prototype.padLeft(Web3.prototype.toBigNumber(params.priceWei).toString(16), 64);
 
     const text2sign =
         params.wallet +

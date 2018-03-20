@@ -71,7 +71,7 @@ function verify_address(address) {
     });
 }
 
-function create_postcard(wallet, address_details, tx_id, confirmation_code_plain, done) {
+function create_postcard(wallet, address_details, tx_id, confirmationCodePlain, done) {
     Lob.postcards.create({
         description: 'Postcard for ' + wallet,
         to: {
@@ -90,7 +90,7 @@ function create_postcard(wallet, address_details, tx_id, confirmation_code_plain
         front: pc_front,
         back: pc_back,
         merge_variables: {
-            code: confirmation_code_plain.toUpperCase(),
+            code: confirmationCodePlain.toUpperCase(),
             confirmation_page_url: config.confirmation_page_url,
         },
     }, {
