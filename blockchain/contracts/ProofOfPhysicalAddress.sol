@@ -45,7 +45,7 @@ contract ProofOfPhysicalAddress {
     function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
     {
-        bytes memory prefix = '\x19Ethereum Signed Message:\n32';
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes32 prefixed = keccak256(prefix, data);
         return (ecrecover(prefixed, v, r, s) == signer);
     }
