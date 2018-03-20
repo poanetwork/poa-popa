@@ -2,8 +2,7 @@ pragma solidity 0.4.19;
 
 // Checks -> Effects -> Interactions
 
-contract ProofOfPhysicalAddress
-{
+contract ProofOfPhysicalAddress {
     address public owner;
     address public signer;
 
@@ -29,8 +28,7 @@ contract ProofOfPhysicalAddress
         signer = owner;
     }
 
-    struct User
-    {
+    struct User {
         uint256 creation_block;
         PhysicalAddress[] physical_addresses;
     }
@@ -99,10 +97,8 @@ contract ProofOfPhysicalAddress
     public constant returns (bool, uint256, bool)
     {
         require(user_exists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1)
-        {
-            if (users[wallet].physical_addresses[ai].creation_block == creation_block)
-            {
+        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
+            if (users[wallet].physical_addresses[ai].creation_block == creation_block) {
                 return (true, ai, user_address_confirmed(wallet, ai));
             }
         }
@@ -114,10 +110,8 @@ contract ProofOfPhysicalAddress
     public constant returns (bool, uint256, bool)
     {
         require(user_exists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1)
-        {
-            if (users[wallet].physical_addresses[ai].confirmation_code_sha3 == confirmation_code_sha3)
-            {
+        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
+            if (users[wallet].physical_addresses[ai].confirmation_code_sha3 == confirmation_code_sha3) {
                 return (true, ai, user_address_confirmed(wallet, ai));
             }
         }
@@ -257,12 +251,9 @@ contract ProofOfPhysicalAddress
         (found, ai, confirmed) = user_address_by_confirmation_code(msg.sender, keccak256(confirmation_code_plain));
         require(found);
 
-        if (confirmed)
-        {
+        if (confirmed) {
             revert();
-        }
-        else
-        {
+        } else {
             users[msg.sender].physical_addresses[ai].confirmation_block = block.number;
             total_confirmed += 1;
         }
