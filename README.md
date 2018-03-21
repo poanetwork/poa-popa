@@ -45,7 +45,7 @@ module.exports = function (cfg_public) {
         lob_api_key: '******************************',
         rpc: '******************************',
         signer: '0x****************************', // with 0x prefix
-        signer_private_key: '******************************', // without 0x prefix
+        signerPrivateKey: '******************************', // without 0x prefix
         confirmation_page_url: '******************************',
     };
 };
@@ -156,7 +156,7 @@ module.exports = function (cfg_public) {
         lob_api_key: '*** LOB TEST OR PROD API KEY ***',
         rpc: '*** PROBABLY INFURA ***',
         signer: '*** SIGNER ADDRESS, 0x... ***', // with 0x prefix
-        signer_private_key: '*** SIGNER PRIVATE KEY ***', // without 0x prefix
+        signerPrivateKey: '*** SIGNER PRIVATE KEY ***', // without 0x prefix
         confirmation_page_url: '*** URL FOR CONFIRMATION PAGE, e.g. https://yourserver.com/confirm ***', // used only for postcard
         // it is recommended to install and use redis for keeping session keys
         session_store: {
