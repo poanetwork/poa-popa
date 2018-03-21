@@ -96,7 +96,7 @@ contract ProofOfPhysicalAddress {
     public constant returns (bool, uint256, bool)
     {
         require(userExists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
             if (users[wallet].physicalAddresses[ai].creationBlock == creationBlock) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
@@ -109,7 +109,7 @@ contract ProofOfPhysicalAddress {
     public constant returns (bool, uint256, bool)
     {
         require(userExists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
             if (users[wallet].physicalAddresses[ai].confirmationCodeSha3 == confirmationCodeSha3) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
@@ -123,7 +123,7 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
             if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
@@ -204,7 +204,7 @@ contract ProofOfPhysicalAddress {
         if (userExists(msg.sender)) {
             // check if this address is already registered
             bool found;
-            (found, , ) = user_address_by_address(msg.sender, country, state, city, location, zip);
+            (found, , ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
 
             require(!found);
         } else {
@@ -222,11 +222,11 @@ contract ProofOfPhysicalAddress {
         pa.city = city;
         pa.location = location;
         pa.zip = zip;
-        pa.creation_block = block.number;
+        pa.creationBlock = block.number;
         pa.confirmationCodeSha3 = confirmationCodeSha3;
-        pa.keccak_identifier = keccak256(country, state, city, location, zip);
-        pa.confirmation_block = 0;
-        users[msg.sender].physical_addresses.push(pa);
+        pa.keccakIdentifier = keccak256(country, state, city, location, zip);
+        pa.confirmationBlock = 0;
+        users[msg.sender].physicalAddresses.push(pa);
 
         totalAddresses += 1;
     }
