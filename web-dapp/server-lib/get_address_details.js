@@ -3,9 +3,9 @@
 const config = require('../server-config');
 const {createResponseObject} = require('./utils');
 
-module.exports = (address_index, wallet) => {
+module.exports = (addressIndex, wallet) => {
     const addressDetails1Pr = new Promise((resolve, reject) => {
-        config.contract.user_address(wallet, address_index[1], function (err, details) {
+        config.contract.userAddress(wallet, addressIndex[1], function (err, details) {
             if (err) return reject(createResponseObject(false, 'error getting address details from contract'));
             const address_details = {
                 country: details[0],
@@ -18,7 +18,7 @@ module.exports = (address_index, wallet) => {
         });
     });
     const addressDetails2Pr = new Promise((resolve, reject) => {
-        config.contract.user_address_info(wallet, address_index[1], function (err, details) {
+        config.contract.userAddressInfo(wallet, addressIndex[1], function (err, details) {
             if (err) return reject(createResponseObject(false, 'error getting address details from contract'));
             const address_details = {
                 name: details[0],

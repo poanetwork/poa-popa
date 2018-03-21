@@ -20,7 +20,7 @@ const [badTxId] = badTxIds;
 
 const info = {
     wallet: walletA,
-    confirmation_code_plain: confCodePlain,
+    confirmationCodePlain: confCodePlain,
 };
 
 const {

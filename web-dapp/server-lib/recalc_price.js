@@ -38,9 +38,9 @@ module.exports = {
             return setTimeout(done, 1);
         }
 
-        if (config.price_wei) {
-            logger.log(prelog + 'using constant current_price_wei: ' + config.price_wei);
-            current_price_wei = new config.web3.BigNumber(config.price_wei);
+        if (config.priceWei) {
+            logger.log(prelog + 'using constant current_price_wei: ' + config.priceWei);
+            current_price_wei = new config.web3.BigNumber(config.priceWei);
             initialized = true;
             return setTimeout(done, 1);
         }

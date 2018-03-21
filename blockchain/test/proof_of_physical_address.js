@@ -35,22 +35,22 @@ contract('ownership', (accounts) => {
 
 contract('address registration', function(accounts) {
   contract('', () => {
-    it('register_address should register an address', async () => {
+    it('registerAddress should register an address', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0])
 
-      let addresses = await popa.total_addresses()
+      let addresses = await popa.totalAddresses()
       assert.equal(+addresses, 0)
 
       await registerAddress(popa, args, accounts[0])
 
-      addresses = await popa.total_addresses()
+      addresses = await popa.totalAddresses()
       assert.equal(+addresses, 1)
     })
   })
 
   contract('', () => {
-    it('register_address should fail if name is empty', async () => {
+    it('registerAddress should fail if name is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0], { name: '' })
 
@@ -58,7 +58,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -66,7 +66,7 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
-    it('register_address should fail if country is empty', async () => {
+    it('registerAddress should fail if country is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0], { country: '' })
 
@@ -74,7 +74,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -82,7 +82,7 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
-    it('register_address should fail if state is empty', async () => {
+    it('registerAddress should fail if state is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0], { state: '' })
 
@@ -90,7 +90,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -98,7 +98,7 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
-    it('register_address should fail if city is empty', async () => {
+    it('registerAddress should fail if city is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0], { city: '' })
 
@@ -106,7 +106,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -114,7 +114,7 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
-    it('register_address should fail if address is empty', async () => {
+    it('registerAddress should fail if address is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0], { address: '' })
 
@@ -122,7 +122,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -130,7 +130,7 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
-    it('register_address should fail if zip code is empty', async () => {
+    it('registerAddress should fail if zip code is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0], { zip: '' })
 
@@ -138,7 +138,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -146,7 +146,7 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
-    it('register_address should fail if sent value is not enough', async () => {
+    it('registerAddress should fail if sent value is not enough', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0])
 
@@ -154,7 +154,7 @@ contract('address registration', function(accounts) {
         .then(
           () => assert.fail(), // should reject
           async () => {
-            const addresses = await popa.total_addresses()
+            const addresses = await popa.totalAddresses()
             assert.equal(+addresses, 0)
           }
         )
@@ -163,7 +163,7 @@ contract('address registration', function(accounts) {
 });
 
 /**
- * Build arguments for register_address method
+ * Build arguments for registerAddress method
  *
  * The { v, r, s } values were signed with the PK of address 0xdbde11e51b9fcc9c455de9af89729cf37d835156,
  * 1dd9083e16e190fa5413f87837025556063c546bf16e38cc53fd5d018a3acfbb, for the requester address
@@ -178,7 +178,7 @@ function buildRegisterAddressArgs(account, extraArgs = {}) {
     city: 'san francisco',
     address: '185 berry st',
     zip: '94107',
-    price_wei: '40000000000000000',
+    priceWei: '40000000000000000',
     cc: '8hwpyynkd9'
   }
 
@@ -187,26 +187,26 @@ function buildRegisterAddressArgs(account, extraArgs = {}) {
   args.sha3cc = web3.sha3(args.cc)
 
   const { v, r, s } = buildSignature(args, privateKeys[1])
-  args.sig_v = v
-  args.sig_r = r
-  args.sig_s = s
+  args.sigV = v
+  args.sigR = r
+  args.sigS = s
 
   return args
 }
 
-function registerAddress(popa, args, account, value = args.price_wei) {
-  return popa.register_address(
+function registerAddress(popa, args, account, value = args.priceWei) {
+  return popa.registerAddress(
     args.name,
     args.country,
     args.state,
     args.city,
     args.address,
     args.zip,
-    args.price_wei,
+    args.priceWei,
     args.sha3cc,
-    args.sig_v,
-    args.sig_r,
-    args.sig_s,
+    args.sigV,
+    args.sigR,
+    args.sigS,
     {
       from: account,
       value: value

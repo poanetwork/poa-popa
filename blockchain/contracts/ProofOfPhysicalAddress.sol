@@ -2,8 +2,7 @@ pragma solidity 0.4.19;
 
 // Checks -> Effects -> Interactions
 
-contract ProofOfPhysicalAddress
-{
+contract ProofOfPhysicalAddress {
     address public owner;
     address public signer;
 
@@ -17,10 +16,10 @@ contract ProofOfPhysicalAddress
         string location;
         string zip;
 
-        uint256 creation_block;
-        bytes32 keccak_identifier;
-        bytes32 confirmation_code_sha3;
-        uint256 confirmation_block;
+        uint256 creationBlock;
+        bytes32 keccakIdentifier;
+        bytes32 confirmationCodeSha3;
+        uint256 confirmationBlock;
     }
 
     function ProofOfPhysicalAddress() public
@@ -29,51 +28,49 @@ contract ProofOfPhysicalAddress
         signer = owner;
     }
 
-    struct User
-    {
-        uint256 creation_block;
-        PhysicalAddress[] physical_addresses;
+    struct User {
+        uint256 creationBlock;
+        PhysicalAddress[] physicalAddresses;
     }
 
     mapping (address => User) public users;
 
     // Stats:
 
-    uint64 public total_users;
-    uint64 public total_addresses;
-    uint64 public total_confirmed;
+    uint64 public totalUsers;
+    uint64 public totalAddresses;
+    uint64 public totalConfirmed;
 
     // Helpers:
-    function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
+    function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
     {
-        bytes memory prefix = '\x19Ethereum Signed Message:\n32';
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes32 prefixed = keccak256(prefix, data);
         return (ecrecover(prefixed, v, r, s) == signer);
     }
 
     // Methods:
-
     // set address that is used on server-side to calculate signatures
     // and on contract-side to verify them
-    function set_signer(address new_signer)
+    function setSigner(address newSigner)
     public
     {
         require(msg.sender == owner);
-        signer = new_signer;
+        signer = newSigner;
     }
 
     // withdraw specified amount of eth in wei
-    function withdraw_some(uint256 amount_wei)
+    function withdrawSome(uint256 amountWei)
     public
     {
         require(msg.sender == owner);
-        if (this.balance < amount_wei) revert();
-        owner.transfer(amount_wei);
+        if (this.balance < amountWei) revert();
+        owner.transfer(amountWei);
     }
 
     // withdraw all available eth
-    function withdraw_all()
+    function withdrawAll()
     public
     {
         require(msg.sender == owner);
@@ -81,111 +78,106 @@ contract ProofOfPhysicalAddress
         owner.transfer(this.balance);
     }
 
-    function user_exists(address wallet)
+    function userExists(address wallet)
     public constant returns (bool)
     {
-        return (users[wallet].creation_block > 0);
+        return (users[wallet].creationBlock > 0);
     }
 
-    function user_address_confirmed(address wallet, uint256 address_index)
+    function userAddressConfirmed(address wallet, uint256 addressIndex)
     public constant returns (bool)
     {
-        require(user_exists(wallet));
-        return (users[wallet].physical_addresses[address_index].confirmation_block > 0);
+        require(userExists(wallet));
+        return (users[wallet].physicalAddresses[addressIndex].confirmationBlock > 0);
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
-    function user_address_by_creation_block(address wallet, uint256 creation_block)
+    function userAddressByCreationBlock(address wallet, uint256 creationBlock)
     public constant returns (bool, uint256, bool)
     {
-        require(user_exists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1)
-        {
-            if (users[wallet].physical_addresses[ai].creation_block == creation_block)
-            {
-                return (true, ai, user_address_confirmed(wallet, ai));
+        require(userExists(wallet));
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+            if (users[wallet].physicalAddresses[ai].creationBlock == creationBlock) {
+                return (true, ai, userAddressConfirmed(wallet, ai));
             }
         }
         return (false, 0, false);
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
-    function user_address_by_confirmation_code(address wallet, bytes32 confirmation_code_sha3)
+    function userAddressByConfirmationCode(address wallet, bytes32 confirmationCodeSha3)
     public constant returns (bool, uint256, bool)
     {
-        require(user_exists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1)
-        {
-            if (users[wallet].physical_addresses[ai].confirmation_code_sha3 == confirmation_code_sha3)
-            {
-                return (true, ai, user_address_confirmed(wallet, ai));
+        require(userExists(wallet));
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+            if (users[wallet].physicalAddresses[ai].confirmationCodeSha3 == confirmationCodeSha3) {
+                return (true, ai, userAddressConfirmed(wallet, ai));
             }
         }
         return (false, 0, false);
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
-    function user_address_by_address(address wallet, string country, string state, string city, string location, string zip)
+    function userAddressByAddress(address wallet, string country, string state, string city, string location, string zip)
     public constant returns(bool, uint256, bool)
     {
-        require(user_exists(wallet));
-        bytes32 keccak_identifier = keccak256(country, state, city, location, zip);
-        for (uint256 ai = 0; ai < users[wallet].physical_addresses.length; ai += 1) {
-            if (users[wallet].physical_addresses[ai].keccak_identifier == keccak_identifier) {
-                return (true, ai, user_address_confirmed(wallet, ai));
+        require(userExists(wallet));
+        bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+            if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
+                return (true, ai, userAddressConfirmed(wallet, ai));
             }
         }
         return (false, 0, false);
     }
 
-    function user_last_used_name(address wallet)
+    function userLastUsedName(address wallet)
     public constant returns (string)
     {
-        require(user_exists(wallet));
-        return users[wallet].physical_addresses[users[wallet].physical_addresses.length-1].name;
+        require(userExists(wallet));
+        return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
     }
 
     // if user does not exist, returns 0
-    function user_addresses_count(address wallet)
+    function userAddressesCount(address wallet)
     public constant returns (uint256)
     {
-        return users[wallet].physical_addresses.length;
+        return users[wallet].physicalAddresses.length;
     }
 
-    function user_address(address wallet, uint256 address_index)
+    function userAddress(address wallet, uint256 addressIndex)
     public constant returns (
         string country, string state, string city, string location, string zip)
     {
-        require(user_exists(wallet));
+        require(userExists(wallet));
         return (
-            users[wallet].physical_addresses[address_index].country,
-            users[wallet].physical_addresses[address_index].state,
-            users[wallet].physical_addresses[address_index].city,
-            users[wallet].physical_addresses[address_index].location,
-            users[wallet].physical_addresses[address_index].zip
+            users[wallet].physicalAddresses[addressIndex].country,
+            users[wallet].physicalAddresses[addressIndex].state,
+            users[wallet].physicalAddresses[addressIndex].city,
+            users[wallet].physicalAddresses[addressIndex].location,
+            users[wallet].physicalAddresses[addressIndex].zip
         );
     }
 
-    function user_address_info(address wallet, uint256 address_index)
+    function userAddressInfo(address wallet, uint256 addressIndex)
     public constant returns (
         string name,
-        uint256 creation_block, uint256 confirmation_block)
+        uint256 creationBlock, uint256 confirmationBlock)
     {
-        require(user_exists(wallet));
+        require(userExists(wallet));
         return (
-            users[wallet].physical_addresses[address_index].name,
-            users[wallet].physical_addresses[address_index].creation_block,
-            users[wallet].physical_addresses[address_index].confirmation_block
+            users[wallet].physicalAddresses[addressIndex].name,
+            users[wallet].physicalAddresses[addressIndex].creationBlock,
+            users[wallet].physicalAddresses[addressIndex].confirmationBlock
         );
     }
 
     // Main methods:
-
-    function register_address(
+    function registerAddress(
         string name,
         string country, string state, string city, string location, string zip,
-        uint256 price_wei,
-        bytes32 confirmation_code_sha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
+        uint256 priceWei,
+        bytes32 confirmationCodeSha3, uint8 sigV, bytes32 sigR, bytes32 sigS)
     public payable
     {
         require(bytes(name).length > 0);
@@ -194,7 +186,7 @@ contract ProofOfPhysicalAddress
         require(bytes(city).length > 0);
         require(bytes(location).length > 0);
         require(bytes(zip).length > 0);
-        require(msg.value >= price_wei);
+        require(msg.value >= priceWei);
 
         bytes32 data = keccak256(
             msg.sender,
@@ -204,22 +196,22 @@ contract ProofOfPhysicalAddress
             city,
             location,
             zip,
-            price_wei,
-            confirmation_code_sha3
+            priceWei,
+            confirmationCodeSha3
         );
-        require(signer_is_valid(data, sig_v, sig_r, sig_s));
+        require(signerIsValid(data, sigV, sigR, sigS));
 
-        if (user_exists(msg.sender)) {
+        if (userExists(msg.sender)) {
             // check if this address is already registered
             bool found;
-            (found, , ) = user_address_by_address(msg.sender, country, state, city, location, zip);
+            (found, , ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
 
             require(!found);
         } else {
             // new user
-            users[msg.sender].creation_block = block.number;
+            users[msg.sender].creationBlock = block.number;
 
-            total_users += 1;
+            totalUsers += 1;
         }
 
         PhysicalAddress memory pa;
@@ -230,41 +222,38 @@ contract ProofOfPhysicalAddress
         pa.city = city;
         pa.location = location;
         pa.zip = zip;
-        pa.creation_block = block.number;
-        pa.confirmation_code_sha3 = confirmation_code_sha3;
-        pa.keccak_identifier = keccak256(country, state, city, location, zip);
-        pa.confirmation_block = 0;
-        users[msg.sender].physical_addresses.push(pa);
+        pa.creationBlock = block.number;
+        pa.confirmationCodeSha3 = confirmationCodeSha3;
+        pa.keccakIdentifier = keccak256(country, state, city, location, zip);
+        pa.confirmationBlock = 0;
+        users[msg.sender].physicalAddresses.push(pa);
 
-        total_addresses += 1;
+        totalAddresses += 1;
     }
 
-    function confirm_address(string confirmation_code_plain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
+    function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
     public
     {
-        require(bytes(confirmation_code_plain).length > 0);
-        require(user_exists(msg.sender));
+        require(bytes(confirmationCodePlain).length > 0);
+        require(userExists(msg.sender));
 
         bytes32 data = keccak256(
             msg.sender,
-            confirmation_code_plain
+            confirmationCodePlain
         );
-        require(signer_is_valid(data, sig_v, sig_r, sig_s));
+        require(signerIsValid(data, sigV, sigR, sigS));
 
         bool found;
         uint ai;
         bool confirmed;
-        (found, ai, confirmed) = user_address_by_confirmation_code(msg.sender, keccak256(confirmation_code_plain));
+        (found, ai, confirmed) = userAddressByConfirmationCode(msg.sender, keccak256(confirmationCodePlain));
         require(found);
 
-        if (confirmed)
-        {
+        if (confirmed) {
             revert();
-        }
-        else
-        {
-            users[msg.sender].physical_addresses[ai].confirmation_block = block.number;
-            total_confirmed += 1;
+        } else {
+            users[msg.sender].physicalAddresses[ai].confirmationBlock = block.number;
+            totalConfirmed += 1;
         }
     }
 }

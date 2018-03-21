@@ -7,7 +7,7 @@ const buildSignature = require('../server-lib/buildSignature');
 const db = require('../server-lib/session_store');
 const postAPI = require('../server-lib/post_api');
 
-const signerPrivateKey = config.signer_private_key;
+const signerPrivateKey = config.signerPrivateKey;
 
 const validateWallet = (body) => {
     return validateParams(body, 'wallet');
@@ -92,10 +92,10 @@ const getPriceWei = () => {
     return recalcPrice.get_price_wei();
 };
 
-const sign = (params, wallet, sha3cc, price_wei) => {
+const sign = (params, wallet, sha3cc, priceWei) => {
     return new Promise((resolve, reject) => {
         try {
-            const signatureParams = Object.assign(params, {wallet, sha3cc, price_wei});
+            const signatureParams = Object.assign(params, {wallet, sha3cc, priceWei: priceWei});
             const signOutput = buildSignature(signatureParams, signerPrivateKey);
             return resolve ({sha3cc, signOutput});
         } catch(err) {

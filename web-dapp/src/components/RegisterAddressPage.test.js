@@ -12,7 +12,7 @@ const checkUserExists = jest.spyOn(RegisterAddressPage.prototype, 'check_user_ex
 const checkWalletSame = jest.spyOn(RegisterAddressPage.prototype, 'check_wallet_same');
 const onChange = jest.spyOn(RegisterAddressPage.prototype, 'on_change');
 const orderClicked = jest.spyOn(RegisterAddressPage.prototype, 'order_clicked');
-const registerAddress = jest.spyOn(RegisterAddressPage.prototype, 'register_address');
+const registerAddress = jest.spyOn(RegisterAddressPage.prototype, 'registerAddress');
 const showAlert = jest.spyOn(window, 'show_alert');
 
 describe('<RegisterAddressPage />', () => {
@@ -243,15 +243,15 @@ describe('<RegisterAddressPage />', () => {
         );
     });
 
-    it('displays a message if there was an error calling contract.user_address_by_address', () => {
+    it('displays a message if there was an error calling contract.userAddressByAddress', () => {
         const page = mount(
             <RegisterAddressPage
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback({
-                            message: 'Error calling contract.user_address_by_address'
+                            message: 'Error calling contract.userAddressByAddress'
                         });
                     })
                 }}
@@ -293,7 +293,7 @@ describe('<RegisterAddressPage />', () => {
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
             'Checking if address exists',
-            [['Error', 'Error calling contract.user_address_by_address']]
+            [['Error', 'Error calling contract.userAddressByAddress']]
         );
     });
 
@@ -303,7 +303,7 @@ describe('<RegisterAddressPage />', () => {
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback(null, [true]);
                     })
                 }}
@@ -355,7 +355,7 @@ describe('<RegisterAddressPage />', () => {
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback(null, [false]);
                     })
                 }}
@@ -420,7 +420,7 @@ describe('<RegisterAddressPage />', () => {
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback(null, [false]);
                     })
                 }}
@@ -488,7 +488,7 @@ describe('<RegisterAddressPage />', () => {
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback(null, [false]);
                     })
                 }}
@@ -556,7 +556,7 @@ describe('<RegisterAddressPage />', () => {
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback(null, [false]);
                     })
                 }}
@@ -626,7 +626,7 @@ describe('<RegisterAddressPage />', () => {
                 my_web3={web3}
                 contract={{
                     ...contract,
-                    user_address_by_address: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
+                    userAddressByAddress: jest.fn((walet, country, state, city, address, zip, opts, callback) => {
                         return callback(null, [false]);
                     })
                 }}

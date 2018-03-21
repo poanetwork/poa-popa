@@ -22,7 +22,7 @@ var cfg = {
     block_wait_interval_ms:   7000,
     block_wait_max_time_ms:  70000,
 
-    price_wei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored
+    priceWei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored
     price_us_cents: 1000, // NOTE: this is in cents! e.g. for $10 price, put 1000
     price_upd_interval_ms: 60000,
 };
@@ -39,12 +39,7 @@ var web3 = new Web3(network);
 cfg.network = network;
 cfg.web3 = web3;
 
-var contract_output = '';
-if (process.env.NODE_ENV === 'test') {
-    contract_output = path.join(__dirname, './test/server/_utils/contract-output.json');
-} else {
-    contract_output = path.join(__dirname, './src/contract-output.json');
-}
+var contract_output = path.join(__dirname, './src/contract-output.json');
 var cconf = require(contract_output).ProofOfPhysicalAddress;
 cfg.contract_output = contract_output;
 cfg.cconf = cconf;

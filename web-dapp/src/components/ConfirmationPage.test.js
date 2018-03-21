@@ -11,7 +11,7 @@ const ajaxCall = jest.spyOn(window.$, 'ajax');
 const componentDidMount = jest.spyOn(ConfirmationPage.prototype, 'componentDidMount');
 const checkUserExists = jest.spyOn(ConfirmationPage.prototype, 'check_user_exists');
 const checkWalletSame = jest.spyOn(ConfirmationPage.prototype, 'check_wallet_same');
-const confirmAddress = jest.spyOn(ConfirmationPage.prototype, 'confirm_address');
+const confirmAddress = jest.spyOn(ConfirmationPage.prototype, 'confirmAddress');
 const confirmClicked = jest.spyOn(ConfirmationPage.prototype, 'confirm_clicked');
 const findAddress = jest.spyOn(ConfirmationPage.prototype, 'find_address');
 const onChange = jest.spyOn(ConfirmationPage.prototype, 'on_change');
@@ -64,7 +64,7 @@ describe('<ConfirmationPage />', () => {
         input.simulate('change');
 
         expect(onChange).toHaveBeenCalled();
-        expect(page.state('confirmation_code_plain')).toBe('12345');
+        expect(page.state('confirmationCodePlain')).toBe('12345');
     });
 
     it('displays a message if the form is sent empty', () => {
@@ -103,11 +103,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback({ message: 'fake error' })) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback({ message: 'fake error' })) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
         page.find('.postcard-button').simulate('click');
 
         expect(checkUserExists).toHaveBeenCalled();
@@ -124,11 +124,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, false)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, false)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
         page.find('.postcard-button').simulate('click');
 
         expect(checkUserExists).toHaveBeenCalled();
@@ -145,11 +145,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ error }) => {
             return error({ statusText: 'Server Error', status: 500 });
@@ -171,11 +171,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success();
@@ -197,11 +197,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ x_id: 'test', err: 'fake error' });
@@ -223,11 +223,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test' });
@@ -249,11 +249,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
@@ -280,7 +280,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -292,7 +292,7 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: false });
         });
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         page.find('.postcard-button').simulate('click');
 
@@ -314,7 +314,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
@@ -326,7 +326,7 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: true, confirmed: true, ...addressDetails });
         });
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         page.find('.postcard-button').simulate('click');
 
@@ -353,12 +353,12 @@ describe('<ConfirmationPage />', () => {
             <ConfirmationPage
                 my_web3={web3}
                 contract={{
-                    user_exists: jest.fn((wallet, opts, callback) => callback(null, true))
+                    userExists: jest.fn((wallet, opts, callback) => callback(null, true))
                 }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
@@ -389,11 +389,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
@@ -425,8 +425,8 @@ describe('<ConfirmationPage />', () => {
             <ConfirmationPage
                 my_web3={web3}
                 contract={{
-                    user_exists: jest.fn((wallet, opts, callback) => callback(null, true)),
-                    confirm_address: {
+                    userExists: jest.fn((wallet, opts, callback) => callback(null, true)),
+                    confirmAddress: {
                         estimateGas: jest.fn((code, v, r, s, opts, callback) => {
                             return callback({ message: 'fake error' });
                         })
@@ -435,7 +435,7 @@ describe('<ConfirmationPage />', () => {
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({
@@ -444,7 +444,7 @@ describe('<ConfirmationPage />', () => {
                 result: {
                     wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
                     params: {
-                        confirmation_code_plain: 'h44hh7n5545'
+                        confirmationCodePlain: 'h44hh7n5545'
                     }
                 }
             });
@@ -469,13 +469,13 @@ describe('<ConfirmationPage />', () => {
 
     it('displays a message when a address was confirmed successfully', () => {
         const contract = {
-            user_exists: jest.fn((wallet, opts, callback) => callback(null, true)),
-            confirm_address: jest.fn((code, v, r, s, opts, callback) => {
+            userExists: jest.fn((wallet, opts, callback) => callback(null, true)),
+            confirmAddress: jest.fn((code, v, r, s, opts, callback) => {
                 return callback(null, '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291');
             })
         };
 
-        contract.confirm_address.estimateGas = jest.fn((code, v, r, s, opts, callback) => {
+        contract.confirmAddress.estimateGas = jest.fn((code, v, r, s, opts, callback) => {
             return callback(null, 1);
         });
 
@@ -483,7 +483,7 @@ describe('<ConfirmationPage />', () => {
             <ConfirmationPage my_web3={web3} contract={contract}/>
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({
@@ -492,7 +492,7 @@ describe('<ConfirmationPage />', () => {
                 result: {
                     wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
                     params: {
-                        confirmation_code_plain: 'h44hh7n5545'
+                        confirmationCodePlain: 'h44hh7n5545'
                     }
                 }
             });
@@ -527,11 +527,11 @@ describe('<ConfirmationPage />', () => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
-                contract={{ user_exists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
+                contract={{ userExists: jest.fn((wallet, opts, callback) => callback(null, true)) }}
             />
         );
 
-        page.setState({ confirmation_code_plain: 'h44hh7n5545' });
+        page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
         ajaxCall.mockImplementationOnce(({ success }) => {
             return success({ ok: true, x_id: 'test', result: {} });
