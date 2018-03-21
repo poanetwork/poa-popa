@@ -3,7 +3,7 @@ const {normalize, validateParams} = require('../server-lib/validations');
 const sign = require('../server-lib/sign');
 const config = require('../server-config');
 
-const signerPrivateKey = config.signer_private_key;
+const signerPrivateKey = config.signerPrivateKey;
 
 const validateWallet = (body) => {
     return validateParams(body, 'wallet');

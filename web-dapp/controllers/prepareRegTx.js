@@ -7,7 +7,7 @@ const buildSignature = require('../server-lib/buildSignature');
 const db = require('../server-lib/session_store');
 const postAPI = require('../server-lib/post_api');
 
-const signerPrivateKey = config.signer_private_key;
+const signerPrivateKey = config.signerPrivateKey;
 
 const validateWallet = (body) => {
     return validateParams(body, 'wallet');

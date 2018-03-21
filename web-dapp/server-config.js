@@ -39,12 +39,7 @@ var web3 = new Web3(network);
 cfg.network = network;
 cfg.web3 = web3;
 
-var contract_output = '';
-if (process.env.NODE_ENV === 'test') {
-    contract_output = path.join(__dirname, './test/server/_utils/contract-output.json');
-} else {
-    contract_output = path.join(__dirname, './src/contract-output.json');
-}
+var contract_output = path.join(__dirname, './src/contract-output.json');
 var cconf = require(contract_output).ProofOfPhysicalAddress;
 cfg.contract_output = contract_output;
 cfg.cconf = cconf;
