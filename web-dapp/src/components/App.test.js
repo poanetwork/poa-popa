@@ -99,7 +99,7 @@ describe('<App/>', () => {
         it('contract is OK', () => {
             const wrapper = mount(<App/>);
 
-            window.my_web3.eth.getCode = jest.fn((address, callback) => {
+                window.my_web3.eth.getCode = jest.fn((address, callback) => {
                 return callback(null, ['0x123', '0x456', '0x789']);
             });
 
@@ -120,8 +120,8 @@ describe('<App/>', () => {
             expect(checkContract).toHaveBeenCalled();
             expect(wrapper.state('contract')).toBeDefined();
             expect(wrapper.state('my_web3')).toBe(web3);
-            expect(wrapper.state('web3_checker')).toBeNull();
-            expect(wrapper.state('web3_checker_dur')).toBe(0);
+            expect(wrapper.state('web3Checker')).toBeNull();
+            expect(wrapper.state('web3CheckerDur')).toBe(0);
         });
 
         it('contract is not OK', () => {
@@ -136,8 +136,8 @@ describe('<App/>', () => {
             expect(checkContract).toHaveBeenCalled();
             expect(wrapper.state('contract')).toBeNull();
             expect(wrapper.state('my_web3')).toBe(web3);
-            expect(wrapper.state('web3_checker')).toBeNull();
-            expect(wrapper.state('web3_checker_dur')).toBe(0);
+            expect(wrapper.state('web3Checker')).toBeNull();
+            expect(wrapper.state('web3CheckerDur')).toBe(0);
         });
 
         it('contract is not OK', () => {
@@ -152,8 +152,8 @@ describe('<App/>', () => {
             expect(checkContract).toHaveBeenCalled();
             expect(wrapper.state('contract')).toBeNull();
             expect(wrapper.state('my_web3')).toBe(web3);
-            expect(wrapper.state('web3_checker')).toBeNull();
-            expect(wrapper.state('web3_checker_dur')).toBe(0);
+            expect(wrapper.state('web3Checker')).toBeNull();
+            expect(wrapper.state('web3CheckerDur')).toBe(0);
         });
 
         it('contract is not OK', () => {
@@ -180,8 +180,8 @@ describe('<App/>', () => {
             expect(checkContract).toHaveBeenCalled();
             expect(wrapper.state('contract')).toBeNull();
             expect(wrapper.state('my_web3')).toBe(web3);
-            expect(wrapper.state('web3_checker')).toBeNull();
-            expect(wrapper.state('web3_checker_dur')).toBe(0);
+            expect(wrapper.state('web3Checker')).toBeNull();
+            expect(wrapper.state('web3CheckerDur')).toBe(0);
         });
 
         it('contract is not OK', () => {
@@ -208,8 +208,8 @@ describe('<App/>', () => {
             expect(checkContract).toHaveBeenCalled();
             expect(wrapper.state('contract')).toBeNull();
             expect(wrapper.state('my_web3')).toBe(web3);
-            expect(wrapper.state('web3_checker')).toBeNull();
-            expect(wrapper.state('web3_checker_dur')).toBe(0);
+            expect(wrapper.state('web3Checker')).toBeNull();
+            expect(wrapper.state('web3CheckerDur')).toBe(0);
         });
 
         it('contract is not OK', () => {
@@ -236,8 +236,8 @@ describe('<App/>', () => {
             expect(checkContract).toHaveBeenCalled();
             expect(wrapper.state('contract')).toBeNull();
             expect(wrapper.state('my_web3')).toBe(web3);
-            expect(wrapper.state('web3_checker')).toBeNull();
-            expect(wrapper.state('web3_checker_dur')).toBe(0);
+            expect(wrapper.state('web3Checker')).toBeNull();
+            expect(wrapper.state('web3CheckerDur')).toBe(0);
         });
     });
 });
