@@ -2,7 +2,7 @@
 
 const config = require('../server-config');
 const db = require('../server-lib/session_store');
-const post_api = require('../server-lib/post_api');
+const postApi = require('../server-lib/post_api');
 const logger = require('../server-lib/logger');
 const {validate, normalize} = require('../server-lib/validations');
 const {createResponseObject} = require('../server-lib/utils');
@@ -24,62 +24,62 @@ const validateData = (opts, prelog = '') => {
         logger.log(`${prelog} validation error on wallet: body.wallet, error: ${validate.wallet(body.wallet).msg}`);
         return createResponseObject(false, validate.wallet(body.wallet).msg);
     }
-    // tx_id
-    if (!validate.string(body.tx_id).ok) {
-        logger.log(`${prelog} validation error on tx_id: body.tx_id, error: ${validate.string(body.tx_id).msg}`);
-        return createResponseObject(false, validate.string(body.tx_id).msg);
+    // txId
+    if (!validate.string(body.txId).ok) {
+        logger.log(`${prelog} validation error on txId: body.txId, error: ${validate.string(body.txId).msg}`);
+        return createResponseObject(false, validate.string(body.txId).msg);
     }
-    // session_key
-    if (!validate.string(body.session_key).ok) {
-        logger.log(`${prelog} validation error on session_key: body.session_key, error: ${validate.string(body.session_key).msg}`);
-        return createResponseObject(false, validate.string(body.session_key).msg);
+    // sessionKey
+    if (!validate.string(body.sessionKey).ok) {
+        logger.log(`${prelog} validation error on sessionKey: body.sessionKey, error: ${validate.string(body.sessionKey).msg}`);
+        return createResponseObject(false, validate.string(body.sessionKey).msg);
     }
     return createResponseObject(true, '');
 };
 
 const normalizeData = (body) => {
     const wallet = body.wallet;
-    const tx_id = normalize.string(body.tx_id);
-    const session_key = normalize.string(body.session_key);
-    return {wallet, tx_id, session_key};
+    const txId = normalize.string(body.txId);
+    const sessionKey = normalize.string(body.sessionKey);
+    return {wallet, txId, sessionKey};
 };
 
 const getTxInfo = (opts, prelog = '') => {
-    const {session_key, wallet} = opts;
-    logger.log(`${prelog} fetching info by session_key: ${session_key}`);
+    const {sessionKey, wallet} = opts;
+    logger.log(`${prelog} fetching info by sessionKey: ${sessionKey}`);
 
-    return db.get(session_key)
-        .then(info => (validateTxInfo({info, session_key, wallet})));
+    return db.get(sessionKey)
+        .then(info => (validateTxInfo({info, sessionKey, wallet})));
 };
 
 const getTxBlockNumber = (opts, prelog = '') => {
-    const {tx_id, wallet, contractAddress, waitInterval, waitMaxTime, startedAt} = opts;
+    const {txId, wallet, contractAddress, waitInterval, waitMaxTime, startedAt} = opts;
 
 
-    logger.log(`${prelog} fetching tx_details from blockchain by tx_id: ${tx_id}`);
-    return getTransaction(tx_id)
+    logger.log(`${prelog} fetching tx_details from blockchain by txId: ${txId}`);
+    return getTransaction(txId)
         .then((result) => {
             const {error, txDetails} = result;
             return validateTxDetails(error, txDetails, contractAddress, wallet);
         })
         .then(txDetails => {
-            logger.log(`${prelog} got block number for tx_id: ${tx_id}, tx_bn: ${txDetails.blockNumber}`);
+            logger.log(`${prelog} got block number for txId: ${txId}, txBn: ${txDetails.blockNumber}`);
             return txDetails.blockNumber;
         })
         .then((blockNumber) => {
             logger.log(`${prelog} checking tx receipt for status`);
-            return getTxReceipt(tx_id);
+            return getTxReceipt(txId);
         })
         .then((result) => {
             const {error, txReceipt} = result;
-            return validateTxReceipt(tx_id, error, txReceipt);
+            return validateTxReceipt(txId, error, txReceipt);
         })
         .catch((error) => {
             if (error.fatal || new Date() - startedAt > waitMaxTime) {
                 throw new Error(error);
             }
             logger.error(`${prelog} ${error.msg}`);
-            logger.log(`${prelog} check tx_id: ${tx_id} again in: ${waitInterval}ms`);
+            logger.log(`${prelog} check txId: ${txId} again in: ${waitInterval}ms`);
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve(getTxBlockNumber(opts));
@@ -107,10 +107,10 @@ const getAddressByBN = (opts, prelog = '') => {
 };
 
 const createPostCard = (opts, prelog) => {
-    const {wallet, tx_id, address, confirmationCodePlain} = opts;
+    const {wallet, txId, address, confirmationCodePlain} = opts;
 
     return new Promise((resolve, reject) => {
-        post_api.create_postcard(wallet, address, tx_id, confirmationCodePlain, function (err, result) {
+        postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
             if (err) {
                 logger.error(`${prelog} error returned by create_postcard: ${err}`);
                 return reject(createResponseObject(false, 'error while sending postcard'));
@@ -121,10 +121,10 @@ const createPostCard = (opts, prelog) => {
 };
 
 const removeUsedSessionKey = (opts, prelog) => {
-    const {session_key, postcard} = opts;
+    const {sessionKey, postcard} = opts;
 
-    logger.log(`${prelog} removing used session_key from memory: ${session_key}`);
-    return db.unset(session_key)
+    logger.log(`${prelog} removing used sessionKey from memory: ${sessionKey}`);
+    return db.unset(sessionKey)
         .then(() => {
             return {
                 ok: true,
@@ -135,8 +135,8 @@ const removeUsedSessionKey = (opts, prelog) => {
             };
         })
         .catch(err => {
-            logger.error(`${prelog} error removing used session_key: ${err}`);
-            throw new Error(createResponseObject(false, 'error removing used session_key'));
+            logger.error(`${prelog} error removing used sessionKey: ${err}`);
+            throw new Error(createResponseObject(false, 'error removing used sessionKey'));
         });
 };
 

@@ -40,15 +40,15 @@ class ConfirmationPage extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    check_wallet_same(current_wallet, initial_wallet) {
-        logger.debug('check_wallet_same, current_wallet: ' + current_wallet);
-        logger.debug('check_wallet_same, initial_wallet: ' + initial_wallet);
+    check_wallet_same(currentWallet, initialWallet) {
+        logger.debug('check_wallet_same, currentWallet: ' + currentWallet);
+        logger.debug('check_wallet_same, initialWallet: ' + initialWallet);
 
-        if (!current_wallet) {
+        if (!currentWallet) {
             return 'MetaMask account should be unlocked';
         }
 
-        if (current_wallet.trim().toLowerCase() !== initial_wallet) {
+        if (currentWallet.trim().toLowerCase() !== initialWallet) {
             return 'MetaMask account was switched';
         }
 
@@ -90,11 +90,11 @@ class ConfirmationPage extends React.Component {
             }
 
             logger.debug('contract.userAddressByConfirmationCode result =', result);
-            const address_details = {};
-            address_details.found = result[0];
-            address_details.confirmed = result[2];
-            if (!address_details.found) {
-                return callback(null, address_details);
+            const addressDetails = {};
+            addressDetails.found = result[0];
+            addressDetails.confirmed = result[2];
+            if (!addressDetails.found) {
+                return callback(null, addressDetails);
             }
 
             // TODO: check wallet here + handle possible errors
@@ -105,12 +105,12 @@ class ConfirmationPage extends React.Component {
                     return callback(err);
                 }
                 logger.debug('***** RESULT=', result);
-                address_details.country = result[0];
-                address_details.state = result[1];
-                address_details.city = result[2];
-                address_details.address = result[3];
-                address_details.zip = result[4];
-                return callback(null, address_details);
+                addressDetails.country = result[0];
+                addressDetails.state = result[1];
+                addressDetails.city = result[2];
+                addressDetails.address = result[3];
+                addressDetails.zip = result[4];
+                return callback(null, addressDetails);
             });
         });
     }
@@ -140,14 +140,14 @@ class ConfirmationPage extends React.Component {
             contract.confirmAddress(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, {
                 from: opts.wallet,
                 gas: ugas
-            }, (err, tx_id) => {
+            }, (err, txId) => {
                 if (err) {
                     logger.debug('Error calling contract.confirmAddress:', err);
                     return callback(err);
                 }
-                logger.debug('tx_id = ' + tx_id);
+                logger.debug('txId = ' + txId);
 
-                return callback(null, tx_id);
+                return callback(null, txId);
             });
         });
     }
@@ -173,7 +173,7 @@ class ConfirmationPage extends React.Component {
 
         logger.debug('Using account ' + wallet);
 
-        this.check_user_exists({ wallet: wallet }, (err, exists) => {
+        this.check_user_exists({ wallet }, (err, exists) => {
             if (err) {
                 this.setState({ loading: false });
                 window.show_alert('error', 'Checking if user exists', [['Error', err.message]]);
@@ -190,7 +190,7 @@ class ConfirmationPage extends React.Component {
                 type: 'post',
                 url: './api/prepareConTx',
                 data: {
-                    wallet: wallet,
+                    wallet,
                     confirmationCodePlain: this.state.confirmationCodePlain
                 },
                 success: (res) => {
@@ -253,17 +253,17 @@ class ConfirmationPage extends React.Component {
 
                         logger.debug('calling confirmAddress');
 
-                        this.confirmAddress(res.result, (err, tx_id) => {
+                        this.confirmAddress(res.result, (err, txId) => {
                             this.setState({ loading: false });
 
                             if (err) {
                                 logger.debug('Error occured in confirmAddress: ', err);
                                 window.show_alert('error', 'Confirming address', [['Error', err.message]]);
-                            } else if (tx_id) {
-                                logger.debug('Transaction submitted: ' + tx_id);
+                            } else if (txId) {
+                                logger.debug('Transaction submitted: ' + txId);
                                 window.show_alert('success', 'Address confirmed!', [
                                     ['Transaction to confirm address was submitted'],
-                                    ['Transaction ID', tx_id],
+                                    ['Transaction ID', txId],
                                     ['Country', address_details.country.toUpperCase()],
                                     ['State', address_details.state.toUpperCase()],
                                     ['City', address_details.city.toUpperCase()],
@@ -271,8 +271,8 @@ class ConfirmationPage extends React.Component {
                                     ['ZIP code', address_details.zip.toUpperCase()]
                                 ]);
                             } else {
-                                logger.debug('JSON RPC unexpected response: err is empty but tx_id is also empty');
-                                window.show_alert('error', 'Confirming address', 'Error is empty but tx_id is also empty');
+                                logger.debug('JSON RPC unexpected response: err is empty but txId is also empty');
+                                window.show_alert('error', 'Confirming address', 'Error is empty but txId is also empty');
                             }
                         });
                     });

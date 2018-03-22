@@ -8,7 +8,7 @@ const prelog = '[redis]';
 module.exports = function () {
     logger.log(`${prelog} connecting`);
 
-    const client = redis.createClient(config.session_store.params);
+    const client = redis.createClient(config.sessionStore.params);
 
     client.on('error', (err) => {
         logger.error(`${prelog} error ${err}`);

@@ -51,30 +51,30 @@ describe('Notify Register Transactions', () => {
             const opts = {
                 body: {
                     wallet: badWallet,
-                    tx_id: txIdA,
-                    session_key: sessionKey,
+                    txId: txIdA,
+                    sessionKey,
                 },
             };
             const result = notifyRegTx.validateData(opts);
             expect(result.ok).toBeFalsy();
         });
-        it('should returns an error if the tx_id is not valid', () => {
+        it('should returns an error if the txId is not valid', () => {
             const opts = {
                 body: {
                     wallet: walletA,
-                    tx_id: badTxId,
-                    session_key: sessionKey,
+                    txId: badTxId,
+                    sessionKey,
                 },
             };
             const result = notifyRegTx.validateData(opts);
             expect(result.ok).toBeFalsy();
         });
-        it('should returns an error if the session_key is not valid', () => {
+        it('should returns an error if the sessionKey is not valid', () => {
             const opts = {
                 body: {
                     wallet: walletA,
-                    tx_id: txIdA,
-                    session_key: badSessionKey,
+                    txId: txIdA,
+                    sessionKey: badSessionKey,
                 },
             };
             const result = notifyRegTx.validateData(opts);
@@ -84,8 +84,8 @@ describe('Notify Register Transactions', () => {
             const opts = {
                 body: {
                     wallet: walletA,
-                    tx_id: txIdA,
-                    session_key: sessionKey,
+                    txId: txIdA,
+                    sessionKey,
                 }
             };
             const result = notifyRegTx.validateData(opts);
@@ -97,28 +97,28 @@ describe('Notify Register Transactions', () => {
         it('should normalize all the input data', () => {
             const body = {
                 wallet: walletA,
-                tx_id: txIdA,
-                session_key: sessionKey,
+                txId: txIdA,
+                sessionKey,
             };
             const result = notifyRegTx.normalizeData(body);
 
             expect(result.wallet).toEqual(body.wallet);
-            expect(result.tx_id).toEqual(body.tx_id.trim().toLowerCase());
-            expect(result.session_key).toEqual(body.session_key.trim().toLowerCase());
+            expect(result.txId).toEqual(body.txId.trim().toLowerCase());
+            expect(result.sessionKey).toEqual(body.sessionKey.trim().toLowerCase());
         });
     });
 
     describe('Get Info', () => {
-        it('should return info for the session_key', () => {
-            const opts = {session_key: sessionKey, wallet: walletA};
+        it('should return info for the sessionKey', () => {
+            const opts = {sessionKey, wallet: walletA};
             return expect(notifyRegTx.getTxInfo(opts)).resolves.toBeTruthy()
         });
-        it('should return an error there is not info for the session_key', () => {
-            const opts = {session_key: badSessionKey, wallet: walletA};
+        it('should return an error there is not info for the sessionKey', () => {
+            const opts = {sessionKey: badSessionKey, wallet: walletA};
             return expect(notifyRegTx.getTxInfo(opts)).rejects.toBeTruthy();
         });
         it('should return an error if the wallet does not match', () => {
-            const opts = {session_key: sessionKey, wallet: walletB};
+            const opts = {sessionKey, wallet: walletB};
             return expect(notifyRegTx.getTxInfo(opts)).rejects.toBeTruthy();
         });
     });
@@ -127,7 +127,7 @@ describe('Notify Register Transactions', () => {
         it('should return the blocknumber', () => {
             const opts = {
                 wallet: walletA,
-                tx_id: txIdA,
+                txId: txIdA,
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
@@ -138,7 +138,7 @@ describe('Notify Register Transactions', () => {
         it('should return fatal error if txDetails.to does not match with contract address', () => {
             const opts = {
                 wallet: walletA,
-                tx_id: txIdA,
+                txId: txIdA,
                 contractAddress: walletC,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
@@ -149,7 +149,7 @@ describe('Notify Register Transactions', () => {
         it('should return fatal error if txDetails.from does not match with wallet', () => {
             const opts = {
                 wallet: walletC,
-                tx_id: txIdA,
+                txId: txIdA,
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
@@ -160,7 +160,7 @@ describe('Notify Register Transactions', () => {
         it('should return fatal error if txReceipt.status is 0', () => {
             const opts = {
                 wallet: walletA,
-                tx_id: txIdG,
+                txId: txIdG,
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
@@ -171,7 +171,7 @@ describe('Notify Register Transactions', () => {
         it('should return fatal error if txReceipt.status is 0', () => {
             const opts = {
                 wallet: walletA,
-                tx_id: txIdG,
+                txId: txIdG,
                 contractAddress: walletB,
                 waitMaxTime: 10000,
                 waitInterval: 3000,
@@ -183,7 +183,7 @@ describe('Notify Register Transactions', () => {
     describe('Get user address by BlockNumber', () => {
         it('should get a full user address details', () => {
             const opts = {
-                tx_bn: 10,
+                txBn: 10,
                 wallet: walletA,
             };
             return expect(notifyRegTx.getAddressByBN(opts)).resolves.toBeTruthy();

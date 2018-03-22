@@ -2,7 +2,7 @@
 
 const express = require('express');
 const path = require('path');
-const body_parser = require('body-parser');
+const bodyParser = require('body-parser');
 const helmet = require('helmet');
 
 const app = express();
@@ -14,8 +14,8 @@ app.use('/', express.static(path.join(__dirname, 'build')));
 app.use('/confirm', express.static(path.join(__dirname, 'build')));
 
 // api
-app.use(body_parser.urlencoded({ extended: true }));
-app.use(body_parser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const routes = require('./routes')({});
 app.use('/api', routes);

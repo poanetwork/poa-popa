@@ -10,7 +10,7 @@ const prepareConTx = require('../controllers/prepareConTx');
 module.exports = (opts) => {
     var router = express.Router();
     router.post('/prepareConTx', function(req, res) {
-        const prelog = `[prepareConTx] (${req.log_prfx})`;
+        const prelog = `[prepareConTx] (${req.logPrfx})`;
         let params;
         let wallet;
 

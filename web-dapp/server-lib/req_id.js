@@ -1,19 +1,19 @@
 'use strict';
 
 const config = require('../server-config');
-const alphanum_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const alphanumChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-function rnd_alphanum(str_length) {
-    str_length = str_length || 6;
+function rnd_alphanum(strLength) {
+    strLength = strLength || 6;
     var str = '';
-    for (var i = 0; i < str_length; i++) {
-        str += alphanum_chars[Math.floor(Math.random() * alphanum_chars.length)];
+    for (var i = 0; i < strLength; i++) {
+        str += alphanumChars[Math.floor(Math.random() * alphanumChars.length)];
     }
     return str;
 }
 
 function req_id(req, res, next) {
-    req.x_id = rnd_alphanum(config.req_id_length);
+    req.x_id = rnd_alphanum(config.reqIdLength);
     var ip = req.headers && req.headers['x-forwarded-for'];
     if (ip) {
         if ( ip && (ip.indexOf(':') >= 0) && (ip.split(':').length - 1 === 1) ) {
