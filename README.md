@@ -42,7 +42,8 @@ npm install
 
 module.exports = function (cfg_public) {
     return {
-        lob_api_key: '******************************',
+        lobApiKey: '******************************',
+        lobApiVersion: '2017-06-16',
         rpc: '******************************',
         signer: '0x****************************', // with 0x prefix
         signerPrivateKey: '******************************', // without 0x prefix
