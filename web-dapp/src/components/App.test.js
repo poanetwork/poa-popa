@@ -51,12 +51,12 @@ describe('<App/>', () => {
     it('provides download information if no MetaMask found', () => {
         const wrapper = mount(<App/>);
 
-        wrapper.setState({ my_web3: null, web3_checker_dur: 500 });
+        wrapper.setState({ my_web3: null, web3CheckerDur: 500 });
         expect(wrapper.find('h2').text()).toEqual('Loading, please wait');
 
         jest.runTimersToTime(999);
 
-        wrapper.setState({ my_web3: null, web3_checker_dur: 1001 });
+        wrapper.setState({ my_web3: null, web3CheckerDur: 1001 });
         expect(wrapper.find('h2').text()).toEqual('No MetaMask found!');
     });
 
@@ -72,7 +72,7 @@ describe('<App/>', () => {
         const wrapper = mount(<App/>);
 
         jest.runTimersToTime(600);
-        wrapper.setState({ web3_checker: true, my_web3: web3, contract });
+        wrapper.setState({ web3Checker: true, my_web3: web3, contract });
 
         expect(wrapper.find(RegisterAddressPage)).toHaveLength(1);
     });
@@ -86,7 +86,7 @@ describe('<App/>', () => {
         const wrapper = mount(<App/>);
 
         jest.runTimersToTime(600);
-        wrapper.setState({ web3_checker: true, my_web3: web3, contract,  });
+        wrapper.setState({ web3Checker: true, my_web3: web3, contract,  });
 
         expect(wrapper.find(ConfirmationPage)).toHaveLength(1);
     });

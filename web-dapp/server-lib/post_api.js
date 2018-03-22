@@ -7,11 +7,11 @@ const uuidv4 = require('uuid/v4');
 
 var prelog = '[post_api] ';
 logger.log(prelog + 'loading Lob');
-const Lob = require('lob')(config.lob_api_key, { apiVersion: config.lob_api_version || '2017-06-16' });
+const Lob = require('lob')(config.lobApiKey, { apiVersion: config.lobApiVersion || '2017-06-16' });
 
 logger.log(prelog + 'reading postcard templates');
-const pc_front = fs.readFileSync(path.join(__dirname, '../postcard/front.html'), 'utf8');
-const pc_back = fs.readFileSync(path.join(__dirname, '../postcard/back.html'), 'utf8');
+const pcFront = fs.readFileSync(path.join(__dirname, '../postcard/front.html'), 'utf8');
+const pcBack = fs.readFileSync(path.join(__dirname, '../postcard/back.html'), 'utf8');
 
 /*
 var countries = [];
@@ -71,7 +71,7 @@ function verify_address(address) {
     });
 }
 
-function create_postcard(wallet, address_details, tx_id, confirmationCodePlain, done) {
+function create_postcard(wallet, address_details, txId, confirmationCodePlain, done) {
     Lob.postcards.create({
         description: 'Postcard for ' + wallet,
         to: {
@@ -83,15 +83,15 @@ function create_postcard(wallet, address_details, tx_id, confirmationCodePlain, 
             address_zip: address_details.zip.toUpperCase(),
         },
         metadata: {
-            wallet: wallet,
-            tx_id: tx_id,
-            generation_time: (new Date).toISOString(),
+            wallet,
+            txId,
+            generationTime: (new Date).toISOString(),
         },
-        front: pc_front,
-        back: pc_back,
+        front: pcFront,
+        back: pcBack,
         merge_variables: {
             code: confirmationCodePlain.toUpperCase(),
-            confirmation_page_url: config.confirmation_page_url,
+            confirmationPageUrl: config.confirmationPageUrl,
         },
     }, {
         'idempotency-key': new_idempotency_key(),

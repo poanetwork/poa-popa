@@ -1,6 +1,6 @@
 'use strict';
 const [walletA, walletB, walletC] = require('./_utils/mocks').wallets;
-const [tx_id] = require('./_utils/mocks').txIds;
+const [txId] = require('./_utils/mocks').txIds;
 const validateTxDetails = require('../../server-lib/validate_tx_details');
 
 describe('Validate transaction details', () => {
@@ -21,7 +21,7 @@ describe('Validate transaction details', () => {
     it('should reject txDetails.to is different to contractAddress', () => {
         const error = null;
         const txDetails = {
-            hash: tx_id,
+            hash: txId,
             to: walletA,
             from: walletC,
             blockNumber: 10,
@@ -33,7 +33,7 @@ describe('Validate transaction details', () => {
     it('should reject if txDetails.from is different to wallet', () => {
         const error = null;
         const txDetails = {
-            hash: tx_id,
+            hash: txId,
             to: walletB,
             from: walletC,
             blockNumber: 10,
@@ -45,7 +45,7 @@ describe('Validate transaction details', () => {
     it('should reject if txDetails.blocknumber does not exist', () => {
         const error = null;
         const txDetails = {
-            hash: tx_id,
+            hash: txId,
             to: walletB,
             from: walletA,
             blockNumber: null,
@@ -57,7 +57,7 @@ describe('Validate transaction details', () => {
     it('should resolves transaction details', () => {
         const error = null;
         const txDetails = {
-            hash: tx_id,
+            hash: txId,
             to: walletB,
             from: walletA,
             blockNumber: 10,

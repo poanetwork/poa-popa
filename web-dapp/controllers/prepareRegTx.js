@@ -111,8 +111,8 @@ const setSessionKey = (wallet, confirmationCodePlain) => {
     return db.set(sessionKey, {wallet, date: new Date(), confirmationCodePlain})
         .then(() => sessionKey)
         .catch(err => {
-            const log = `error setting session_key: ${err}`;
-            const msg = 'error setting session_key';
+            const log = `error setting sessionKey: ${err}`;
+            const msg = 'error setting sessionKey';
             throw {ok: false, log, msg};
         });
 };

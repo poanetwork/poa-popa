@@ -191,15 +191,15 @@ class RegisterAddressPage extends React.Component {
                     opts.v,
                     opts.r,
                     opts.s,
-                    { from: opts.wallet, value: opts.params.priceWei, gas: ugas }, (err, tx_id) => {
+                    { from: opts.wallet, value: opts.params.priceWei, gas: ugas }, (err, txId) => {
 
                         if (err) {
                             logger.debug('Error calling contract.registerAddress:', err);
                             return callback(err);
                         }
-                        logger.debug('contract.registerAddress, tx_id = ' + tx_id);
+                        logger.debug('contract.registerAddress, txId = ' + txId);
 
-                        return callback(null, tx_id);
+                        return callback(null, txId);
                     });
             });
     };
@@ -260,7 +260,7 @@ class RegisterAddressPage extends React.Component {
             type: 'post',
             url: './api/prepareRegTx',
             data: {
-                wallet: wallet,
+                wallet,
                 name: this.state.name,
                 country: this.state.country,
                 state: this.state.state,
@@ -306,20 +306,20 @@ class RegisterAddressPage extends React.Component {
                     }
 
                     logger.debug('calling registerAddress');
-                    this.registerAddress(res.result, (err, tx_id) => {
+                    this.registerAddress(res.result, (err, txId) => {
                         if (err) {
                             logger.debug('Error occured in registerAddress: ', err);
                             this.setState({ loading: false });
                             window.show_alert('error', 'Register address', [['Error', err.message]]);
-                        } else if (tx_id) {
-                            logger.debug('Transaction submitted: ' + tx_id);
+                        } else if (txId) {
+                            logger.debug('Transaction submitted: ' + txId);
                             window.$.ajax({
                                 type: 'post',
                                 url: './api/notifyRegTx',
                                 data: {
-                                    wallet: wallet,
-                                    tx_id: tx_id,
-                                    session_key: res.result.session_key
+                                    wallet,
+                                    txId,
+                                    sessionKey: res.result.sessionKey
                                 },
                                 success: (res) => {
                                     this.setState({ loading: false });
@@ -328,7 +328,7 @@ class RegisterAddressPage extends React.Component {
                                         logger.debug('Empty response from server');
                                         window.show_alert('error', 'Postcard sending', [
                                             ['Transaction to register address was mined, but postcard was not sent'],
-                                            ['Transaction ID', tx_id],
+                                            ['Transaction ID', txId],
                                             ['Error', 'empty response from server']
                                         ]);
                                         return;
@@ -339,14 +339,14 @@ class RegisterAddressPage extends React.Component {
                                         window.show_alert('error', 'Postcard sending', [
                                             ['Transaction to register address was mined, but postcard was not sent'],
                                             ['Request ID', res.x_id],
-                                            ['Transaction ID', tx_id],
+                                            ['Transaction ID', txId],
                                             ['Error', res.err]
                                         ]);
                                         return;
                                     }
                                     window.show_alert('success', 'Address registered!', [
                                         ['Transaction to register address was mined and postcard was sent'],
-                                        ['Transaction ID', tx_id],
+                                        ['Transaction ID', txId],
                                         ['Expected delivery date', res.result.expected_delivery_date],
                                         ['Mail type', res.result.mail_type]
                                     ]);
@@ -358,9 +358,9 @@ class RegisterAddressPage extends React.Component {
                                 }
                             });
                         } else {
-                            logger.debug('JSON RPC unexpected response: err is empty but tx_id is also empty');
+                            logger.debug('JSON RPC unexpected response: err is empty but txId is also empty');
                             this.setState({ loading: false });
-                            window.show_alert('error', 'Register address', 'Error is empty but tx_id is also empty!');
+                            window.show_alert('error', 'Register address', 'Error is empty but txId is also empty!');
                         }
                     });
                 });

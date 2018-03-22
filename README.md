@@ -46,7 +46,7 @@ module.exports = function (cfg_public) {
         rpc: '******************************',
         signer: '0x****************************', // with 0x prefix
         signerPrivateKey: '******************************', // without 0x prefix
-        confirmation_page_url: '******************************',
+        confirmationPageUrl: '******************************',
     };
 };
 ```
@@ -157,9 +157,9 @@ module.exports = function (cfg_public) {
         rpc: '*** PROBABLY INFURA ***',
         signer: '*** SIGNER ADDRESS, 0x... ***', // with 0x prefix
         signerPrivateKey: '*** SIGNER PRIVATE KEY ***', // without 0x prefix
-        confirmation_page_url: '*** URL FOR CONFIRMATION PAGE, e.g. https://yourserver.com/confirm ***', // used only for postcard
+        confirmationPageUrl: '*** URL FOR CONFIRMATION PAGE, e.g. https://yourserver.com/confirm ***', // used only for postcard
         // it is recommended to install and use redis for keeping session keys
-        session_store: {
+        sessionStore: {
             "type": "redis",
             "params": { *** REDIS CONNECTION PARAMETERS *** }
         },

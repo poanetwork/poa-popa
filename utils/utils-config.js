@@ -11,7 +11,7 @@ var utils_config = {
     source_file: path.join(__dirname, '../blockchain/contracts/ProofOfPhysicalAddress.sol'),
     contract_name: 'ProofOfPhysicalAddress',
     network: network,
-    contract_output: path.join(__dirname, '../web-dapp/src/contract-output.json'),
+    contractOutput: path.join(__dirname, '../web-dapp/src/contract-output.json'),
 };
 
 module.exports = function () {

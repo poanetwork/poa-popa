@@ -70,7 +70,7 @@ var confirm = function (next) {
     logger.log('(3) Confirmation');
     logger.log('\n==============================');
     logger.log('* This will deploy contract from ' + config.source_file + ' to network', config.network);
-    logger.log('* Contract output will be saved to ' + config.contract_output);
+    logger.log('* Contract output will be saved to ' + config.contractOutput);
     logger.log('* Contract owner is ' + (config.owner === '$TEST' ? 'TEST ' : '') + owner);
     logger.log('* Gas estimation: ' + egas + ' => ~' + gprice*egas/1e18 + ' ETH');
     logger.log('* Will set gas = ' + ugas + ' => ~' + gprice*ugas/1e18 + ' ETH');
@@ -170,8 +170,8 @@ confirm(function () {
                 bytecode: bytecode,
                 abi: abi_def,
             };
-            logger.log('(5) Saving contract output to ' + config.contract_output);
-            fs.writeFileSync(config.contract_output, JSON.stringify(file_output, null, 4));
+            logger.log('(5) Saving contract output to ' + config.contractOutput);
+            fs.writeFileSync(config.contractOutput, JSON.stringify(file_output, null, 4));
 
             logger.log('\nDONE');
             return process.exit(0);

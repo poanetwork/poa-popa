@@ -2,7 +2,7 @@
 
 const logger = require('../logger'); // eslint-disable-line no-unused-vars
 const express = require('express');
-const post_api = require('../server-lib/post_api');
+const postApi = require('../server-lib/post_api');
 
 const MIN_SEARCH_LEN = 2;
 
@@ -16,14 +16,14 @@ module.exports = function (opts) {
         if (!name || typeof name !== 'string') return res.json([]);
         name = name.toLowerCase();
         if (name.length < MIN_SEARCH_LEN) return res.json([]);
-        var countries = post_api.lists.countries.filter((c) => {
+        var countries = postApi.lists.countries.filter((c) => {
             return (c.name.toLowerCase().indexOf(name) >= 0 || c.short_name.toLowerCase().indexOf(name) >= 0);
         });
         res.json(countries);
     });
 
     router.post('/lists/allCountries', function (req, res) {
-        res.json(post_api.lists.countries);
+        res.json(postApi.lists.countries);
     });
 
     router.post('/lists/states', function (req, res) {
@@ -37,7 +37,7 @@ module.exports = function (opts) {
         name = name.toLowerCase();
         if (name.length < MIN_SEARCH_LEN) return res.json([]);
 
-        var states = post_api.lists.states.US.filter((s) => {
+        var states = postApi.lists.states.US.filter((s) => {
             return (s.name.toLowerCase().indexOf(name) >= 0 || s.short_name.toLowerCase().indexOf(name) >= 0);
         });
 
@@ -50,7 +50,7 @@ module.exports = function (opts) {
         cname = cname.toLowerCase();
         if (cname !== 'united states') return res.json([]);
 
-        res.json(post_api.lists.states.US);
+        res.json(postApi.lists.states.US);
     });
 
     return router;

@@ -4,7 +4,7 @@ var logger = console;
 
 var config = require('./utils-config')();
 
-var cout = require(config.contract_output);
+var cout = require(config.contractOutput);
 var web3 = new Web3(config.network);
 var cconf = cout[config.contract_name];
 var contract = web3.eth.contract(cconf.abi).at(cconf.address);

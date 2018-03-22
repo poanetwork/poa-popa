@@ -2,9 +2,9 @@
 const config = require('../server-config');
 
 module.exports = (opts) => {
-    const {wallet, tx_bn} = opts;
+    const {wallet, txBn} = opts;
     return new Promise((resolve) => {
-        config.contract.userAddressByCreationBlock(wallet, tx_bn, function (err, addressIndex) {
+        config.contract.userAddressByCreationBlock(wallet, txBn, function (err, addressIndex) {
             return resolve({err, addressIndex});
         });
     });

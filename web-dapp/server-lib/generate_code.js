@@ -3,8 +3,8 @@
 const config = require('../server-config');
 const crypto = require('crypto');
 
-const max_b = 256-1 - 256%config.code_symbols.length;
-const crbl = Math.ceil( config.code_length*256/(max_b+1) );
+const max_b = 256-1 - 256%config.codeSymbols.length;
+const crbl = Math.ceil( config.codeLength*256/(max_b+1) );
 
 function generate_code() {
     var code = '';
@@ -15,13 +15,13 @@ function generate_code() {
             if (b > max_b) {
                 continue;
             }
-            code += config.code_symbols[b%config.code_symbols.length];
+            code += config.codeSymbols[b%config.codeSymbols.length];
 
-            if (code.length >= config.code_length) {
+            if (code.length >= config.codeLength) {
                 break;
             }
         }
-    } while (code.length < config.code_length);
+    } while (code.length < config.codeLength);
 
     return code;
 }

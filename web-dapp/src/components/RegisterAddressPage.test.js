@@ -546,7 +546,7 @@ describe('<RegisterAddressPage />', () => {
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
             'Register address',
-            'Error is empty but tx_id is also empty!'
+            'Error is empty but txId is also empty!'
         );
     });
 

@@ -5,7 +5,7 @@ const config = require('../../server-config');
 
 const TRIES = 1e4;
 
-const EXPECTED_FREQ = 1.0/config.code_symbols.length;
+const EXPECTED_FREQ = 1.0/config.codeSymbols.length;
 const MAX_DIFF = EXPECTED_FREQ*5e-2;
 
 function safe_inc(obj, key, val = 1) {
@@ -28,7 +28,7 @@ describe('Confirmation code', () => {
 
         for (let i = 0; i < TRIES; i++) {
             let code = generate_code();
-            if (code.length !== config.code_length) {
+            if (code.length !== config.codeLength) {
                 pass = false;
                 break;
             }
@@ -48,14 +48,14 @@ describe('Confirmation code', () => {
 
         // 1. check that all symbols are present
         let symbs = Object.keys(symbs_stat);
-        expect(symbs.length === config.code_symbols.length);
-        expect(a_in_b(symbs, config.code_symbols)).toEqual(true);
-        expect(a_in_b(config.code_symbols, symbs)).toEqual(true);
+        expect(symbs.length === config.codeSymbols.length);
+        expect(a_in_b(symbs, config.codeSymbols)).toEqual(true);
+        expect(a_in_b(config.codeSymbols, symbs)).toEqual(true);
 
         // 2. check frequencies
         let freqs_stat = {};
         for (let i = 0; i < symbs.length; i++) {
-            freqs_stat[symbs[i]] = symbs_stat[symbs[i]]/(TRIES*config.code_length);
+            freqs_stat[symbs[i]] = symbs_stat[symbs[i]]/(TRIES*config.codeLength);
         }
 
         let freqs = Object.keys(freqs_stat);

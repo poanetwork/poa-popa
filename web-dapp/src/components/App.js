@@ -21,8 +21,8 @@ class App extends Component {
         super(props);
         this.state = {
             my_web3: null,
-            web3_checker: null,
-            web3_checker_dur: 0,
+            web3Checker: null,
+            web3CheckerDur: 0,
             contract: null,
         };
         this.check_web3 = this.check_web3.bind(this);
@@ -69,7 +69,7 @@ class App extends Component {
         if (window.my_web3) {
             logger.debug('web3 found, getting contract');
 
-            clearInterval(this.state.web3_checker);
+            clearInterval(this.state.web3Checker);
 
             const cconf = require('../contract-output').ProofOfPhysicalAddress;
 
@@ -79,22 +79,22 @@ class App extends Component {
                     this.setState({
                         contract: contract,
                         my_web3: window.my_web3,
-                        web3_checker: null,
-                        web3_checker_dur: 0,
+                        web3Checker: null,
+                        web3CheckerDur: 0,
                     });
                 } else {
                     logger.debug('contract is not ok');
                     this.setState({
                         contract: null,
                         my_web3: window.my_web3,
-                        web3_checker: null,
-                        web3_checker_dur: 0,
+                        web3Checker: null,
+                        web3CheckerDur: 0,
                     });
                 }
             });
         } else {
-            this.setState((prevState, props) => { prevState.web3_checker_dur += WEB3_CHECKER_INTERV_MS; }, () => {
-                logger.debug('no web3 yet, web3_checker_dur = ' + this.state.web3_checker_dur);
+            this.setState((prevState, props) => { prevState.web3CheckerDur += WEB3_CHECKER_INTERV_MS; }, () => {
+                logger.debug('no web3 yet, web3CheckerDur = ' + this.state.web3CheckerDur);
             });
         }
     };
@@ -102,8 +102,8 @@ class App extends Component {
     componentDidMount() {
         logger.debug('App.componentDidMount');
 
-        logger.debug('Starting web3_checker');
-        this.setState({ web3_checker: setInterval(this.check_web3, WEB3_CHECKER_INTERV_MS) });
+        logger.debug('Starting web3Checker');
+        this.setState({ web3Checker: setInterval(this.check_web3, WEB3_CHECKER_INTERV_MS) });
     }
 
     render() {
@@ -138,7 +138,7 @@ class App extends Component {
                 </BrowserRouter>
             );
         }
-        else if (this.state.web3_checker_dur > 1000) {
+        else if (this.state.web3CheckerDur > 1000) {
             const googleChromeLink = (
                 <a href={GOOGLE_CHROME_URL} target="_blank" rel="noopener noreferrer">
                     the latest version of Google Chrome

@@ -1,9 +1,9 @@
 'use strict';
 const config = require('../server-config');
 
-module.exports = (tx_id) => {
+module.exports = (txId) => {
     return new Promise((resolve) => {
-        config.web3.eth.getTransactionReceipt(tx_id, (error, txReceipt) => {
+        config.web3.eth.getTransactionReceipt(txId, (error, txReceipt) => {
             return resolve({error, txReceipt});
         });
     });
