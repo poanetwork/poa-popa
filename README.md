@@ -40,7 +40,7 @@ npm install
 ```
 'use strict';
 
-module.exports = function (cfg_public) {
+module.exports = function (cfgPublic) {
     return {
         lobApiKey: '******************************',
         lobApiVersion: '2017-06-16',
@@ -51,7 +51,7 @@ module.exports = function (cfg_public) {
     };
 };
 ```
-_Note:_ you can get the `lob_api_key` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**
+_Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**
 
 If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
 
@@ -152,7 +152,7 @@ npm install
 ```
 'use strict';
 
-module.exports = function (cfg_public) {
+module.exports = function (cfgPublic) {
     return {
         lobApiKey: '*** LOB TEST OR PROD API KEY ***',
         lobApiVersion: '*** LOB TEST OR PROD API VERSION ***',
@@ -188,57 +188,56 @@ pm2 start -i 0 server
 ### contract
 Contract source file is `blockchain/contracts/ProofOfPhysicalAddress.sol`.
 * main data structures are `User` and `PhysicalAddress`:
-```
-    struct PhysicalAddress
-    {
-        string name;
+```solidity
+struct PhysicalAddress {
+    string name;
 
-        string country;
-        string state;
-        string city;
-        string location;
-        string zip;
+    string country;
+    string state;
+    string city;
+    string location;
+    string zip;
 
-        uint256 creation_block;
-        bytes32 confirmationCodeSha3;
-        uint256 confirmation_block;
-    }
+    uint256 creationBlock;
+    bytes32 keccakIdentifier;
+    bytes32 confirmationCodeSha3;
+    uint256 confirmationBlock;
+}
 
-    struct User
-    {
-        uint256 creation_block;
-        PhysicalAddress[] physical_addresses;
-    }
+struct User {
+    uint256 creationBlock;
+    PhysicalAddress[] physicalAddresses;
+}
 
-    mapping (address => User) public users;
+mapping (address => User) public users;
 ```
 
 `location` in contract is alias for `address` in dapp.
 
 * there are also three variables for statistics
-```
-    uint64 public total_users;
-    uint64 public total_addresses;
-    uint64 public total_confirmed;
+```solidity
+uint64 public totalUsers;
+uint64 public totalAddresses;
+uint64 public totalConfirmed;
 ```
 
 * contract has `owner` which is the account that sent the transaction to deploy the contract.
 
-* contract has `signer` which is the account that is used to calculate signatures on server-side and validate parameters from contract-side. By default when contract is created, `signer` is set to `owner`. You can change it later with `set_signer` method.
+* contract has `signer` which is the account that is used to calculate signatures on server-side and validate parameters from contract-side. By default when contract is created, `signer` is set to `owner`. You can change it later with `setSigner` method.
 
 * main methods are
-```
-    function register_address(
-        string name,
-        string country, string state, string city, string location, string zip,
-        uint256 priceWei,
-        bytes32 confirmationCodeSha3, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
-    public payable
+```solidity
+function registerAddress(
+    string name,
+    string country, string state, string city, string location, string zip,
+    uint256 priceWei,
+    bytes32 confirmationCodeSha3, uint8 sigV, bytes32 sigR, bytes32 sigS)
+public payable
  ```
  used to register a new address, and
- ```
-    function confirm_address(string confirmationCodePlain, uint8 sig_v, bytes32 sig_r, bytes32 sig_s)
-    public
+ ```solidity
+function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR bytes32 sigS)
+public
 ```
 used to confirm an address.
 
@@ -246,25 +245,18 @@ used to confirm an address.
 
 * `country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
 
-* when confirmation code is entered, `user_address_by_confirmation_code` method is called by dapp to search for address with matching confirmation code.
+* when confirmation code is entered, `userAddressByConfirmationCode` method is called by dapp to search for address with matching confirmation code.
 
 ### signing parameters
-First, all relevant parameters for `register_address` and `confirm_address` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`), e.g.
-
-```
-    var text2sign = wallet + Buffer.from(confirmationCodePlain, 'utf8').toString('hex');
-    try {
-        var sign_output = sign(web3, text2sign);
-```
-this function produces a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
+First, all relevant parameters for `registerAddress` and `confirmAddress` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`). This function produces a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
 Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `signer`:
-```
-    function signer_is_valid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
-    public constant returns (bool)
-    {
-        bytes memory prefix = '\x19Ethereum Signed Message:\n32';
-        bytes32 prefixed = keccak256(prefix, data);
-        return (ecrecover(prefixed, v, r, s) == signer);
-    }
+```solidity
+function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
+public constant returns (bool)
+{
+    bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+    bytes32 prefixed = keccak256(prefix, data);
+    return (ecrecover(prefixed, v, r, s) == signer);
+}
 ```
 Note the use of magical `prefix`.
