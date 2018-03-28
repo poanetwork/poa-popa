@@ -19,22 +19,23 @@ contract EthereumClaimsRegistry {
         uint removedAt);
 
     // create or update clams
-    function setClaim(address subject, bytes32 key, bytes32 value) public {
+    function setClaim(address subject, bytes32 key, bytes32 value) external {
         registry[msg.sender][subject][key] = value;
         ClaimSet(msg.sender, subject, key, value, now);
     }
 
-    function setSelfClaim(bytes32 key, bytes32 value) public {
-        setClaim(msg.sender, key, value);
+    function setSelfClaim(bytes32 key, bytes32 value) external {
+        registry[msg.sender][msg.sender][key] = value;
+        ClaimSet(msg.sender, msg.sender, key, value, now);
     }
 
-    function getClaim(address issuer, address subject, bytes32 key) public view returns(bytes32) {
-        return registry[issuer][subject][key];
-    }
-
-    function removeClaim(address issuer, address subject, bytes32 key) public {
+    function removeClaim(address issuer, address subject, bytes32 key) external {
         require(msg.sender == issuer || msg.sender == subject);
         delete registry[issuer][subject][key];
         ClaimRemoved(msg.sender, subject, key, now);
+    }
+
+    function getClaim(address issuer, address subject, bytes32 key) external view returns(bytes32) {
+        return registry[issuer][subject][key];
     }
 }

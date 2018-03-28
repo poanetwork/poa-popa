@@ -1,6 +1,6 @@
 pragma solidity 0.4.19;
 
-import "./EthereumClaimsRegistry.sol";
+import "./EthereumClaimsRegistryInterface.sol";
 import "./PhysicalAddressClaim.sol";
 
 
@@ -8,7 +8,7 @@ import "./PhysicalAddressClaim.sol";
 contract ProofOfPhysicalAddress {
     address public owner;
     address public signer;
-    EthereumClaimsRegistry public registry;
+    EthereumClaimsRegistryInterface public registry;
 
     // Main structures:
     struct PhysicalAddress {
@@ -30,7 +30,7 @@ contract ProofOfPhysicalAddress {
     {
         owner = msg.sender;
         signer = owner;
-        registry = EthereumClaimsRegistry(_registry);
+        registry = EthereumClaimsRegistryInterface(_registry);
     }
 
     struct User {
@@ -246,7 +246,6 @@ contract ProofOfPhysicalAddress {
         pa.creationBlock = block.number;
         pa.confirmationCodeSha3 = confirmationCodeSha3;
         pa.keccakIdentifier = keccak256(country, state, city, location, zip);
-        pa.confirmationBlock = 0;
         users[msg.sender].physicalAddresses.push(pa);
 
         totalAddresses += 1;
