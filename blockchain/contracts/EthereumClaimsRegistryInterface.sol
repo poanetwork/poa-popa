@@ -1,7 +1,7 @@
 pragma solidity 0.4.19;
 
 
-interface EthereumClaimsRegistryInterface {
+contract EthereumClaimsRegistryInterface {
     function setClaim(address subject, bytes32 key, bytes32 value) external;
     function setSelfClaim(bytes32 key, bytes32 value) external;
     function removeClaim(address issuer, address subject, bytes32 key) external;
