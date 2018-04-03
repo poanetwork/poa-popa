@@ -18,7 +18,7 @@ contract EthereumClaimsRegistry {
         bytes32 indexed key,
         uint removedAt);
 
-    // create or update clams
+    // create or update claims
     function setClaim(address subject, bytes32 key, bytes32 value) external {
         registry[msg.sender][subject][key] = value;
         ClaimSet(msg.sender, subject, key, value, now);
