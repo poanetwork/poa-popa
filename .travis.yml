@@ -3,6 +3,7 @@ language: node_js
 before_script:
   - cp web-dapp/test/server/_utils/contract-output.json web-dapp/src/
   - cp web-dapp/test/server/_utils/server-config-private.js web-dapp/
+  - npm install redis
 
 script:
   - npm run --prefix=blockchain coverage
