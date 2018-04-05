@@ -1,10 +1,14 @@
 pragma solidity 0.4.19;
 
-// Checks -> Effects -> Interactions
+import "./EthereumClaimsRegistryInterface.sol";
+import "./PhysicalAddressClaim.sol";
 
+
+// Checks -> Effects -> Interactions
 contract ProofOfPhysicalAddress {
     address public owner;
     address public signer;
+    EthereumClaimsRegistryInterface public registry;
 
     // Main structures:
     struct PhysicalAddress {
@@ -19,13 +23,13 @@ contract ProofOfPhysicalAddress {
         uint256 creationBlock;
         bytes32 keccakIdentifier;
         bytes32 confirmationCodeSha3;
-        uint256 confirmationBlock;
     }
 
-    function ProofOfPhysicalAddress() public
+    function ProofOfPhysicalAddress(address _registry) public
     {
         owner = msg.sender;
         signer = owner;
+        registry = EthereumClaimsRegistryInterface(_registry);
     }
 
     struct User {
@@ -53,11 +57,14 @@ contract ProofOfPhysicalAddress {
     // Methods:
     // set address that is used on server-side to calculate signatures
     // and on contract-side to verify them
-    function setSigner(address newSigner)
-    public
-    {
+    function setSigner(address newSigner) public {
         require(msg.sender == owner);
         signer = newSigner;
+    }
+
+    function setRegistry(address newRegistry) public {
+        require(msg.sender == owner);
+        registry = EthereumClaimsRegistryInterface(newRegistry);
     }
 
     // withdraw specified amount of eth in wei
@@ -65,7 +72,7 @@ contract ProofOfPhysicalAddress {
     public
     {
         require(msg.sender == owner);
-        if (this.balance < amountWei) revert();
+        if (address(this).balance < amountWei) revert();
         owner.transfer(amountWei);
     }
 
@@ -74,8 +81,8 @@ contract ProofOfPhysicalAddress {
     public
     {
         require(msg.sender == owner);
-        if (this.balance == 0) revert();
-        owner.transfer(this.balance);
+        if (address(this).balance == 0) revert();
+        owner.transfer(address(this).balance);
     }
 
     function userExists(address wallet)
@@ -88,7 +95,13 @@ contract ProofOfPhysicalAddress {
     public constant returns (bool)
     {
         require(userExists(wallet));
-        return (users[wallet].physicalAddresses[addressIndex].confirmationBlock > 0);
+        bytes32 keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
+
+        if (keccakIdentifier == 0x0) {
+            return false;
+        }
+
+        return PhysicalAddressClaim.decodeConfirmation(registry.getClaim(address(this), wallet, keccakIdentifier)) > 0;
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
@@ -105,16 +118,26 @@ contract ProofOfPhysicalAddress {
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
-    function userAddressByConfirmationCode(address wallet, bytes32 confirmationCodeSha3)
-    public constant returns (bool, uint256, bool)
+    function userAddressByConfirmationCode(
+        address wallet,
+        bytes32 confirmationCodeSha3
+    )
+        public
+        constant
+        returns(bool, uint256, bool, bytes32)
     {
         require(userExists(wallet));
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
             if (users[wallet].physicalAddresses[ai].confirmationCodeSha3 == confirmationCodeSha3) {
-                return (true, ai, userAddressConfirmed(wallet, ai));
+                return (
+                    true,
+                    ai,
+                    userAddressConfirmed(wallet, ai),
+                    users[wallet].physicalAddresses[ai].keccakIdentifier
+                );
             }
         }
-        return (false, 0, false);
+        return (false, 0, false, 0x0);
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
@@ -162,13 +185,18 @@ contract ProofOfPhysicalAddress {
     function userAddressInfo(address wallet, uint256 addressIndex)
     public constant returns (
         string name,
-        uint256 creationBlock, uint256 confirmationBlock)
-    {
+        uint256 creationBlock,
+        uint256 confirmationBlock
+    ) {
         require(userExists(wallet));
         return (
             users[wallet].physicalAddresses[addressIndex].name,
             users[wallet].physicalAddresses[addressIndex].creationBlock,
-            users[wallet].physicalAddresses[addressIndex].confirmationBlock
+            PhysicalAddressClaim.decodeConfirmation(registry.getClaim(
+                address(this),
+                wallet,
+                users[wallet].physicalAddresses[addressIndex].keccakIdentifier)
+            )
         );
     }
 
@@ -225,7 +253,6 @@ contract ProofOfPhysicalAddress {
         pa.creationBlock = block.number;
         pa.confirmationCodeSha3 = confirmationCodeSha3;
         pa.keccakIdentifier = keccak256(country, state, city, location, zip);
-        pa.confirmationBlock = 0;
         users[msg.sender].physicalAddresses.push(pa);
 
         totalAddresses += 1;
@@ -246,14 +273,15 @@ contract ProofOfPhysicalAddress {
         bool found;
         uint ai;
         bool confirmed;
-        (found, ai, confirmed) = userAddressByConfirmationCode(msg.sender, keccak256(confirmationCodePlain));
+        bytes32 keccakIdentifier;
+        (found, ai, confirmed, keccakIdentifier) = userAddressByConfirmationCode(
+            msg.sender,
+            keccak256(confirmationCodePlain)
+        );
         require(found);
+        require(!confirmed);
 
-        if (confirmed) {
-            revert();
-        } else {
-            users[msg.sender].physicalAddresses[ai].confirmationBlock = block.number;
-            totalConfirmed += 1;
-        }
+        registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
+        totalConfirmed += 1;
     }
 }
