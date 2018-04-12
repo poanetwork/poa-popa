@@ -271,7 +271,7 @@ contract ProofOfPhysicalAddress {
 
         // Remove physical address from list
         uint256 length = users[msg.sender].physicalAddresses.length;
-        for (uint i = index; i < length - 1; i++){
+        for (uint256 i = index; i < length - 1; i++){
             users[msg.sender].physicalAddresses[i] = users[msg.sender].physicalAddresses[i+1];
         }
         delete users[msg.sender].physicalAddresses[length - 1];
