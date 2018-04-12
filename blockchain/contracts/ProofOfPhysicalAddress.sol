@@ -258,6 +258,30 @@ contract ProofOfPhysicalAddress {
         totalAddresses += 1;
     }
 
+    function unregisterAddress(string country, string state, string city, string location, string zip) public {
+        require(userExists(msg.sender));
+
+        bool found;
+        uint256 index;
+        (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
+        require(found);
+
+        bytes32 keccakIdentifier = users[msg.sender].physicalAddresses[index].keccakIdentifier;
+        registry.removeClaim(address(this), msg.sender, keccakIdentifier);
+
+        // Remove physical address from list
+        uint256 length = users[msg.sender].physicalAddresses.length;
+        for (uint i = index; i < length - 1; i++){
+            users[msg.sender].physicalAddresses[i] = users[msg.sender].physicalAddresses[i+1];
+        }
+        delete users[msg.sender].physicalAddresses[length - 1];
+        users[msg.sender].physicalAddresses.length--;
+
+        if (users[msg.sender].physicalAddresses.length == 0) {
+          delete users[msg.sender];
+        }
+    }
+
     function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
     public
     {
