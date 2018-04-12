@@ -1,5 +1,9 @@
 'use strict';
-var path = require('path');
+
+const path = require('path');
+const envPath = path.join(__dirname, '..', '.env');
+require('dotenv').config({ path: envPath });
+
 var fs = require('fs');
 var Web3 = require('web3');
 
