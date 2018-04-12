@@ -12,3 +12,5 @@ node_modules
 
 web-dapp/server-config-private.js
 web-dapp/src/contract-output.json
+
+/.env
