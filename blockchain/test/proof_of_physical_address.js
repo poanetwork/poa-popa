@@ -5,9 +5,13 @@ const ProofOfPhysicalAddress = artifacts.require('ProofOfPhysicalAddress');
 // `solidity-coverage`
 let buildSignature = null;
 try {
-  buildSignature = require('../../web-dapp/server-lib/buildSignature')
+  buildSignature = require('../web-dapp/server-lib/buildSignature')
 } catch (e) {
-  buildSignature = require('../../../web-dapp/server-lib/buildSignature')
+  try {
+    buildSignature = require('../../web-dapp/server-lib/buildSignature')
+  } catch (e) {
+    buildSignature = require('../../../web-dapp/server-lib/buildSignature')
+  }
 }
 
 // Private keys of accounts generated when running `npm run start-testrpc`
@@ -160,6 +164,106 @@ contract('address registration', function(accounts) {
         )
     })
   })
+
+  contract('', () => {
+    it('should allow to unregister an address', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      await registerAddress(popa, args, accounts[0])
+
+      let addressesCount = await popa.userAddressesCount(accounts[0])
+      assert.equal(+addressesCount, 1)
+
+      await unregisterAddress(popa, args, accounts[0])
+
+      addressesCount = await popa.userAddressesCount(accounts[0])
+      assert.equal(+addressesCount, 0)
+    })
+  })
+
+  contract('', () => {
+    it('should not allow an user to unregister another user\'s address', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      await registerAddress(popa, args, accounts[0])
+
+      let addressesCount = await popa.userAddressesCount(accounts[0])
+      assert.equal(+addressesCount, 1)
+
+      await unregisterAddress(popa, args, accounts[1])
+        .then(
+          () => assert.fail(), // should reject
+          () => {}
+        )
+
+      addressesCount = await popa.userAddressesCount(accounts[0])
+      assert.equal(+addressesCount, 1)
+    })
+  })
+
+  contract('', () => {
+    it('should delete the user if the unregistered address was their last one', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      await registerAddress(popa, args, accounts[0])
+
+      let userExists = await popa.userExists(accounts[0])
+      assert.isTrue(userExists)
+
+      await unregisterAddress(popa, args, accounts[0])
+
+      userExists = await popa.userExists(accounts[0])
+      assert.isFalse(userExists)
+    })
+  })
+
+  contract('', () => {
+    it('should not delete the user if the unregistered address was not their last one', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args1 = buildRegisterAddressArgs(accounts[0])
+      const args2 = buildRegisterAddressArgs(accounts[0], {
+        address: '186 berry st'
+      })
+
+      await registerAddress(popa, args1, accounts[0])
+      await registerAddress(popa, args2, accounts[0])
+
+      let userExists = await popa.userExists(accounts[0])
+      assert.isTrue(userExists)
+
+      await unregisterAddress(popa, args1, accounts[0])
+
+      userExists = await popa.userExists(accounts[0])
+      assert.isTrue(userExists)
+    })
+  })
+
+  contract('', () => {
+    it('should not delete an address that an user has not registered', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args1 = buildRegisterAddressArgs(accounts[0])
+      const args2 = buildRegisterAddressArgs(accounts[0], {
+        address: '186 berry st'
+      })
+
+      await registerAddress(popa, args1, accounts[0])
+
+      let addressesCount = await popa.userAddressesCount(accounts[0])
+      assert.equal(+addressesCount, 1)
+
+      await unregisterAddress(popa, args2, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          () => {}
+        )
+
+      addressesCount = await popa.userAddressesCount(accounts[0])
+      assert.equal(+addressesCount, 1)
+    })
+  })
 });
 
 /**
@@ -210,6 +314,19 @@ function registerAddress(popa, args, account, value = args.priceWei) {
     {
       from: account,
       value: value
+    }
+  )
+}
+
+function unregisterAddress(popa, args, account) {
+  return popa.unregisterAddress(
+    args.country,
+    args.state,
+    args.city,
+    args.address,
+    args.zip,
+    {
+      from: account
     }
   )
 }
