@@ -60,7 +60,7 @@ function verify_address(address) {
         Lob.usVerifications.verify({
             state: address.state.toUpperCase(),
             city: address.city.toUpperCase(),
-            primary_line: address.location.toUpperCase(),
+            primary_line: address.location,
             zip_code: address.zip.toUpperCase(),
         }, function (err, result) {
             if (err || !result || !result.deliverability || result.deliverability.trim().toLowerCase() !== 'deliverable') {

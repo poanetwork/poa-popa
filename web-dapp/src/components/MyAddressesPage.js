@@ -32,16 +32,20 @@ class ConfirmationPage extends React.Component {
         if (!wallet) {
             window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
         }
-        
+
         this.get_total_user_addresses({wallet}, (err, result) => {
-            this.state.totalAddresses = parseInt(result.toFixed());
+            const totalAddresses = parseInt(result.toFixed())
+            this.setState({ totalAddresses })
             let addresses = [];
             for (let i=0; i<this.state.totalAddresses; i++) {
                 this.get_addresses({wallet, index: i}, (err, result) => {
                     addresses.push(result);
+
+                  if (addresses.length === totalAddresses) {
+                    this.setState({ addresses })
+                  }
                 })
             }
-            this.state.addresses = addresses;
         })
     }
 
@@ -79,12 +83,18 @@ class ConfirmationPage extends React.Component {
         return (
             <div className='confirmation-page'>
                 <section className="content postcard-container table">
-                    <div className="table-cell table-cell_left">
+                    <div>
                         <h2>My Addresses</h2>
                         <ul>
                             {
-                                this.state.addresses.map((address, index) => (
-                                  <li key={index}>{address}</li>
+                                this.state.addresses.map(([country, state, city, address, zip], index) => (
+                                  <li key={index}>
+                                    Country: { country }<br/>
+                                    State: { state }<br/>
+                                    City: { city }<br/>
+                                    Address: { address }<br/>
+                                    Zip: { zip }<br/>
+                                  </li>
                                 ))
                             }
                         </ul>
