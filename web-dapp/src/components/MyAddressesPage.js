@@ -12,11 +12,10 @@ class ConfirmationPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            confirmationCodePlain: '',
-            confirmed_class: '',
             loading: false,
             totalAddresses: 0,
-            addresses: []
+            addresses: [],
+            wallet: ''
         };
         this.get_total_user_addresses = this.get_total_user_addresses.bind(this);
         this.get_addresses = this.get_addresses.bind(this);
@@ -28,6 +27,8 @@ class ConfirmationPage extends React.Component {
         const [wallet] = this.props.my_web3 && this.props.my_web3.eth.accounts
             ? this.props.my_web3.eth.accounts
             : [];
+
+        this.setState({ wallet })
 
         if (!wallet) {
             window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
@@ -79,25 +80,51 @@ class ConfirmationPage extends React.Component {
     });
   }
 
+    remove = (e, country, state, city, location, zip) => {
+        e.preventDefault();
+
+        const contract = this.props.contract;
+
+        contract.unregisterAddress(country, state, city, location, zip, {
+            gas: '1000000'
+        }, (err, result) => {
+            if (err) {
+                logger.debug('Error calling contract.unregisterAddress:', err);
+                return;
+            }
+
+            window.location.reload();
+        });
+    }
+
     render() {
         return (
             <div className='confirmation-page'>
-                <section className="content postcard-container table">
+                <section>
                     <div>
                         <h2>My Addresses</h2>
                         <ul>
                             {
-                                this.state.addresses.map(([country, state, city, address, zip], index) => (
+                                this.state.addresses.map(([country, state, city, location, zip], index) => (
                                   <li key={index}>
                                     Country: { country }<br/>
                                     State: { state }<br/>
                                     City: { city }<br/>
-                                    Address: { address }<br/>
+                                    Location: { location }<br/>
                                     Zip: { zip }<br/>
+                                    <a
+                                        href=""
+                                        onClick={(e) => this.remove(e, country, state, city, location, zip)}
+                                    >
+                                        (Remove)
+                                    </a>
                                   </li>
                                 ))
                             }
                         </ul>
+                        { this.state.addresses.length === 0 ? (
+                            <p>There are no addresses registered for account <b>{this.state.wallet}</b></p>
+                        ) : null }
                     </div>
                 </section>
                 <Loading show={this.state.loading}/>
