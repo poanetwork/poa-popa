@@ -100,18 +100,19 @@ class ConfirmationPage extends React.Component {
     render() {
         return (
             <div className='confirmation-page'>
-                <section>
-                    <div>
-                        <h2>My Addresses</h2>
-                        <ul>
+              <section className="content address table">
+                  <div className="table-cell table-cell_left">
+                    <div className="address-content">
+                      <h1 className="title">My Addresses</h1>
+                        <ul className="list">
                             {
                                 this.state.addresses.map(([country, state, city, location, zip], index) => (
                                   <li key={index}>
-                                    Country: { country }<br/>
-                                    State: { state }<br/>
-                                    City: { city }<br/>
-                                    Location: { location }<br/>
-                                    Zip: { zip }<br/>
+                                    Country: <strong>{ country }</strong><br/>
+                                    State: <strong>{ state }</strong><br/>
+                                    City: <strong>{ city }</strong><br/>
+                                    Location: <strong>{ location }</strong><br/>
+                                    Zip: <strong>{ zip }</strong><br/>
                                     <a
                                         href=""
                                         onClick={(e) => this.remove(e, country, state, city, location, zip)}
@@ -123,9 +124,11 @@ class ConfirmationPage extends React.Component {
                             }
                         </ul>
                         { this.state.addresses.length === 0 ? (
-                            <p>There are no addresses registered for account <b>{this.state.wallet}</b></p>
+                          <p className="description">There are no addresses registered for account <b>{this.state.wallet}</b></p>
                         ) : null }
                     </div>
+                    </div>
+                <div className="table-cell table-cell_rigth">&nbsp;</div>
                 </section>
                 <Loading show={this.state.loading}/>
             </div>
