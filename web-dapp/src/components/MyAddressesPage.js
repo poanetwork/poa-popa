@@ -8,6 +8,8 @@ import '../assets/javascripts/show-alert.js';
 
 const logger = log.getLogger('ConfirmationPage');
 
+const range = n => [...Array(n)].map((x, i) => i)
+
 class ConfirmationPage extends React.Component {
     constructor(props) {
         super(props);
@@ -17,8 +19,6 @@ class ConfirmationPage extends React.Component {
             addresses: [],
             wallet: ''
         };
-        this.get_total_user_addresses = this.get_total_user_addresses.bind(this);
-        this.get_addresses = this.get_addresses.bind(this);
     }
 
     componentDidMount() {
@@ -34,27 +34,25 @@ class ConfirmationPage extends React.Component {
             window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
         }
 
-        this.get_total_user_addresses({wallet}, (err, result) => {
+        this.getTotalUserAddresses(wallet, (err, result) => {
             const totalAddresses = parseInt(result.toFixed())
             this.setState({ totalAddresses })
-            let addresses = [];
-            for (let i=0; i<this.state.totalAddresses; i++) {
-                this.get_addresses({wallet, index: i}, (err, result) => {
-                    addresses.push(result);
 
-                  if (addresses.length === totalAddresses) {
-                    this.setState({ addresses })
-                  }
-                })
-            }
+            const whenAddresses = range(totalAddresses).map((index) => {
+                return this.getAddress(wallet, index)
+            })
+
+            Promise.all(whenAddresses).then(addresses => {
+                this.setState({ addresses })
+            })
         })
     }
 
-    get_total_user_addresses(opts, callback) {
+    getTotalUserAddresses = (wallet, callback) => {
         const contract = this.props.contract;
 
         logger.debug('calling contract.userAddressesCount');
-        contract.userAddressesCount(opts.wallet, (err, result) => {
+        contract.userAddressesCount(wallet, (err, result) => {
             if (err) {
                 logger.debug('Error calling contract.userAddressesCount:', err);
                 return callback(err);
@@ -65,20 +63,18 @@ class ConfirmationPage extends React.Component {
         });
     }
 
-  get_addresses(opts, callback) {
-    const contract = this.props.contract;
+    getAddress = (wallet, index) => {
+        const contract = this.props.contract;
 
-    logger.debug('calling contract.userAddress');
-    contract.userAddress(opts.wallet, opts.index, (err, result) => {
-      if (err) {
-        logger.debug('Error calling contract.userAddress:', err);
-        return callback(err);
-      }
-
-      logger.debug('contract.userAddress result =', result);
-      return callback(null, result);
-    });
-  }
+        return new Promise((resolve, reject) => {
+            contract.userAddress(wallet, index, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+            });
+        })
+    }
 
     remove = (e, country, state, city, location, zip) => {
         e.preventDefault();
