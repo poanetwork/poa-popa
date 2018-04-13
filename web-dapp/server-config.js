@@ -39,10 +39,17 @@ var web3 = new Web3(network);
 cfg.network = network;
 cfg.web3 = web3;
 
-var contractOutput = path.join(__dirname, './src/contract-output.json');
-var cconf = require(contractOutput).ProofOfPhysicalAddress;
-cfg.contractOutput = contractOutput;
-cfg.cconf = cconf;
-cfg.contract = web3.eth.contract(cconf.abi).at(cconf.address);
+if (!process.env.REACT_APP_POPA_CONTRACT_ADDRESS) {
+    throw new Error('REACT_APP_POPA_CONTRACT_ADDRESS env var is not defined')
+}
+if (!process.env.REACT_APP_POPA_CONTRACT_ABI) {
+    throw new Error('REACT_APP_POPA_CONTRACT_ABI env var is not defined')
+}
+
+cfg.cconf = {};
+cfg.cconf.abi = JSON.parse(process.env.REACT_APP_POPA_CONTRACT_ABI);
+cfg.cconf.address = process.env.REACT_APP_POPA_CONTRACT_ADDRESS;
+
+cfg.contract = web3.eth.contract(cfg.cconf.abi).at(cfg.cconf.address);
 
 module.exports = cfg;
