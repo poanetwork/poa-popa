@@ -1,7 +1,7 @@
 import React from 'react';
 import * as log from 'loglevel';
 
-import { Loading } from './Loading';
+import {Loading} from './Loading';
 
 import '../assets/javascripts/show-alert.js';
 
@@ -27,39 +27,39 @@ class ConfirmationPage extends React.Component {
             ? this.props.my_web3.eth.accounts
             : [];
 
-        this.setState({ wallet })
+        this.setState({wallet})
 
         if (!wallet) {
             return window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
         }
 
         this.getTotalUserAddresses(wallet)
-          .then((result) => {
-            const totalAddresses = parseInt(result.toFixed())
-            this.setState({ totalAddresses })
+            .then((result) => {
+                const totalAddresses = parseInt(result.toFixed())
+                this.setState({totalAddresses})
 
-            const whenAddresses = range(totalAddresses).map((index) => {
-                const whenAddressInfo = this.getAddress(wallet, index)
-                    .then(([country, state, city, location, zip]) => {
-                        return {
-                            country, state, city, location, zip
-                        }
-                    })
-                const whenAddressConfirmed = this.isAddressConfirmed(wallet, index)
+                const whenAddresses = range(totalAddresses).map((index) => {
+                    const whenAddressInfo = this.getAddress(wallet, index)
+                        .then(([country, state, city, location, zip]) => {
+                            return {
+                                country, state, city, location, zip
+                            }
+                        })
+                    const whenAddressConfirmed = this.isAddressConfirmed(wallet, index)
 
-                return Promise.all([whenAddressInfo, whenAddressConfirmed])
-                    .then(([addressInfo, addressConfirmed]) => {
-                        return {
-                            ...addressInfo,
-                            confirmed: addressConfirmed
-                        }
-                    })
+                    return Promise.all([whenAddressInfo, whenAddressConfirmed])
+                        .then(([addressInfo, addressConfirmed]) => {
+                            return {
+                                ...addressInfo,
+                                confirmed: addressConfirmed
+                            }
+                        })
+                })
+
+                Promise.all(whenAddresses).then(addresses => {
+                    this.setState({addresses})
+                })
             })
-
-            Promise.all(whenAddresses).then(addresses => {
-                this.setState({ addresses })
-            })
-        })
     }
 
     getTotalUserAddresses = (wallet) => {
