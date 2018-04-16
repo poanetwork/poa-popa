@@ -212,6 +212,28 @@ ul.list {
   .address-postcard-description {
     font-size: 13px; }
 
+.my-addresses table,
+.my-addresses th,
+.my-addresses td {
+  border: 1px solid #e4dded; }
+
+.my-addresses table {
+  border-collapse: collapse;
+  float: right; }
+  .my-addresses table thead {
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase; }
+    .my-addresses table thead th {
+      height: 24px;
+      line-height: 24px;
+      padding: 0 7px; }
+  .my-addresses table tbody tr td {
+    padding: 3px;
+    height: 24px;
+    line-height: 24px;
+    text-align: left; }
+
 button {
   cursor: pointer;
   transition: 0.3s background-color, 0.3s color;
