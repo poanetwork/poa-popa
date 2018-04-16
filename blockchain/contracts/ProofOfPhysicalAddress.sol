@@ -167,7 +167,9 @@ contract ProofOfPhysicalAddress {
     public constant returns (string)
     {
         require(userExists(wallet));
-        for (uint256 ai = users[wallet].physicalAddresses.length-1; ai >= 0; ai -= 1) {
+
+        for (uint256 iai = 0; iai < users[wallet].physicalAddresses.length; iai += 1) {
+            uint256 ai = (users[wallet].physicalAddresses.length-1) - iai;
             if (userAddressConfirmed(wallet, ai)) {
                 return users[wallet].physicalAddresses[ai].name;
             }
