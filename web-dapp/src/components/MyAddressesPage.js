@@ -31,15 +31,30 @@ class ConfirmationPage extends React.Component {
         this.setState({ wallet })
 
         if (!wallet) {
-            window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
+            return window.show_alert('warning', 'MetaMask account', 'Please unlock your account in MetaMask and refresh the page first');
         }
 
-        this.getTotalUserAddresses(wallet, (err, result) => {
+        this.getTotalUserAddresses(wallet)
+          .then((result) => {
             const totalAddresses = parseInt(result.toFixed())
             this.setState({ totalAddresses })
 
             const whenAddresses = range(totalAddresses).map((index) => {
-                return this.getAddress(wallet, index)
+                const whenAddressInfo = this.getAddress(wallet, index)
+                    .then(([country, state, city, location, zip]) => {
+                        return {
+                            country, state, city, location, zip
+                        }
+                    })
+                const whenAddressConfirmed = this.isAddressConfirmed(wallet, index)
+
+                return Promise.all([whenAddressInfo, whenAddressConfirmed])
+                    .then(([addressInfo, addressConfirmed]) => {
+                        return {
+                            ...addressInfo,
+                            confirmed: addressConfirmed
+                        }
+                    })
             })
 
             Promise.all(whenAddresses).then(addresses => {
@@ -48,19 +63,18 @@ class ConfirmationPage extends React.Component {
         })
     }
 
-    getTotalUserAddresses = (wallet, callback) => {
+    getTotalUserAddresses = (wallet) => {
         const contract = this.props.contract;
 
-        logger.debug('calling contract.userAddressesCount');
-        contract.userAddressesCount(wallet, (err, result) => {
-            if (err) {
-                logger.debug('Error calling contract.userAddressesCount:', err);
-                return callback(err);
-            }
+        return new Promise((resolve, reject) => {
+            contract.userAddressesCount(wallet, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
 
-            logger.debug('contract.userAddressesCount result =', result.toFixed());
-            return callback(null, result);
-        });
+                return resolve(result);
+            });
+        })
     }
 
     getAddress = (wallet, index) => {
@@ -68,6 +82,19 @@ class ConfirmationPage extends React.Component {
 
         return new Promise((resolve, reject) => {
             contract.userAddress(wallet, index, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+            });
+        })
+    }
+
+    isAddressConfirmed = (wallet, index) => {
+        const contract = this.props.contract;
+
+        return new Promise((resolve, reject) => {
+            contract.userAddressConfirmed(wallet, index, (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -102,13 +129,14 @@ class ConfirmationPage extends React.Component {
                       <h1 className="title">My Addresses</h1>
                         <ul className="list">
                             {
-                                this.state.addresses.map(([country, state, city, location, zip], index) => (
+                                this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
                                   <li key={index}>
                                     Country: <strong>{ country }</strong><br/>
                                     State: <strong>{ state }</strong><br/>
                                     City: <strong>{ city }</strong><br/>
                                     Location: <strong>{ location }</strong><br/>
                                     Zip: <strong>{ zip }</strong><br/>
+                                    Confirmed?: <strong>{ confirmed ? 'yes' : 'no' }</strong><br/>
                                     <a
                                         href=""
                                         onClick={(e) => this.remove(e, country, state, city, location, zip)}
