@@ -215,7 +215,8 @@ contract ProofOfPhysicalAddress {
     public constant returns (
         string name,
         uint256 creationBlock,
-        uint256 confirmationBlock
+        uint256 confirmationBlock,
+        bytes32 keccakIdentifier
     ) {
         require(userExists(wallet));
         return (
@@ -225,7 +226,8 @@ contract ProofOfPhysicalAddress {
                 address(this),
                 wallet,
                 users[wallet].physicalAddresses[addressIndex].keccakIdentifier)
-            )
+            ),
+            users[wallet].physicalAddresses[addressIndex].keccakIdentifier
         );
     }
 
