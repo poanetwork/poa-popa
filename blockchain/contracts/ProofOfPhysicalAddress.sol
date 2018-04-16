@@ -154,18 +154,47 @@ contract ProofOfPhysicalAddress {
         return (false, 0, false);
     }
 
-    function userLastUsedName(address wallet)
+    // returns last name submitted to PoPA contract
+    function userLastSubmittedName(address wallet)
     public constant returns (string)
     {
         require(userExists(wallet));
         return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
     }
 
-    // if user does not exist, returns 0
-    function userAddressesCount(address wallet)
+    // returns name from the last confirmed address. If no addresses were confirmed returns ''
+    function userLastConfirmedName(address wallet)
+    public constant returns (string)
+    {
+        require(userExists(wallet));
+
+        for (uint256 iai = 0; iai < users[wallet].physicalAddresses.length; iai += 1) {
+            uint256 ai = (users[wallet].physicalAddresses.length-1) - iai;
+            if (userAddressConfirmed(wallet, ai)) {
+                return users[wallet].physicalAddresses[ai].name;
+            }
+        }
+        return '';
+    }
+
+    // returns how many addresses there are in PoPA contract. If user does not exist, returns 0
+    function userSubmittedAddressesCount(address wallet)
     public constant returns (uint256)
     {
         return users[wallet].physicalAddresses.length;
+    }
+
+    // returns how many addresses from PoPA contract are confirmed. If user does not exist, returns 0
+    function userConfirmedAddressesCount(address wallet)
+    public constant returns (uint256)
+    {
+        uint256 c = 0;
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+            if (userAddressConfirmed(wallet, ai)) {
+                c += 1;
+            }
+        }
+        return c;
     }
 
     function userAddress(address wallet, uint256 addressIndex)
