@@ -5,7 +5,8 @@ trash.txt
 .vscode/
 .nvmrc
 
-build/
+/blockchain/build/
+!/blockchain/build/contracts/ProofOfPhysicalAddress.json
 coverage/
 
 node_modules
