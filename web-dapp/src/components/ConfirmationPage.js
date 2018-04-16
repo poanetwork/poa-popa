@@ -3,7 +3,6 @@ import * as log from 'loglevel';
 
 import { Loading } from './Loading';
 
-import '../assets/stylesheets/application.css';
 import '../assets/javascripts/show-alert.js';
 
 const logger = log.getLogger('ConfirmationPage');

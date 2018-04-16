@@ -6,6 +6,7 @@ import Header from './Header';
 import Footer from './Footer';
 import RegisterAddressPage from './RegisterAddressPage';
 import ConfirmationPage from './ConfirmationPage';
+import MyAddressesPage from './MyAddressesPage';
 
 import '../assets/javascripts/init-my-web3.js';
 import '../assets/javascripts/show-alert.js';
@@ -118,6 +119,8 @@ class App extends Component {
                         <Route exact path="/" component={() => <RegisterAddressPage my_web3={this.state.my_web3}
                                                                                     contract={this.state.contract}/>}/>
                         <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3}
+                                                                                  contract={this.state.contract}/>}/>
+                        <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
                                                                                   contract={this.state.contract}/>}/>
                         <Footer/>
                     </div>

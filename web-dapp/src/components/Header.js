@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import '../assets/stylesheets/application.css';
-
 class Header extends React.Component {
     render () {
         const verifyButton = window.location.pathname !== '/confirm'
@@ -13,6 +11,7 @@ class Header extends React.Component {
             <header className="header">
                 <div className="container">
                     <Link to="/" className="logo" title="Register address"/>
+                    <Link to="/my-addresses" className="button button_my_addresses">My Addresses</Link>
                     {verifyButton}
                 </div>
             </header>

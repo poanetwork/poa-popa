@@ -12,6 +12,7 @@ app.use(helmet());
 // react front-end
 app.use('/', express.static(path.join(__dirname, 'build')));
 app.use('/confirm', express.static(path.join(__dirname, 'build')));
+app.use('/my-addresses', express.static(path.join(__dirname, 'build')));
 
 // api
 app.use(bodyParser.urlencoded({ extended: true }));
