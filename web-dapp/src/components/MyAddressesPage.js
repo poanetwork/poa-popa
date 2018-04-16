@@ -66,7 +66,7 @@ class ConfirmationPage extends React.Component {
         const contract = this.props.contract;
 
         return new Promise((resolve, reject) => {
-            contract.userAddressesCount(wallet, (err, result) => {
+            contract.userSubmittedAddressesCount(wallet, (err, result) => {
                 if (err) {
                     return reject(err);
                 }

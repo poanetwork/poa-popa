@@ -172,12 +172,12 @@ contract('address registration', function(accounts) {
 
       await registerAddress(popa, args, accounts[0])
 
-      let addressesCount = await popa.userAddressesCount(accounts[0])
+      let addressesCount = await popa.userSubmittedAddressesCount(accounts[0])
       assert.equal(+addressesCount, 1)
 
       await unregisterAddress(popa, args, accounts[0])
 
-      addressesCount = await popa.userAddressesCount(accounts[0])
+      addressesCount = await popa.userSubmittedAddressesCount(accounts[0])
       assert.equal(+addressesCount, 0)
     })
   })
@@ -189,7 +189,7 @@ contract('address registration', function(accounts) {
 
       await registerAddress(popa, args, accounts[0])
 
-      let addressesCount = await popa.userAddressesCount(accounts[0])
+      let addressesCount = await popa.userSubmittedAddressesCount(accounts[0])
       assert.equal(+addressesCount, 1)
 
       await unregisterAddress(popa, args, accounts[1])
@@ -198,7 +198,7 @@ contract('address registration', function(accounts) {
           () => {}
         )
 
-      addressesCount = await popa.userAddressesCount(accounts[0])
+      addressesCount = await popa.userSubmittedAddressesCount(accounts[0])
       assert.equal(+addressesCount, 1)
     })
   })
@@ -251,7 +251,7 @@ contract('address registration', function(accounts) {
 
       await registerAddress(popa, args1, accounts[0])
 
-      let addressesCount = await popa.userAddressesCount(accounts[0])
+      let addressesCount = await popa.userSubmittedAddressesCount(accounts[0])
       assert.equal(+addressesCount, 1)
 
       await unregisterAddress(popa, args2, accounts[0])
@@ -260,7 +260,7 @@ contract('address registration', function(accounts) {
           () => {}
         )
 
-      addressesCount = await popa.userAddressesCount(accounts[0])
+      addressesCount = await popa.userSubmittedAddressesCount(accounts[0])
       assert.equal(+addressesCount, 1)
     })
   })
