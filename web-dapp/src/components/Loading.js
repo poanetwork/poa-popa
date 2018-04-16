@@ -1,7 +1,5 @@
 import React from 'react';
 
-import '../assets/stylesheets/application.css';
-
 export const Loading = ({ show }) => {
     if (show) {
         return (<div className="loading-container">

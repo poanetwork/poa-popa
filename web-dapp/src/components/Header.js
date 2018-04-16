@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import '../assets/stylesheets/application.css';
-
 class Header extends React.Component {
     render () {
         const verifyButton = window.location.pathname !== '/confirm'
