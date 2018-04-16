@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config()
+
 const logger = require('./server-lib/logger');
 const config = require('./server-config');
 const recalcPrice = require('./server-lib/recalc_price');
