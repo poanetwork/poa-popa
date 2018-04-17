@@ -131,33 +131,35 @@
 }
 
 .my-addresses {
-  table,
-  th,
-  td {
-    border: 1px solid #e4dded;
+  .box {
+    background-color: #fff;
+    color: #333;
+    border-radius: 5px;
+    padding: 20px;
   }
-  table {
-    border-collapse: collapse;
+
+  .box:nth-child(even) {
+    background-color: #efefef;
+    color: #333;
+  }
+
+  .wrapper {
+    width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(4, 200px);
+    grid-template-rows: 200px 200px 200px;
+    grid-auto-flow: column;
+  }
+  
+  .remove-button {
     float: right;
-    thead {
-      font-weight: bold;
-      text-align: center;
-      text-transform: uppercase;
-      th {
-        height: 24px;
-        line-height: 24px;
-        padding: 0 7px;
-      }
-    }
-    tbody {
-      tr {
-        td {
-          padding: 3px;
-          height: 24px;
-          line-height: 24px;
-          text-align: center;
-        }
-      }
+    font-size: 1.2em;
+    color: #333;
+
+    &:hover {
+      color: #34c3f8;
     }
   }
 }
