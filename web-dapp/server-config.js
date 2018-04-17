@@ -44,14 +44,13 @@ cfg.network = network;
 cfg.web3 = web3;
 
 if (!process.env.REACT_APP_POPA_CONTRACT_ADDRESS) {
-    throw new Error('REACT_APP_POPA_CONTRACT_ADDRESS env var is not defined')
-}
-if (!process.env.REACT_APP_POPA_CONTRACT_ABI) {
-    throw new Error('REACT_APP_POPA_CONTRACT_ABI env var is not defined')
+    throw new Error('REACT_APP_POPA_CONTRACT_ADDRESS env var is not defined');
 }
 
+const popaContract = require('./src/ProofOfPhysicalAddress.json');
+
 cfg.cconf = {};
-cfg.cconf.abi = JSON.parse(process.env.REACT_APP_POPA_CONTRACT_ABI);
+cfg.cconf.abi = popaContract.abi;
 cfg.cconf.address = process.env.REACT_APP_POPA_CONTRACT_ADDRESS;
 
 cfg.contract = web3.eth.contract(cfg.cconf.abi).at(cfg.cconf.address);

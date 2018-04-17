@@ -43,4 +43,5 @@ ganache-cli \
     --account="0xed8aa8f379bac1ff5eafc5f792c32b40a5419edf528a37addbfc8ce36c487463," \
     --account="0x81193e26e271a824fda36511b2814e9d47e0c16ebd31304e88c25a6d659286b8," \
     --account="0x6ee2f0da244d4eea41bd2d92eb8af046589956790ca83055d72d6cb3fe425a57," \
-    --unlock "0xdbde11e51b9fcc9c455de9af89729cf37d835156"
+    --unlock "0xdbde11e51b9fcc9c455de9af89729cf37d835156" \
+    --networkId 1523897649907
