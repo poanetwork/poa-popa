@@ -121,7 +121,7 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='confirmation-page'>
+            <div className='my-addresses'>
               <section className="content address table">
                   <div className="table-cell table-cell_left">
                     <div className="address-content">
