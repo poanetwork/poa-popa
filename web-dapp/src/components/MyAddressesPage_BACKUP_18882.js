@@ -121,10 +121,11 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='my-addresses'>
+<<<<<<< HEAD
+            <div className='confirmation-page'>
                 <section className="content address table">
                     <div className="table-cell table-cell_left">
-                        <div className="address-content">
+                        <div className="my-addresses">
                             <h1 className="title">My Addresses</h1>
                             {this.state.addresses.length !== 0 ? (
                                 <table>
@@ -167,6 +168,37 @@ class ConfirmationPage extends React.Component {
                                     account <b>{this.state.wallet}</b></p>
                             ) : null}
                         </div>
+=======
+            <div className='my-addresses'>
+              <section className="content address table">
+                  <div className="table-cell table-cell_left">
+                    <div className="address-content">
+                      <h1 className="title">My Addresses</h1>
+                        <ul className="list">
+                            {
+                                this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
+                                  <li key={index}>
+                                    Country: <strong>{ country }</strong><br/>
+                                    State: <strong>{ state }</strong><br/>
+                                    City: <strong>{ city }</strong><br/>
+                                    Location: <strong>{ location }</strong><br/>
+                                    Zip: <strong>{ zip }</strong><br/>
+                                    Confirmed?: <strong>{ confirmed ? 'yes' : 'no' }</strong><br/>
+                                    <a
+                                        href=""
+                                        onClick={(e) => this.remove(e, country, state, city, location, zip)}
+                                    >
+                                        (Remove)
+                                    </a>
+                                  </li>
+                                ))
+                            }
+                        </ul>
+                        { this.state.addresses.length === 0 ? (
+                          <p className="description">There are no addresses registered for account <b>{this.state.wallet}</b></p>
+                        ) : null }
+                    </div>
+>>>>>>> master
                     </div>
                     <div className="table-cell table-cell_rigth">&nbsp;</div>
                 </section>

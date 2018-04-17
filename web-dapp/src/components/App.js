@@ -72,9 +72,11 @@ class App extends Component {
 
             clearInterval(this.state.web3Checker);
 
+            const popaContract = require('../ProofOfPhysicalAddress.json')
+
             const cconf = {
               address: process.env.REACT_APP_POPA_CONTRACT_ADDRESS,
-              abi: JSON.parse(process.env.REACT_APP_POPA_CONTRACT_ABI)
+              abi: popaContract.abi
             }
 
             this.check_contract(cconf, (contract) => {

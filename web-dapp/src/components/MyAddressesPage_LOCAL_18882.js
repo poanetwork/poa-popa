@@ -121,10 +121,10 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='my-addresses'>
+            <div className='confirmation-page'>
                 <section className="content address table">
                     <div className="table-cell table-cell_left">
-                        <div className="address-content">
+                        <div className="my-addresses">
                             <h1 className="title">My Addresses</h1>
                             {this.state.addresses.length !== 0 ? (
                                 <table>
