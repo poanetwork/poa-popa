@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
+    "ganache-cli": "^6.1.0",
     "husky": "^0.14.3",
     "lcov-result-merger": "^2.0.0",
     "supertest": "^3.0.0"

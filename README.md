@@ -18,78 +18,78 @@ A more detailed schematic view of the process:
 ![popa-scheme](https://raw.githubusercontent.com/poanetwork/wiki/master/assets/imgs/poa/papers/whitepaper/proof-of-address.png)
 
 ## How to test the current version locally
-1. clone this repository
-```
-git clone https://github.com/poanetwork/poa-popa.git
-```
+1. Clone this repository:
 
-2. make sure you have node.js version >= 6.9.1 installed
+    $ git clone https://github.com/poanetwork/poa-popa.git
+    $ cd poa-popa
 
-3. install Ganache CLI globally
-```
-npm install -g ganache-cli
-```
+In the following steps, we'll refer to this directory as `$REPO_DIR`.
 
-4. cd to the repo folder and install dependencies.
-```
-cd poa-popa
-npm install
-```
+1. Make sure you have node.js version >= 6.9.1 installed.
 
-4. sensitive data (like lob api key) can be provided by creating `web-dapp/server-config-private.js` file that exports config object like so:
-```
-'use strict';
+1. Install the project dependencies:
 
-module.exports = function (cfgPublic) {
-    return {
-        lobApiKey: '******************************',
-        lobApiVersion: '2017-06-16',
-        rpc: '******************************',
-        signer: '0x****************************', // with 0x prefix
-        signerPrivateKey: '******************************', // without 0x prefix
-        confirmationPageUrl: '******************************',
-    };
-};
-```
-_Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**
+    $ npm install
 
-If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
+1. Sensitive data (like lob api key) has to be added to
+`web-dapp/server-config-private.js`. You can create this file by copying the
+example:
 
-5. open new tab in your terminal, and start testrpc with a set of predefined acounts
-```
-npm run start-testrpc
-```
-leave this tab opened until your test is complete.
+    $ cd $REPO_DIR/web-dapp
+    $ cp server-config-private.example.js server-config-private.js
 
-6. in the first tab of your terminal deploy the contract
-```
-npm run deploy-contract
-```
-answer `yes` when confirmation appears.
+This file exports a config object whose keys will replace the ones in
+`web-dapp/server-config.js`.
 
-7. then to compile react components and start dapp, run:
-```
-npm start
-```
-wait until a build is ready and `Listening on 3000` is printed in terminal
+_Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/)
+and copying your **Test API Key** from **User -> Settings -> API Keys**.
 
-8. open file `scripts/start_rpc.sh` in text editor and import one of the accounts from there to MetaMask using its private key. You can choose any address-private-key pair except `0xdbde11e51b9fcc9c455de9af89729cf37d835156` which is reserved for contract's owner.
+1. Open a new terminal and start testrpc with a set of predefined accounts:
 
-9. navigate to http://localhost:3000 in your browser and do tests.
+    $ npm run start-testrpc
 
-To find out confirmation code, look for a line like
-```
-[prepareRegTx] confirmation confirmationCodePlain: y8t44s8yrt
-```
-in server logs
+Leave this tab open until your test is complete.
+
+1. Deploy the contracts:
+
+    $ cd $REPO_DIR/blockchain
+    $ ./node_modules/.bin/truffle migrate
+
+This will send several transactions. One of them will create the PoPA contract.
+You have to have its address in the `.env` file. If you followed these steps,
+the address will be the same as the one in `.env.example`, so it will be enough
+to copy it:
+
+    $ cd $REPO_DIR
+    $ cp .env.example .env
+
+1. Start the application. This will build the frontend and start the sever.
+
+    $ cd $REPO_DIR
+    $ npm start
+
+Wait until you see `Listening on 3000` in the terminal
+
+1. Go to the terminal where you executed the `npm run start-testrpc` command and
+use those private keys or the mnemonic in MetaMask. You should have an account
+with 100 ETH.
+
+1. Navigate to http://localhost:3000 in your browser.
+
+To find out the confirmation code, look for a line like
+
+    [prepareRegTx] confirmation confirmationCodePlain: y8t44s8yrt
+
+in the server logs (the terminal where you ran `npm start`).
 
 To find response details from Lob, including links to the postcard, look for a line like
-```
-[notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
-```
-in server logs
 
-_Note:_ in the property `thumbnails` you can found the url of the front and back sides of the postcard with the confirmation code:
+    [notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
+
+in the server logs.
+
+_Note:_ in the property `thumbnails` you can found the url of the front and back
+sides of the postcard with the confirmation code:
 ```json
 "thumbnails": [
     {
@@ -104,28 +104,33 @@ _Note:_ in the property `thumbnails` you can found the url of the front and back
     }
 ```
 ### Running tests on test network:
-1. make sure you have truffle installed
-```
-npm install -g truffle
-```
-2. switch to `blockchain` folder
-3. run tests
-```
-truffle test
-```
+
+1. Start testrpc
+
+    $ cd $REPO_DIR
+    $ npm run start-testrpc
+
+1. In another terminal, go to the `blockchain` directory.
+
+    $ cd $REPO_DIR/blockchain
+
+1. Run tests
+
+    ./node_modules/.bin/truffle test
 
 ### Running javascript tests:
-1. run the test script
-```
-npm run test
-```
 
-2. if you want to run linter test,
-```
-npm run lint
-```
+1. Go to the root directory and run the tests:
 
-Note: Before to run the `npm install` script it will copy a `pre-push` hook to the `.git` folder, so, before to each `git push`, it will run the tests
+    $ cd $REPO_DIR
+    $ npm test
+
+1. If you want to run the linter:
+
+    $ npm run lint
+
+Note: Before running the `npm install` script, a `pre-push` hook will be copied
+to the `.git` folder, so, before to each `git push`, it will run the tests.
 
 ## How to deploy to a real network
 1. download the latest version from master branch
