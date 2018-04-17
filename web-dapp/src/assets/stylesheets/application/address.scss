@@ -147,9 +147,9 @@
     width: 960px;
     margin: 0 auto;
     display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(4, 200px);
-    grid-template-rows: 200px 200px 200px;
+    grid-gap: 12px;
+    grid-template-columns: repeat(4, 230px);
+    grid-template-rows: 230px 230px 230px 230px;
     grid-auto-flow: row;
   }
   
