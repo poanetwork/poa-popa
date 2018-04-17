@@ -229,7 +229,7 @@ ul.list {
   grid-gap: 10px;
   grid-template-columns: repeat(4, 200px);
   grid-template-rows: 200px 200px 200px;
-  grid-auto-flow: column; }
+  grid-auto-flow: row; }
 
 .my-addresses .remove-button {
   float: right;
