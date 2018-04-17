@@ -20,76 +20,87 @@ A more detailed schematic view of the process:
 ## How to test the current version locally
 1. Clone this repository:
 
+    ```
     $ git clone https://github.com/poanetwork/poa-popa.git
     $ cd poa-popa
+    ```
 
-In the following steps, we'll refer to this directory as `$REPO_DIR`.
+    In the following steps, we'll refer to this directory as `$REPO_DIR`.
 
 1. Make sure you have node.js version >= 6.9.1 installed.
 
 1. Install the project dependencies:
 
-    $ npm install
+     ```
+     $ npm install
+     ```
 
 1. Sensitive data (like lob api key) has to be added to
 `web-dapp/server-config-private.js`. You can create this file by copying the
 example:
 
+    ```
     $ cd $REPO_DIR/web-dapp
     $ cp server-config-private.example.js server-config-private.js
+    ```
 
-This file exports a config object whose keys will replace the ones in
-`web-dapp/server-config.js`.
+    This file exports a config object whose keys will replace the ones in `web-dapp/server-config.js`.
 
-_Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/)
-and copying your **Test API Key** from **User -> Settings -> API Keys**.
+    _Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**.
 
 1. Open a new terminal and start testrpc with a set of predefined accounts:
 
+    ```
     $ npm run start-testrpc
+    ```
 
-Leave this tab open until your test is complete.
+    Leave this tab open until your test is complete.
 
 1. Deploy the contracts:
 
+    ```
     $ cd $REPO_DIR/blockchain
     $ ./node_modules/.bin/truffle migrate
+    ```
 
-This will send several transactions. One of them will create the PoPA contract.
-You have to have its address in the `.env` file. If you followed these steps,
-the address will be the same as the one in `.env.example`, so it will be enough
-to copy it:
+    This will send several transactions. One of them will create the PoPA contract. You have to have its address in the `.env` file. If you followed these steps, the address will be the same as the one in `.env.example`, so it will be enough to copy it:
 
+    ```
     $ cd $REPO_DIR
     $ cp .env.example .env
+    ```
 
 1. Start the application. This will build the frontend and start the sever.
 
+    ```
     $ cd $REPO_DIR
     $ npm start
+    ```
 
-Wait until you see `Listening on 3000` in the terminal
+    Wait until you see `Listening on 3000` in the terminal
 
-1. Go to the terminal where you executed the `npm run start-testrpc` command and
-use those private keys or the mnemonic in MetaMask. You should have an account
-with 100 ETH.
+1. Go to the terminal where you executed the `npm run start-testrpc` command and use those private keys or the mnemonic in MetaMask. You should have an account with 100 ETH.
 
 1. Navigate to http://localhost:3000 in your browser.
 
-To find out the confirmation code, look for a line like
+    To find out the confirmation code, look for a line like
 
+    ```
     [prepareRegTx] confirmation confirmationCodePlain: y8t44s8yrt
+    ```
 
-in the server logs (the terminal where you ran `npm start`).
+    in the server logs (the terminal where you ran `npm start`).
 
-To find response details from Lob, including links to the postcard, look for a line like
+    To find response details from Lob, including links to the postcard, look for a line like
 
+    ```
     [notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
+    ```
 
-in the server logs.
+    in the server logs.
 
-_Note:_ in the property `thumbnails` you can found the url of the front and back
-sides of the postcard with the confirmation code:
+    _Note:_ in the property `thumbnails` you can found the url of the front and back sides of the postcard with the confirmation code:
+    
 ```json
 "thumbnails": [
     {
@@ -103,34 +114,44 @@ sides of the postcard with the confirmation code:
       "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_.."
     }
 ```
+
 ### Running tests on test network:
 
 1. Start testrpc
 
+    ```
     $ cd $REPO_DIR
     $ npm run start-testrpc
+    ```
 
 1. In another terminal, go to the `blockchain` directory.
 
+    ```
     $ cd $REPO_DIR/blockchain
+    ```
 
 1. Run tests
 
+    ```
     ./node_modules/.bin/truffle test
+    ```
 
 ### Running javascript tests:
 
 1. Go to the root directory and run the tests:
 
+    ```
     $ cd $REPO_DIR
     $ npm test
+    ```
 
 1. If you want to run the linter:
 
+    ```
     $ npm run lint
+    ```
 
-Note: Before running the `npm install` script, a `pre-push` hook will be copied
-to the `.git` folder, so, before to each `git push`, it will run the tests.
+    Note: Before running the `npm install` script, a `pre-push` hook will be copied to the `.git` folder, so, before to each `git push`, it will run the tests.
 
 ## How to deploy to a real network
 1. download the latest version from master branch
