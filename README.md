@@ -101,19 +101,20 @@ example:
 
     _Note:_ in the property `thumbnails` you can found the url of the front and back sides of the postcard with the confirmation code:
     
-```json
-"thumbnails": [
-    {
-      "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
-      "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
-      "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..."
-    },
-    {
-      "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
-      "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
-      "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_.."
-    }
-```
+    ```json
+    "thumbnails": [
+        {
+          "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
+          "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
+          "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..."
+        },
+        {
+          "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
+          "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
+          "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_.."
+        }
+    ]
+    ```
 
 ### Running tests on test network:
 
