@@ -79,7 +79,7 @@ example:
 
     Wait until you see `Listening on 3000` in the terminal
 
-1. Go to the terminal where you executed the `npm run start-testrpc` command and use those private keys or the mnemonic in MetaMask. You should have an account with 100 ETH.
+1. Go to the terminal where you executed the `npm run start-testrpc` command and use those private keys or the mnemonic in MetaMask. You should have an account with a little less than 100 ETH (100 - contract deployment fee).
 
 1. Navigate to http://localhost:3000 in your browser.
 
@@ -99,7 +99,7 @@ example:
 
     in the server logs.
 
-    _Note:_ in the property `thumbnails` you can found the url of the front and back sides of the postcard with the confirmation code:
+    _Note:_ in the property `thumbnails` you can find the url of the front and back sides of the postcard with the confirmation code:
     
     ```json
     "thumbnails": [
@@ -152,7 +152,7 @@ example:
     $ npm run lint
     ```
 
-    Note: Before running the `npm install` script, a `pre-push` hook will be copied to the `.git` folder, so, before to each `git push`, it will run the tests.
+    Note: Before running the `npm install` script, a `pre-push` hook will be copied to the `.git` folder, so, before each `git push`, it will run the tests. Also for some tests you need to have redis server running locally. If you don't have it, you can skip tests with `--no-verify` git flag and they will be run by travis.
 
 ## How to deploy to a real network
 1. download the latest version from master branch
@@ -165,16 +165,11 @@ cd poa-popa
 npm install
 ```
 3. deploy the contract, e.g. use Remix and Metamask
-4. create file `poa-popa/web-dapp/src/contract-output.json` with the following structure:
+4. create file `.env` with the following structure:
 ```
-    {
-        "ProofOfPhysicalAddress": {
-            "address": "*** CONTRACT ADDRESS, 0x... ***",
-            "bytecode": "*** BYTECODE, 60606040... ***",
-            "abi": [ *** ABI *** ]
-        }
-    }
+REACT_APP_POPA_CONTRACT_ADDRESS=0x...
 ```
+put the correct PoPA contract address here.
 5. create file `poa-popa/web-dapp/server-config-private.js` with the following content:
 ```
 'use strict';
@@ -247,7 +242,7 @@ uint64 public totalUsers;
 uint64 public totalAddresses;
 uint64 public totalConfirmed;
 ```
-
+_Note_: they represent an overall number of users/addresses/confirmation, not number at any particular time
 * contract has `owner` which is the account that sent the transaction to deploy the contract.
 
 * contract has `signer` which is the account that is used to calculate signatures on server-side and validate parameters from contract-side. By default when contract is created, `signer` is set to `owner`. You can change it later with `setSigner` method.
@@ -260,30 +255,38 @@ function registerAddress(
     uint256 priceWei,
     bytes32 confirmationCodeSha3, uint8 sigV, bytes32 sigR, bytes32 sigS)
 public payable
- ```
- used to register a new address, and
- ```solidity
-function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR bytes32 sigS)
+```
+ used to register a new address,
+```solidity
+function confirmAddress(
+    string confirmationCodePlain,
+    uint8 sigV,
+    bytes32 sigR,
+    bytes32 sigS)
 public
 ```
-used to confirm an address.
+used to confirm an address and
+```solidity
+function unregisterAddress(
+    string country,
+    string state,
+    string city,
+    string location,
+    string zip)
+public
+```
+used to remove an existing address
 
 * `name` may be different for each new address
 
 * `country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
 
-* when confirmation code is entered, `userAddressByConfirmationCode` method is called by dapp to search for address with matching confirmation code.
+## Integration with EthereumClaimsRegistry (ERC780)
+PoPA uses EthereumClaimsRegistry contract (the Register) proposed in https://github.com/ethereum/EIPs/issues/780 to store attestations
+* when address is confirmed in PoPA, a new claim is added to the Register with the following structure
+    * `issuer`: PoPA contract address
+    * `subject`: user's eth wallet address
+    * `key`: `keccakIdentifier` of the address
+    * `value`: `bytes32` array containing confirmation date and library version
 
-### signing parameters
-First, all relevant parameters for `registerAddress` and `confirmAddress` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`). This function produces a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
-Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `signer`:
-```solidity
-function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
-public constant returns (bool)
-{
-    bytes memory prefix = "\x19Ethereum Signed Message:\n32";
-    bytes32 prefixed = keccak256(prefix, data);
-    return (ecrecover(prefixed, v, r, s) == signer);
-}
-```
-Note the use of magical `prefix`.
+* when address is removed in PoPA, corresponding claim is removed from the Register
