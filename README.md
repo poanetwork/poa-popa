@@ -1,26 +1,19 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [POA network - Proof of Physical Address (PoPA)](#poa-network---proof-of-physical-address-popa)
-  - [Identity DApps](#identity-dapps)
-  - [Proof of Physical Address (PoPA)](#proof-of-physical-address-popa)
-  - [How to test the current version locally](#how-to-test-the-current-version-locally)
-    - [Running tests on test network:](#running-tests-on-test-network)
-    - [Running javascript tests:](#running-javascript-tests)
-  - [How to deploy to a real network](#how-to-deploy-to-a-real-network)
-  - [Description](#description)
-    - [contract](#contract)
-  - [Integration with EthereumClaimsRegistry (ERC780)](#integration-with-ethereumclaimsregistry-erc780)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # POA network - Proof of Physical Address (PoPA)
 
 [![Build Status](https://travis-ci.org/poanetwork/poa-popa.svg?branch=master)](https://travis-ci.org/poanetwork/poa-popa)
 [![Coverage Status](https://coveralls.io/repos/github/poanetwork/poa-popa/badge.svg?branch=master)](https://coveralls.io/github/poanetwork/poa-popa?branch=master)
 [![dependencies Status](https://david-dm.org/poanetwork/poa-popa/status.svg)](https://david-dm.org/poanetwork/poa-popa)
 [![devDependencies Status](https://david-dm.org/poanetwork/poa-popa/dev-status.svg)](https://david-dm.org/poanetwork/poa-popa?type=dev)
+
+- [Identity DApps](#identity-dapps)
+- [Proof of Physical Address (PoPA)](#proof-of-physical-address-popa)
+- [How to test the current version locally](#how-to-test-the-current-version-locally)
+  - [Running tests on test network](#running-tests-on-test-network)
+  - [Running javascript tests](#running-javascript-tests)
+- [How to deploy to a real network](#how-to-deploy-to-a-real-network)
+- [Description](#description)
+- [Integration with EthereumClaimsRegistry (ERC780)](#integration-with-ethereumclaimsregistry-erc780)
+
 
 ## Identity DApps
 In POA Network, identity of individual validators plays a major role for selected consensus. We propose additional checks of identity, performed in a decentralized way. Proof of Identity DApps is a series of decentralized applications focused on connecting a user's identity to his/her wallet. Applications can be run on any Ethereum-compatible network.
