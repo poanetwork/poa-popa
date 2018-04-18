@@ -5,6 +5,10 @@ const redis = require('redis'); // https://github.com/NodeRedis/node_redis
 
 const prelog = '[redis]';
 
+function k1(k) {
+    return `locked:${k}`;
+}
+
 module.exports = function () {
     logger.log(`${prelog} connecting`);
 
@@ -36,21 +40,24 @@ module.exports = function () {
         },
         get: (k) => {
             return new Promise((resolve, reject) => {
-                client.get(k, (err, v) => {
+                client.rename(k, k1(k), (err) => {
                     if (err) return reject(err);
-                    try {
-                        v = JSON.parse(v);
-                        return resolve(v);
-                    }
-                    catch (ex) {
-                        return reject(ex);
-                    }
+                    client.get(k1(k), (err, v) => {
+                        if (err) return reject(err);
+                        try {
+                            v = JSON.parse(v);
+                            return resolve(v);
+                        }
+                        catch (ex) {
+                            return reject(ex);
+                        }
+                    });
                 });
             });
         },
         unset: (k) => {
             return new Promise((resolve) => {
-                client.del(k);
+                client.del(k1(k));
                 return resolve(true);
             });
         },
