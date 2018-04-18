@@ -212,6 +212,32 @@ ul.list {
   .address-postcard-description {
     font-size: 13px; }
 
+.my-addresses .box {
+  background-color: #fff;
+  color: #333;
+  border-radius: 5px;
+  padding: 20px; }
+
+.my-addresses .box:nth-child(even) {
+  background-color: #efefef;
+  color: #333; }
+
+.my-addresses .wrapper {
+  width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: repeat(4, 230px);
+  grid-template-rows: 230px 230px 230px 230px;
+  grid-auto-flow: row; }
+
+.my-addresses .remove-button {
+  float: right;
+  font-size: 1.2em;
+  color: #333; }
+  .my-addresses .remove-button:hover {
+    color: #34c3f8; }
+
 button {
   cursor: pointer;
   transition: 0.3s background-color, 0.3s color;
