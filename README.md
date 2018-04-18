@@ -5,6 +5,16 @@
 [![dependencies Status](https://david-dm.org/poanetwork/poa-popa/status.svg)](https://david-dm.org/poanetwork/poa-popa)
 [![devDependencies Status](https://david-dm.org/poanetwork/poa-popa/dev-status.svg)](https://david-dm.org/poanetwork/poa-popa?type=dev)
 
+- [Identity DApps](#identity-dapps)
+- [Proof of Physical Address (PoPA)](#proof-of-physical-address-popa)
+- [How to test the current version locally](#how-to-test-the-current-version-locally)
+  - [Running tests on test network](#running-tests-on-test-network)
+  - [Running javascript tests](#running-javascript-tests)
+- [How to deploy to a real network](#how-to-deploy-to-a-real-network)
+- [Description](#description)
+- [Integration with EthereumClaimsRegistry (ERC780)](#integration-with-ethereumclaimsregistry-erc780)
+
+
 ## Identity DApps
 In POA Network, identity of individual validators plays a major role for selected consensus. We propose additional checks of identity, performed in a decentralized way. Proof of Identity DApps is a series of decentralized applications focused on connecting a user's identity to his/her wallet. Applications can be run on any Ethereum-compatible network.
 
@@ -18,114 +28,141 @@ A more detailed schematic view of the process:
 ![popa-scheme](https://raw.githubusercontent.com/poanetwork/wiki/master/assets/imgs/poa/papers/whitepaper/proof-of-address.png)
 
 ## How to test the current version locally
-1. clone this repository
-```
-git clone https://github.com/poanetwork/poa-popa.git
-```
+1. Clone this repository:
 
-2. make sure you have node.js version >= 6.9.1 installed
+    ```
+    $ git clone https://github.com/poanetwork/poa-popa.git
+    $ cd poa-popa
+    ```
 
-3. install Ganache CLI globally
-```
-npm install -g ganache-cli
-```
+    In the following steps, we'll refer to this directory as `$REPO_DIR`.
 
-4. cd to the repo folder and install dependencies.
-```
-cd poa-popa
-npm install
-```
+1. Make sure you have node.js version >= 6.9.1 installed.
 
-4. sensitive data (like lob api key) can be provided by creating `web-dapp/server-config-private.js` file that exports config object like so:
-```
-'use strict';
+1. Install the project dependencies:
 
-module.exports = function (cfgPublic) {
-    return {
-        lobApiKey: '******************************',
-        lobApiVersion: '2017-06-16',
-        rpc: '******************************',
-        signer: '0x****************************', // with 0x prefix
-        signerPrivateKey: '******************************', // without 0x prefix
-        confirmationPageUrl: '******************************',
-    };
-};
-```
-_Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**
+     ```
+     $ npm install
+     ```
 
-If this file is present, its keys will add to/replace keys in `web-dapp/server-config.js`.
+1. Sensitive data (like lob api key) has to be added to
+`web-dapp/server-config-private.js`. You can create this file by copying the
+example:
 
-5. open new tab in your terminal, and start testrpc with a set of predefined acounts
-```
-npm run start-testrpc
-```
-leave this tab opened until your test is complete.
+    ```
+    $ cd $REPO_DIR/web-dapp
+    $ cp server-config-private.example.js server-config-private.js
+    ```
 
-6. in the first tab of your terminal deploy the contract
-```
-npm run deploy-contract
-```
-answer `yes` when confirmation appears.
+    This file exports a config object whose keys will replace the ones in `web-dapp/server-config.js`.
 
-7. then to compile react components and start dapp, run:
-```
-npm start
-```
-wait until a build is ready and `Listening on 3000` is printed in terminal
+    _Note:_ you can get the `lobApiKey` registering on [Lob](https://lob.com/) and copying your **Test API Key** from **User -> Settings -> API Keys**.
 
-8. open file `scripts/start_rpc.sh` in text editor and import one of the accounts from there to MetaMask using its private key. You can choose any address-private-key pair except `0xdbde11e51b9fcc9c455de9af89729cf37d835156` which is reserved for contract's owner.
+1. Open a new terminal and start testrpc with a set of predefined accounts:
 
-9. navigate to http://localhost:3000 in your browser and do tests.
+    ```
+    $ npm run start-testrpc
+    ```
 
-To find out confirmation code, look for a line like
-```
-[prepareRegTx] confirmation confirmationCodePlain: y8t44s8yrt
-```
-in server logs
+    Leave this tab open until your test is complete.
 
-To find response details from Lob, including links to the postcard, look for a line like
-```
-[notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
-```
-in server logs
+1. Deploy the contracts:
 
-_Note:_ in the property `thumbnails` you can found the url of the front and back sides of the postcard with the confirmation code:
-```json
-"thumbnails": [
-    {
-      "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
-      "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
-      "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..."
-    },
-    {
-      "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
-      "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
-      "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_.."
-    }
-```
+    ```
+    $ cd $REPO_DIR/blockchain
+    $ ./node_modules/.bin/truffle migrate
+    ```
+
+    This will send several transactions. One of them will create the PoPA contract. You have to have its address in the `.env` file. If you followed these steps, the address will be the same as the one in `.env.example`, so it will be enough to copy it:
+
+    ```
+    $ cd $REPO_DIR
+    $ cp .env.example .env
+    ```
+
+1. Start the application. This will build the frontend and start the sever.
+
+    ```
+    $ cd $REPO_DIR
+    $ npm start
+    ```
+
+    Wait until you see `Listening on 3000` in the terminal
+
+1. Go to the terminal where you executed the `npm run start-testrpc` command and use those private keys or the mnemonic in MetaMask. You should have an account with a little less than 100 ETH (100 - contract deployment fee).
+
+1. Navigate to http://localhost:3000 in your browser.
+
+    To find out the confirmation code, look for a line like
+
+    ```
+    [prepareRegTx] confirmation confirmationCodePlain: y8t44s8yrt
+    ```
+
+    in the server logs (the terminal where you ran `npm start`).
+
+    To find response details from Lob, including links to the postcard, look for a line like
+
+    ```
+    [notifyRegTx] postcard: {"id":"psc_106fe1363e5b9521", ..., "to": ..., thumbnails": ... }
+    ```
+
+    in the server logs.
+
+    _Note:_ in the property `thumbnails` you can find the url of the front and back sides of the postcard with the confirmation code:
+    
+    ```json
+    "thumbnails": [
+        {
+          "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
+          "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_...",
+          "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..."
+        },
+        {
+          "small": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
+          "medium": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_..",
+          "large": "https://s3.us-west-2.amazonaws.com/assets.lob.com/psc_.."
+        }
+    ]
+    ```
+
 ### Running tests on test network:
-1. make sure you have truffle installed
-```
-npm install -g truffle
-```
-2. switch to `blockchain` folder
-3. run tests
-```
-truffle test
-```
+
+1. Start testrpc
+
+    ```
+    $ cd $REPO_DIR
+    $ npm run start-testrpc
+    ```
+
+1. In another terminal, go to the `blockchain` directory.
+
+    ```
+    $ cd $REPO_DIR/blockchain
+    ```
+
+1. Run tests
+
+    ```
+    ./node_modules/.bin/truffle test
+    ```
 
 ### Running javascript tests:
-1. run the test script
-```
-npm run test
-```
 
-2. if you want to run linter test,
-```
-npm run lint
-```
+1. Go to the root directory and run the tests:
 
-Note: Before to run the `npm install` script it will copy a `pre-push` hook to the `.git` folder, so, before to each `git push`, it will run the tests
+    ```
+    $ cd $REPO_DIR
+    $ npm test
+    ```
+
+1. If you want to run the linter:
+
+    ```
+    $ npm run lint
+    ```
+
+    Note: Before running the `npm install` script, a `pre-push` hook will be copied to the `.git` folder, so, before each `git push`, it will run the tests. Also for some tests you need to have redis server running locally. If you don't have it, you can skip tests with `--no-verify` git flag and they will be run by travis.
 
 ## How to deploy to a real network
 1. download the latest version from master branch
@@ -138,16 +175,11 @@ cd poa-popa
 npm install
 ```
 3. deploy the contract, e.g. use Remix and Metamask
-4. create file `poa-popa/web-dapp/src/contract-output.json` with the following structure:
+4. create file `.env` with the following structure:
 ```
-    {
-        "ProofOfPhysicalAddress": {
-            "address": "*** CONTRACT ADDRESS, 0x... ***",
-            "bytecode": "*** BYTECODE, 60606040... ***",
-            "abi": [ *** ABI *** ]
-        }
-    }
+REACT_APP_POPA_CONTRACT_ADDRESS=0x...
 ```
+put the correct PoPA contract address here.
 5. create file `poa-popa/web-dapp/server-config-private.js` with the following content:
 ```
 'use strict';
@@ -220,7 +252,7 @@ uint64 public totalUsers;
 uint64 public totalAddresses;
 uint64 public totalConfirmed;
 ```
-
+_Note_: they represent an overall number of users/addresses/confirmation, not number at any particular time
 * contract has `owner` which is the account that sent the transaction to deploy the contract.
 
 * contract has `signer` which is the account that is used to calculate signatures on server-side and validate parameters from contract-side. By default when contract is created, `signer` is set to `owner`. You can change it later with `setSigner` method.
@@ -233,30 +265,38 @@ function registerAddress(
     uint256 priceWei,
     bytes32 confirmationCodeSha3, uint8 sigV, bytes32 sigR, bytes32 sigS)
 public payable
- ```
- used to register a new address, and
- ```solidity
-function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR bytes32 sigS)
+```
+ used to register a new address,
+```solidity
+function confirmAddress(
+    string confirmationCodePlain,
+    uint8 sigV,
+    bytes32 sigR,
+    bytes32 sigS)
 public
 ```
-used to confirm an address.
+used to confirm an address and
+```solidity
+function unregisterAddress(
+    string country,
+    string state,
+    string city,
+    string location,
+    string zip)
+public
+```
+used to remove an existing address
 
 * `name` may be different for each new address
 
 * `country`, `state`, `city`, `location` and `zip` are `trim()`ed and `toLowerCase()`ed by dapp before passing them to the contract.
 
-* when confirmation code is entered, `userAddressByConfirmationCode` method is called by dapp to search for address with matching confirmation code.
+## Integration with EthereumClaimsRegistry (ERC780)
+PoPA uses EthereumClaimsRegistry contract (the Register) proposed in https://github.com/ethereum/EIPs/issues/780 to store attestations
+* when address is confirmed in PoPA, a new claim is added to the Register with the following structure
+    * `issuer`: PoPA contract address
+    * `subject`: user's eth wallet address
+    * `key`: `keccakIdentifier` of the address
+    * `value`: `bytes32` array containing confirmation date and library version
 
-### signing parameters
-First, all relevant parameters for `registerAddress` and `confirmAddress` need to be converted from utf8 strings to hex strings and then combined together into a single long hex string and then passed to `sign()` function (defined in `web-dapp/server-lib/sign.js`). This function produces a signature, that is divided into three parameters `v`, `r` and `s` that need to be passed to client and then by the client to contract's method.
-Contract uses built-in ethereum function `ecrecover` to verify that signer's address matches contract's `signer`:
-```solidity
-function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
-public constant returns (bool)
-{
-    bytes memory prefix = "\x19Ethereum Signed Message:\n32";
-    bytes32 prefixed = keccak256(prefix, data);
-    return (ecrecover(prefixed, v, r, s) == signer);
-}
-```
-Note the use of magical `prefix`.
+* when address is removed in PoPA, corresponding claim is removed from the Register
