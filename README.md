@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [POA network - Proof of Physical Address (PoPA)](#poa-network---proof-of-physical-address-popa)
+  - [Identity DApps](#identity-dapps)
+  - [Proof of Physical Address (PoPA)](#proof-of-physical-address-popa)
+  - [How to test the current version locally](#how-to-test-the-current-version-locally)
+    - [Running tests on test network:](#running-tests-on-test-network)
+    - [Running javascript tests:](#running-javascript-tests)
+  - [How to deploy to a real network](#how-to-deploy-to-a-real-network)
+  - [Description](#description)
+    - [contract](#contract)
+  - [Integration with EthereumClaimsRegistry (ERC780)](#integration-with-ethereumclaimsregistry-erc780)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # POA network - Proof of Physical Address (PoPA)
 
 [![Build Status](https://travis-ci.org/poanetwork/poa-popa.svg?branch=master)](https://travis-ci.org/poanetwork/poa-popa)
