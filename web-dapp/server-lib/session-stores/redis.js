@@ -40,7 +40,7 @@ module.exports = function () {
         },
         get: (k) => {
             return new Promise((resolve, reject) => {
-                client.rename(k, k1(k), (err, v) => {
+                client.rename(k, k1(k), (err) => {
                     if (err) return reject(err);
                     client.get(k1(k), (err, v) => {
                         if (err) return reject(err);
@@ -52,7 +52,7 @@ module.exports = function () {
                             return reject(ex);
                         }
                     });
-                })
+                });
             });
         },
         unset: (k) => {
