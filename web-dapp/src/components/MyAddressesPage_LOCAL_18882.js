@@ -121,38 +121,54 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='my-addresses'>
+            <div className='confirmation-page'>
                 <section className="content address table">
-                    <div className="table-cell">
-                        <div className="container">
+                    <div className="table-cell table-cell_left">
+                        <div className="my-addresses">
                             <h1 className="title">My Addresses</h1>
+                            {this.state.addresses.length !== 0 ? (
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Country</th>
+                                        <th>State</th>
+                                        <th>City</th>
+                                        <th>Location</th>
+                                        <th>Zip</th>
+                                        <th>Confirmed</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
+                                            <tr key={index}>
+                                                <td>{index}</td>
+                                                <td>{country}<br/></td>
+                                                <td>{state}<br/></td>
+                                                <td>{city}<br/></td>
+                                                <td>{location}<br/></td>
+                                                <td>{zip}<br/></td>
+                                                <td>{confirmed ? 'yes' : 'no'}<br/></td>
+                                                <td><a
+                                                    href=""
+                                                    onClick={(e) => this.remove(e, country, state, city, location, zip)}
+                                                    title="Remove address"
+                                                ><i className="fa fa-trash"></i></a></td>
+                                            </tr>
+                                        ))
+                                    }
+                                    </tbody>
+                                </table>
+                            ) : null}
+                            {this.state.addresses.length === 0 ? (
+                                <p className="description">There are no addresses registered for
+                                    account <b>{this.state.wallet}</b></p>
+                            ) : null}
                         </div>
-                        {this.state.addresses.length !== 0 ? (
-                            <div className="wrapper">
-                                {
-                                    this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
-                                    <div className="box">
-                                        <p className="description">
-                                            <strong>Country:</strong> {country} <br/>
-                                            <strong>State:</strong> {state} <br/>
-                                            <strong>City:</strong> {city} <br/>
-                                            <strong>Locations:</strong> {location} <br/>
-                                            <strong>Zip:</strong> {zip} <br/>
-                                            <strong>Confirmed?:</strong> {confirmed ? 'yes' : 'no'} <br/>
-                                            <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
-                                                <i className="fa fa-trash"></i>
-                                            </a>
-                                        </p>
-                                    </div>
-                                    ))
-                                }
-                            </div>
-                        ) : null}
-                        {this.state.addresses.length === 0 ? (
-                            <p className="description">There are no addresses registered for
-                                account <b>{this.state.wallet}</b></p>
-                        ) : null}
                     </div>
+                    <div className="table-cell table-cell_rigth">&nbsp;</div>
                 </section>
                 <Loading show={this.state.loading}/>
             </div>
