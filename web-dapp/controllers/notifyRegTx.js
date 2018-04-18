@@ -30,7 +30,7 @@ const validateData = (opts, prelog = '') => {
         return createResponseObject(false, validate.string(body.txId).msg);
     }
     // sessionKey
-    if (!validate.string(body.sessionKey).ok) {
+    if (!validate.string(body.sessionKey).ok || isNaN(Number(body.sessionKey))) {
         logger.log(`${prelog} validation error on sessionKey: body.sessionKey, error: ${validate.string(body.sessionKey).msg}`);
         return createResponseObject(false, validate.string(body.sessionKey).msg);
     }
