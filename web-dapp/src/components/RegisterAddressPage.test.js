@@ -107,7 +107,7 @@ describe('<RegisterAddressPage />', () => {
         page.setProps({ my_web3: web3 });
 
         for (const field of fields) {
-            if (field !== 'country') {
+            if (field !== 'country' && field !== 'state') {
                 orderButton.simulate('click');
 
                 expect(showAlert).toHaveBeenLastCalledWith(

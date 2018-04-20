@@ -7,13 +7,78 @@ import '../assets/javascripts/show-alert.js';
 
 const logger = log.getLogger('RegisterAddressPage');
 
+const listOfStates = [
+  { code: 'AA', label: 'U.S. Armed Forces – Americas' },
+  { code: 'AE', label: 'U.S. Armed Forces – Europe' },
+  { code: 'AK', label: 'Alaska' },
+  { code: 'AL', label: 'Alabama' },
+  { code: 'AP', label: 'U.S. Armed Forces – Pacific' },
+  { code: 'AR', label: 'Arkansas' },
+  { code: 'AS', label: 'American Somoa' },
+  { code: 'AZ', label: 'Arizona' },
+  { code: 'CA', label: 'California' },
+  { code: 'CT', label: 'Connecticut' },
+  { code: 'CO', label: 'Colorado' },
+  { code: 'DC', label: 'District Of Columbia' },
+  { code: 'DE', label: 'Delaware' },
+  { code: 'FL', label: 'Florida' },
+  { code: 'FM', label: 'Federated States of Micronesia' },
+  { code: 'GA', label: 'Georgia' },
+  { code: 'GU', label: 'Guam' },
+  { code: 'HI', label: 'Hawaii' },
+  { code: 'IA', label: 'Iowa' },
+  { code: 'ID', label: 'Idaho' },
+  { code: 'IL', label: 'Illinois' },
+  { code: 'IN', label: 'Indiana' },
+  { code: 'KS', label: 'Kansas' },
+  { code: 'KY', label: 'Kentucky' },
+  { code: 'LA', label: 'Louisiana' },
+  { code: 'MA', label: 'Massachusetts' },
+  { code: 'MD', label: 'Maryland' },
+  { code: 'ME', label: 'Maine' },
+  { code: 'MH', label: 'Marshall Islands' },
+  { code: 'MI', label: 'Michigan' },
+  { code: 'MN', label: 'Minnesota' },
+  { code: 'MO', label: 'Missouri' },
+  { code: 'MP', label: 'Northern Mariana' },
+  { code: 'MS', label: 'Mississippi' },
+  { code: 'MT', label: 'Montana' },
+  { code: 'NC', label: 'North Carolina' },
+  { code: 'ND', label: 'North Dakota' },
+  { code: 'NE', label: 'Nebraska' },
+  { code: 'NH', label: 'New Hampshire' },
+  { code: 'NJ', label: 'New Jersey' },
+  { code: 'NM', label: 'New Mexico' },
+  { code: 'NV', label: 'Nevada' },
+  { code: 'NY', label: 'New York' },
+  { code: 'OH', label: 'Ohio' },
+  { code: 'OK', label: 'Oklahoma' },
+  { code: 'OR', label: 'Oregon' },
+  { code: 'PA', label: 'Pennsylvania' },
+  { code: 'PW', label: 'Palau' },
+  { code: 'PR', label: 'Puerto Rico' },
+  { code: 'RI', label: 'Rhode Island' },
+  { code: 'SC', label: 'South Carolina' },
+  { code: 'SD', label: 'South Dakota' },
+  { code: 'TN', label: 'Tennessee' },
+  { code: 'TX', label: 'Texas' },
+  { code: 'UT', label: 'Utah' },
+  { code: 'VA', label: 'Virginia' },
+  { code: 'WA', label: 'Washington' },
+  { code: 'WV', label: 'West Virginia' },
+  { code: 'WY', label: 'Wyoming' },
+  { code: 'WI', label: 'Wisconsin' },
+  { code: 'VI', label: 'Virgin Islands' },
+  { code: 'VT', label: 'Vermont' },
+]
+
 class RegisterAddressPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
             country: 'US',
-            state: '',
+            state: listOfStates[0].code,
             city: '',
             address: '',
             zip: '',
@@ -430,68 +495,11 @@ class RegisterAddressPage extends React.Component {
                                     */}
                                         <select className="input" name="state" style={{ 'backgroundColor': 'white' }}
                                                 value={this.state.state} onChange={this.on_change}>
-                                            <option value="AA">U.S. Armed Forces – Americas</option>
-                                            <option value="AE">U.S. Armed Forces – Europe</option>
-                                            <option value="AK">Alaska</option>
-                                            <option value="AL">Alabama</option>
-                                            <option value="AP">U.S. Armed Forces – Pacific</option>
-                                            <option value="AR">Arkansas</option>
-                                            <option value="AS">American Somoa</option>
-                                            <option value="AZ">Arizona</option>
-                                            <option value="CA">California</option>
-                                            <option value="CT">Connecticut</option>
-                                            <option value="CO">Colorado</option>
-                                            <option value="DC">District Of Columbia</option>
-                                            <option value="DE">Delaware</option>
-                                            <option value="FL">Florida</option>
-                                            <option value="FM">Federated States of Micronesia</option>
-                                            <option value="GA">Georgia</option>
-                                            <option value="GU">Guam</option>
-                                            <option value="HI">Hawaii</option>
-                                            <option value="IA">Iowa</option>
-                                            <option value="ID">Idaho</option>
-                                            <option value="IL">Illinois</option>
-                                            <option value="IN">Indiana</option>
-                                            <option value="KS">Kansas</option>
-                                            <option value="KY">Kentucky</option>
-                                            <option value="LA">Louisiana</option>
-                                            <option value="MA">Massachusetts</option>
-                                            <option value="MD">Maryland</option>
-                                            <option value="ME">Maine</option>
-                                            <option value="MH">Marshall Islands</option>
-                                            <option value="MI">Michigan</option>
-                                            <option value="MN">Minnesota</option>
-                                            <option value="MO">Missouri</option>
-                                            <option value="MP">Northern Mariana</option>
-                                            <option value="MS">Mississippi</option>
-                                            <option value="MT">Montana</option>
-                                            <option value="NC">North Carolina</option>
-                                            <option value="ND">North Dakota</option>
-                                            <option value="NE">Nebraska</option>
-                                            <option value="NH">New Hampshire</option>
-                                            <option value="NJ">New Jersey</option>
-                                            <option value="NM">New Mexico</option>
-                                            <option value="NV">Nevada</option>
-                                            <option value="NY">New York</option>
-                                            <option value="OH">Ohio</option>
-                                            <option value="OK">Oklahoma</option>
-                                            <option value="OR">Oregon</option>
-                                            <option value="PA">Pennsylvania</option>
-                                            <option value="PW">Palau</option>
-                                            <option value="PR">Puerto Rico</option>
-                                            <option value="RI">Rhode Island</option>
-                                            <option value="SC">South Carolina</option>
-                                            <option value="SD">South Dakota</option>
-                                            <option value="TN">Tennessee</option>
-                                            <option value="TX">Texas</option>
-                                            <option value="UT">Utah</option>
-                                            <option value="VA">Virginia</option>
-                                            <option value="WA">Washington</option>
-                                            <option value="WV">West Virginia</option>
-                                            <option value="WY">Wyoming</option>
-                                            <option value="WI">Wisconsin</option>
-                                            <option value="VI">Virgin Islands</option>
-                                            <option value="VT">Vermont</option>
+                                            {
+                                                listOfStates.map((state, index) => (
+                                                    <option value={state.code} key={index}>{state.label}</option>
+                                                ))
+                                            }
                                         </select>
                                     </div>
                                 </div>
