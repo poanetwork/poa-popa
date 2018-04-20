@@ -24,7 +24,7 @@ module.exports = {
       gasPrice: 0x01
     },
     rinkeby: {
-      provider: new HDWalletProvider(mnemonic, rinkebyUrl, 0, 2),
+      provider: new HDWalletProvider(mnemonic, rinkebyUrl),
       network_id: 4
     }
   }
