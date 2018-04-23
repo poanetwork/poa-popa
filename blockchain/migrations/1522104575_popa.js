@@ -8,7 +8,7 @@ module.exports = function(deployer, network, accounts) {
     await deployer.link(PhysicalAddressClaim, POPA);
 
     let ethereumClaimsRegistryAddress = null
-    if (network === 'development') {
+    if (network === 'development' || network === 'coverage') {
       await deployer.deploy(EthereumClaimsRegistry);
       let ethereumClaimsRegistry = await EthereumClaimsRegistry.deployed();
       ethereumClaimsRegistryAddress = ethereumClaimsRegistry.address
