@@ -1,3 +1,8 @@
+const HDWalletProvider = require("truffle-hdwallet-provider");
+
+const mnemonic = 'toddler weather rocket off sentence chat unlock flame organ shuffle treat awful'
+const rinkebyUrl = 'https://rinkeby.infura.io'
+
 module.exports = {
   networks: {
     development: {
@@ -17,6 +22,10 @@ module.exports = {
       network_id: '*',
       gas: '0xfffffffffff',
       gasPrice: 0x01
+    },
+    rinkeby: {
+      provider: new HDWalletProvider(mnemonic, rinkebyUrl),
+      network_id: 4
     }
   }
 };

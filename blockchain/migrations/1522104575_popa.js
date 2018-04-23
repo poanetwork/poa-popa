@@ -4,11 +4,18 @@ var EthereumClaimsRegistry = artifacts.require("EthereumClaimsRegistry");
 
 module.exports = function(deployer, network, accounts) {
   return deployer.then(async () => {
-    let ethereumClaimsRegistry = await EthereumClaimsRegistry.deployed();
     await deployer.deploy(PhysicalAddressClaim);
     await deployer.link(PhysicalAddressClaim, POPA);
-    await deployer.deploy(POPA, ethereumClaimsRegistry.address, {
-      from: accounts[1]
-    });
+
+    let ethereumClaimsRegistryAddress = null
+    if (network === 'development' || network === 'coverage') {
+      await deployer.deploy(EthereumClaimsRegistry);
+      let ethereumClaimsRegistry = await EthereumClaimsRegistry.deployed();
+      ethereumClaimsRegistryAddress = ethereumClaimsRegistry.address
+    } else {
+      ethereumClaimsRegistryAddress = '0xaca1bcd8d0f5a9bfc95aff331da4c250cd9ac2da'
+    }
+
+    await deployer.deploy(POPA, ethereumClaimsRegistryAddress);
   });
 };

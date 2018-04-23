@@ -9,7 +9,7 @@ module.exports = (error, txDetails, contractAddress, wallet) => {
         if (!txDetails) {
             return reject({msg: `no details for tx with this hash: ${txId}`});
         }
-        if (txDetails.to !== contractAddress) {
+        if (txDetails.to.toLowerCase() !== contractAddress.toLowerCase()) {
             return reject({
                 msg: `tx_details.to does not match contract address: tx_details.to = ${txDetails.to}, but config.cconf.address = ${contractAddress}`,
                 error: 'to-address in transaction does not match contract address',
