@@ -72,7 +72,7 @@ contract ProofOfPhysicalAddress {
     public
     {
         require(msg.sender == owner);
-        if (address(this).balance < amountWei) revert();
+        require(address(this).balance >= amountWei);
         owner.transfer(amountWei);
     }
 
@@ -81,7 +81,7 @@ contract ProofOfPhysicalAddress {
     public
     {
         require(msg.sender == owner);
-        if (address(this).balance == 0) revert();
+        require(address(this).balance > 0);
         owner.transfer(address(this).balance);
     }
 
@@ -109,7 +109,7 @@ contract ProofOfPhysicalAddress {
     public constant returns (bool, uint256, bool)
     {
         require(userExists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].creationBlock == creationBlock) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
@@ -127,7 +127,7 @@ contract ProofOfPhysicalAddress {
         returns(bool, uint256, bool, bytes32)
     {
         require(userExists(wallet));
-        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].confirmationCodeSha3 == confirmationCodeSha3) {
                 return (
                     true,
@@ -146,7 +146,7 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
-        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
             }
@@ -168,13 +168,13 @@ contract ProofOfPhysicalAddress {
     {
         require(userExists(wallet));
 
-        for (uint256 iai = 0; iai < users[wallet].physicalAddresses.length; iai += 1) {
-            uint256 ai = (users[wallet].physicalAddresses.length-1) - iai;
+        for (uint256 ai = users[wallet].physicalAddresses.length; ai > 0;) {
+            ai--;
             if (userAddressConfirmed(wallet, ai)) {
                 return users[wallet].physicalAddresses[ai].name;
             }
         }
-        return '';
+        return "";
     }
 
     // returns how many addresses there are in PoPA contract. If user does not exist, returns 0
@@ -189,7 +189,7 @@ contract ProofOfPhysicalAddress {
     public constant returns (uint256)
     {
         uint256 c = 0;
-        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai += 1) {
+        for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (userAddressConfirmed(wallet, ai)) {
                 c += 1;
             }
@@ -297,19 +297,24 @@ contract ProofOfPhysicalAddress {
         (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
         require(found);
 
-        bytes32 keccakIdentifier = users[msg.sender].physicalAddresses[index].keccakIdentifier;
-        registry.removeClaim(address(this), msg.sender, keccakIdentifier);
+        registry.removeClaim(
+            address(this),
+            msg.sender,
+            users[msg.sender].physicalAddresses[index].keccakIdentifier
+        );
 
         // Remove physical address from list
         uint256 length = users[msg.sender].physicalAddresses.length;
-        for (uint256 i = index; i < length - 1; i++){
+
+        for (uint256 i = index; i < length - 1; i++) {
             users[msg.sender].physicalAddresses[i] = users[msg.sender].physicalAddresses[i+1];
         }
+
         delete users[msg.sender].physicalAddresses[length - 1];
         users[msg.sender].physicalAddresses.length--;
 
         if (users[msg.sender].physicalAddresses.length == 0) {
-          delete users[msg.sender];
+            delete users[msg.sender];
         }
     }
 
