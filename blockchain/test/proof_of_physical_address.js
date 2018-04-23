@@ -290,7 +290,7 @@ function buildRegisterAddressArgs(account, extraArgs = {}) {
 
   args.sha3cc = web3.sha3(args.cc)
 
-  const { v, r, s } = buildSignature(args, privateKeys[1])
+  const { v, r, s } = buildSignature(args, privateKeys[0])
   args.sigV = v
   args.sigR = r
   args.sigS = s
