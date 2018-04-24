@@ -13,44 +13,6 @@ logger.log(prelog + 'reading postcard templates');
 const pcFront = fs.readFileSync(path.join(__dirname, '../postcard/front.html'), 'utf8');
 const pcBack = fs.readFileSync(path.join(__dirname, '../postcard/back.html'), 'utf8');
 
-/*
-var countries = [];
-
-logger.log(prelog + 'loading list of countries');
-Lob.countries.list(function (err, res) {
-    if (err) {
-        logger.error(prelog + 'error loading list of countries: ' + err);
-        return;
-    }
-    var d = res.data || [];
-    for (var c = 0; c < d.length; c++) {
-        if (d[c].object === 'country') {
-            countries.push( d[c] );
-        }
-    }
-    logger.log(prelog + 'loaded ' + countries.length + ' countries');
-});
-
-var states = {
-    US: []
-};
-
-logger.log(prelog + 'loading list of states');
-Lob.states.list(function (err, res) {
-    if (err) {
-        logger.error(prelog + 'error loading list of US states: ' + err);
-        return;
-    }
-    var d = res.data || [];
-    for (var s = 0; s < d.length; s++) {
-        if (d[s].object === 'state') {
-            states.US.push( d[s] );
-        }
-    }
-    logger.log(prelog + 'loaded ' + states.US.length + ' US states');
-});
-*/
-
 function new_idempotency_key() {
     return uuidv4();
 }
@@ -104,10 +66,5 @@ module.exports = {
     Lob,
     verify_address,
     create_postcard,
-    lists: {
-        /*
-        countries: countries,
-        states: states
-        */
-    },
+    lists: {},
 };

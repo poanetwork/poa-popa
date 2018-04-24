@@ -6,8 +6,7 @@ const config = require('../server-config');
 const sendResponse = require('../server-lib/send_response');
 const notifyRegTxController = require('../controllers/notifyRegTx');
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (opts) => {
+module.exports = () => {
     const router = express.Router();
     router.post('/notifyRegTx', function(req, res) {
         const logPrfx = req.logPrfx;

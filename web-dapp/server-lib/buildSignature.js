@@ -5,7 +5,7 @@ const Web3 = require('web3');
 
 function buildSignature(params, privateKey) {
     const priceWei = Web3.prototype.padLeft(Web3.prototype.toBigNumber(params.priceWei).toString(16), 64);
-    
+
     const text2sign =
         params.wallet +
         Buffer.concat([
@@ -18,7 +18,7 @@ function buildSignature(params, privateKey) {
             Buffer.from(priceWei, 'hex'),
             Buffer.from(params.sha3cc.substr(2), 'hex'),
         ]).toString('hex');
-    
+
     return sign(text2sign, privateKey);
 }
 

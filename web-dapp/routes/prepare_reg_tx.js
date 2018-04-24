@@ -6,8 +6,7 @@ const sendResponse = require('../server-lib/send_response');
 
 const prepareRegTx = require('../controllers/prepareRegTx');
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (opts) => {
+module.exports = () => {
     const router = express.Router();
     router.post('/prepareRegTx', function(req, res) {
         const prelog = `[prepareRegTx] (${req.logPrfx}) `;
