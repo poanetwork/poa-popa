@@ -15,6 +15,7 @@ plugins:
   - jsx-a11y
   - json
 globals:
+  jasmine: false
   jest: false
   describe: false
   xdescribe: false

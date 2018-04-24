@@ -5,23 +5,16 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 0;
 const {
     wallets,
     badWallets,
-    confirmationCodes,
     sessionKeys,
     badSessionKeys,
     txIds,
     badTxIds} = require(path.join(__dirname, './_utils/mocks'));
 const [walletA, walletB, walletC] = wallets;
 const [badWallet] = badWallets;
-const [confCodePlain] = confirmationCodes;
 const [sessionKey] = sessionKeys;
 const [badSessionKey] = badSessionKeys;
-const [txIdA, txIdB, txIdC, txIdD, txIdE, txIdF, txIdG] = txIds;
+const [txIdA, , , , , , txIdG] = txIds;
 const [badTxId] = badTxIds;
-
-const info = {
-    wallet: walletA,
-    confirmationCodePlain: confCodePlain,
-};
 
 const {
     mockDb,
@@ -31,7 +24,7 @@ const {
     mockGetAddressDetails } = require('./_utils/mocks');
 
 jest.mock('../../server-lib/session_store', () => ({
-    get: jest.fn(mockDb.get)
+    get: jest.fn(mockDb.get),
 }));
 jest.mock('../../server-lib/get_transaction', () => jest.fn(mockGetTransaction));
 jest.mock('../../server-lib/get_tx_receipt', () => jest.fn(mockGetTxReceipt));
@@ -86,7 +79,7 @@ describe('Notify Register Transactions', () => {
                     wallet: walletA,
                     txId: txIdA,
                     sessionKey,
-                }
+                },
             };
             const result = notifyRegTx.validateData(opts);
             expect(result.ok).toBeTruthy();
@@ -111,7 +104,7 @@ describe('Notify Register Transactions', () => {
     describe('Get Info', () => {
         it('should return info for the sessionKey', () => {
             const opts = {sessionKey, wallet: walletA};
-            return expect(notifyRegTx.getTxInfo(opts)).resolves.toBeTruthy()
+            return expect(notifyRegTx.getTxInfo(opts)).resolves.toBeTruthy();
         });
         it('should return an error there is not info for the sessionKey', () => {
             const opts = {sessionKey: badSessionKey, wallet: walletA};

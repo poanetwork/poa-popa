@@ -33,11 +33,11 @@ const validateZip = (body) => {
 const validateParams = (body, param) => {
     return new Promise((resolve, reject) => {
         const result = (param === 'wallet') ? validate.wallet(body[param]) : validate.string(body[param]);
-       if (!result.ok) {
-           const log = `validation error on ${param}: ${body[param]}, err: ${result.msg}`;
-           return reject({...result, log});
-       }
-       return resolve(body)
+        if (!result.ok) {
+            const log = `validation error on ${param}: ${body[param]}, err: ${result.msg}`;
+            return reject({...result, log});
+        }
+        return resolve(body);
     });
 };
 
@@ -46,15 +46,15 @@ const validateData = (data = {}) => {
         if (!data || !Object.keys(data).length) return reject({ok: false, log: 'request body empty', msg: 'request body empty'});
         return resolve(data);
     })
-    .then(validateWallet)
-    .then(validateName)
-    .then(validateCountry)
-    .then(validateState)
-    .then(validateCity)
-    .then(validateAddress)
-    .then(validateZip)
-    .then(verifyAddress)
-    .then(normalizeData);
+        .then(validateWallet)
+        .then(validateName)
+        .then(validateCountry)
+        .then(validateState)
+        .then(validateCity)
+        .then(validateAddress)
+        .then(validateZip)
+        .then(verifyAddress)
+        .then(normalizeData);
 };
 
 const verifyAddress = (params) => {

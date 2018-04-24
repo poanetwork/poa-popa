@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('../server-config');
 const db = require('../server-lib/session_store');
 const postApi = require('../server-lib/post_api');
 const logger = require('../server-lib/logger');
@@ -66,7 +65,7 @@ const getTxBlockNumber = (opts, prelog = '') => {
             logger.log(`${prelog} got block number for txId: ${txId}, txBn: ${txDetails.blockNumber}`);
             return txDetails.blockNumber;
         })
-        .then((blockNumber) => {
+        .then(() => {
             logger.log(`${prelog} checking tx receipt for status`);
             return getTxReceipt(txId);
         })
