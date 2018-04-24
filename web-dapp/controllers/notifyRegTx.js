@@ -47,7 +47,7 @@ const getTxInfo = (opts, prelog = '') => {
     const {sessionKey, wallet} = opts;
     logger.log(`${prelog} fetching info by sessionKey: ${sessionKey}`);
 
-    return db.get(sessionKey)
+    return db.getAndLock(sessionKey)
         .then(info => (validateTxInfo({info, sessionKey, wallet})));
 };
 

@@ -14,6 +14,11 @@ module.exports = function () {
             });
         },
         get: (k) => {
+            return new Promise((resolve) => {
+                return resolve(db[k]);
+            });
+        },
+        getAndLock: (k) => {
             db[k1(k)] = db[k];
             delete db[k];
             return new Promise((resolve) => {
