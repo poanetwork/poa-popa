@@ -2,8 +2,14 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import ConfirmationPage from './ConfirmationPage';
+import * as waitForTransaction from '../waitForTransaction';
 
-const web3 = { eth: { accounts: ['0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1'] } };
+const web3 = {
+  eth: {
+    accounts: ['0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1'],
+    getTransactionReceipt: jest.fn()
+  }
+};
 const contract = require('../ProofOfPhysicalAddress.json');
 
 window.$ = { ajax: jest.fn() };
@@ -348,7 +354,7 @@ describe('<ConfirmationPage />', () => {
         );
     });
 
-    it('displays a message if there was an error confirming address', () => {
+    it('displays a message if there was an error confirming address', (done) => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
@@ -368,24 +374,27 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: true, ...addressDetails });
         });
 
-        confirmAddress.mockImplementationOnce((opts, callback) => {
-            return callback({ message: 'fake confirmation error' });
+        confirmAddress.mockImplementationOnce((opts) => {
+            return Promise.reject({ message: 'fake confirmation error' });
         });
 
         page.find('.postcard-button').simulate('click');
 
-        expect(checkUserExists).toHaveBeenCalled();
-        expect(checkWalletSame).toHaveBeenCalled();
-        expect(ajaxCall).toHaveBeenCalled();
-        expect(findAddress).toHaveBeenCalled();
-        expect(showAlert).toHaveBeenLastCalledWith(
-            'error',
-            'Confirming address',
-            [['Error', 'fake confirmation error']]
-        );
+        setTimeout(() => {
+            expect(checkUserExists).toHaveBeenCalled();
+            expect(checkWalletSame).toHaveBeenCalled();
+            expect(ajaxCall).toHaveBeenCalled();
+            expect(findAddress).toHaveBeenCalled();
+            expect(showAlert).toHaveBeenLastCalledWith(
+                'error',
+                'Confirming address',
+                [['Error', 'fake confirmation error']]
+                );
+            done();
+        })
     });
 
-    it('displays a message when received an unexpected JSON RPC response', () => {
+    it('displays a message when received an unexpected JSON RPC response', (done) => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
@@ -404,23 +413,26 @@ describe('<ConfirmationPage />', () => {
         });
 
         confirmAddress.mockImplementationOnce((opts, callback) => {
-            return callback();
+            return Promise.resolve();
         });
 
         page.find('.postcard-button').simulate('click');
 
-        expect(checkUserExists).toHaveBeenCalled();
-        expect(checkWalletSame).toHaveBeenCalled();
-        expect(ajaxCall).toHaveBeenCalled();
-        expect(findAddress).toHaveBeenCalled();
-        expect(showAlert).toHaveBeenLastCalledWith(
-            'error',
-            'Confirming address',
-            'Error is empty but txId is also empty'
-        );
+        setTimeout(() => {
+            expect(checkUserExists).toHaveBeenCalled();
+            expect(checkWalletSame).toHaveBeenCalled();
+            expect(ajaxCall).toHaveBeenCalled();
+            expect(findAddress).toHaveBeenCalled();
+            expect(showAlert).toHaveBeenLastCalledWith(
+                'error',
+                'Confirming address',
+                'Error is empty but txId is also empty'
+                );
+            done();
+        })
     });
 
-    it('displays a message if there was an error estimating gas for transaction', () => {
+    it('displays a message if there was an error estimating gas for transaction', (done) => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
@@ -456,16 +468,19 @@ describe('<ConfirmationPage />', () => {
 
         page.find('.postcard-button').simulate('click');
 
-        expect(checkUserExists).toHaveBeenCalled();
-        expect(checkWalletSame).toHaveBeenCalled();
-        expect(ajaxCall).toHaveBeenCalled();
-        expect(findAddress).toHaveBeenCalled();
-        expect(showAlert).toHaveBeenLastCalledWith(
-            'error',
-            'Confirming address',
-            [['Error', 'fake error']]
-        );
-    });
+        setTimeout(() => {
+            expect(checkUserExists).toHaveBeenCalled();
+            expect(checkWalletSame).toHaveBeenCalled();
+            expect(ajaxCall).toHaveBeenCalled();
+            expect(findAddress).toHaveBeenCalled();
+            expect(showAlert).toHaveBeenLastCalledWith(
+                'error',
+                'Confirming address',
+                [['Error', 'fake error']]
+            );
+            done();
+        })
+    })
 
     it('displays a message when a address was confirmed successfully', () => {
         const contract = {
@@ -504,26 +519,29 @@ describe('<ConfirmationPage />', () => {
 
         page.find('.postcard-button').simulate('click');
 
-        expect(checkUserExists).toHaveBeenCalled();
-        expect(checkWalletSame).toHaveBeenCalled();
-        expect(ajaxCall).toHaveBeenCalled();
-        expect(findAddress).toHaveBeenCalled();
-        expect(showAlert).toHaveBeenLastCalledWith(
-            'success',
-            'Address confirmed!',
-            [
-                ['Transaction to confirm address was submitted'],
-                ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
-                ['Country', 'US'],
-                ['State', 'NM'],
-                ['City', 'ALBUQUERQUE'],
-                ['Address', '3828 PIERMONT DR NE'],
-                ['ZIP code', '87111']
-            ]
-        );
+        setTimeout(() => {
+            expect(checkUserExists).toHaveBeenCalled();
+            expect(checkWalletSame).toHaveBeenCalled();
+            expect(ajaxCall).toHaveBeenCalled();
+            expect(findAddress).toHaveBeenCalled();
+            expect(showAlert).toHaveBeenLastCalledWith(
+                'success',
+                'Address confirmed!',
+                [
+                    ['Transaction to confirm address was submitted'],
+                    ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
+                    ['Country', 'US'],
+                    ['State', 'NM'],
+                    ['City', 'ALBUQUERQUE'],
+                    ['Address', '3828 PIERMONT DR NE'],
+                    ['ZIP code', '87111']
+                ]
+            );
+            done();
+        })
     });
 
-    it('displays a message when a address was confirmed successfully', () => {
+    it('displays a message when a address was confirmed successfully', (done) => {
         const page = mount(
             <ConfirmationPage
                 my_web3={web3}
@@ -541,28 +559,33 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: true, ...addressDetails });
         });
 
-        confirmAddress.mockImplementationOnce((opts, callback) => {
-            return callback(null, '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291');
+        confirmAddress.mockImplementationOnce((opts) => {
+            return Promise.resolve('0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291');
         });
+
+        waitForTransaction.default = jest.fn().mockImplementationOnce(() => Promise.resolve())
 
         page.find('.postcard-button').simulate('click');
 
-        expect(checkUserExists).toHaveBeenCalled();
-        expect(checkWalletSame).toHaveBeenCalled();
-        expect(ajaxCall).toHaveBeenCalled();
-        expect(findAddress).toHaveBeenCalled();
-        expect(showAlert).toHaveBeenLastCalledWith(
-            'success',
-            'Address confirmed!',
-            [
-                ['Transaction to confirm address was submitted'],
-                ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
-                ['Country', 'US'],
-                ['State', 'NM'],
-                ['City', 'ALBUQUERQUE'],
-                ['Address', '3828 PIERMONT DR NE'],
-                ['ZIP code', '87111']
-            ]
-        );
+        setTimeout(() => {
+            expect(checkUserExists).toHaveBeenCalled();
+            expect(checkWalletSame).toHaveBeenCalled();
+            expect(ajaxCall).toHaveBeenCalled();
+            expect(findAddress).toHaveBeenCalled();
+            expect(showAlert).toHaveBeenLastCalledWith(
+                'success',
+                'Address confirmed!',
+                [
+                    ['Transaction to confirm address was submitted'],
+                    ['Transaction ID', '0xfd3c97d14b3979cc6356a92b79b3ac8038f0065fc5079c6a0a0ff9b0c0786291'],
+                    ['Country', 'US'],
+                    ['State', 'NM'],
+                    ['City', 'ALBUQUERQUE'],
+                    ['Address', '3828 PIERMONT DR NE'],
+                    ['ZIP code', '87111']
+                ]
+            );
+            done();
+        })
     });
 });

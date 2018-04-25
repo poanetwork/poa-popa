@@ -2,6 +2,7 @@ import React from 'react';
 import * as log from 'loglevel';
 
 import {Loading} from './Loading';
+import waitForTransaction from '../waitForTransaction';
 
 import '../assets/javascripts/show-alert.js';
 
@@ -107,15 +108,23 @@ class ConfirmationPage extends React.Component {
 
         const contract = this.props.contract;
 
+        this.setState({ loading: true })
         contract.unregisterAddress(country, state, city, location, zip, {
             gas: '1000000'
-        }, (err, result) => {
+        }, (err, txId) => {
             if (err) {
                 logger.debug('Error calling contract.unregisterAddress:', err);
                 return;
             }
 
-            window.location.reload();
+            waitForTransaction(this.props.my_web3, txId)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((e) => {
+                    logger.error('Error waiting for transaction: ', e);
+                    this.setState({ loading: false });
+                });
         });
     }
 

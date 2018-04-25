@@ -3,6 +3,8 @@ import * as log from 'loglevel';
 
 import { Loading } from './Loading';
 
+import waitForTransaction from '../waitForTransaction';
+
 import '../assets/javascripts/show-alert.js';
 
 const logger = log.getLogger('ConfirmationPage');
@@ -114,41 +116,43 @@ class ConfirmationPage extends React.Component {
         });
     }
 
-    confirmAddress(opts, callback) {
+    confirmAddress(opts) {
         const contract = this.props.contract;
 
-        contract.confirmAddress.estimateGas(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
-            if (err) {
-                logger.debug('Estimate gas callback error:', err);
-                return callback(err);
-            }
-
-            const egas = result;
-            logger.debug('Estimated gas: ' + egas);
-            const ugas = Math.floor(1.1 * egas);
-            logger.debug('Will set gas = ' + ugas);
-
-            const wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
-
-            if (wsame) {
-                return callback(wsame);
-            }
-
-            logger.debug('calling contract.confirmAddress');
-
-            contract.confirmAddress(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, {
-                from: opts.wallet,
-                gas: ugas
-            }, (err, txId) => {
+        return new Promise((resolve, reject) => {
+            contract.confirmAddress.estimateGas(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, { from: opts.wallet }, (err, result) => {
                 if (err) {
-                    logger.debug('Error calling contract.confirmAddress:', err);
-                    return callback(err);
+                    logger.debug('Estimate gas callback error:', err);
+                    return reject(err);
                 }
-                logger.debug('txId = ' + txId);
 
-                return callback(null, txId);
+                const egas = result;
+                logger.debug('Estimated gas: ' + egas);
+                const ugas = Math.floor(1.1 * egas);
+                logger.debug('Will set gas = ' + ugas);
+
+                const wsame = this.check_wallet_same(this.props.my_web3.eth.accounts[0], opts.wallet);
+
+                if (wsame) {
+                    return reject(wsame);
+                }
+
+                logger.debug('calling contract.confirmAddress');
+
+                contract.confirmAddress(opts.params.confirmationCodePlain, opts.v, opts.r, opts.s, {
+                    from: opts.wallet,
+                    gas: ugas
+                }, (err, txId) => {
+                    if (err) {
+                        logger.debug('Error calling contract.confirmAddress:', err);
+                        return reject(err);
+                    }
+                    logger.debug('txId = ' + txId);
+
+                    return resolve(txId);
+                });
             });
-        });
+        })
     }
 
     confirm_clicked() {
@@ -252,28 +256,34 @@ class ConfirmationPage extends React.Component {
 
                         logger.debug('calling confirmAddress');
 
-                        this.confirmAddress(res.result, (err, txId) => {
-                            this.setState({ loading: false });
-
-                            if (err) {
+                        this.confirmAddress(res.result)
+                            .then((txId) => {
+                                if (txId) {
+                                    waitForTransaction(this.props.my_web3, txId)
+                                        .then(() => {
+                                            logger.debug('Transaction submitted: ' + txId);
+                                            window.show_alert('success', 'Address confirmed!', [
+                                                ['Transaction to confirm address was submitted'],
+                                                ['Transaction ID', txId],
+                                                ['Country', address_details.country.toUpperCase()],
+                                                ['State', address_details.state.toUpperCase()],
+                                                ['City', address_details.city.toUpperCase()],
+                                                ['Address', address_details.address.toUpperCase()],
+                                                ['ZIP code', address_details.zip.toUpperCase()]
+                                            ]);
+                                            this.setState({ loading: false });
+                                        })
+                                } else {
+                                    logger.debug('JSON RPC unexpected response: err is empty but txId is also empty');
+                                    window.show_alert('error', 'Confirming address', 'Error is empty but txId is also empty');
+                                    this.setState({ loading: false });
+                                }
+                            })
+                            .catch((err) => {
                                 logger.debug('Error occured in confirmAddress: ', err);
                                 window.show_alert('error', 'Confirming address', [['Error', err.message]]);
-                            } else if (txId) {
-                                logger.debug('Transaction submitted: ' + txId);
-                                window.show_alert('success', 'Address confirmed!', [
-                                    ['Transaction to confirm address was submitted'],
-                                    ['Transaction ID', txId],
-                                    ['Country', address_details.country.toUpperCase()],
-                                    ['State', address_details.state.toUpperCase()],
-                                    ['City', address_details.city.toUpperCase()],
-                                    ['Address', address_details.address.toUpperCase()],
-                                    ['ZIP code', address_details.zip.toUpperCase()]
-                                ]);
-                            } else {
-                                logger.debug('JSON RPC unexpected response: err is empty but txId is also empty');
-                                window.show_alert('error', 'Confirming address', 'Error is empty but txId is also empty');
-                            }
-                        });
+                                    this.setState({ loading: false });
+                            })
                     });
                 },
                 error: ({ statusText, status }) => {
