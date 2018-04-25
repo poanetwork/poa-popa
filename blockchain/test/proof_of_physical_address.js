@@ -938,6 +938,41 @@ contract('setSigner', function(accounts) {
     });
 });
 
+contract('setRegistry', function(accounts) {
+    contract('', () => {
+        it('should allow the owner to change the registry', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const registryBefore = await popa.registry();
+
+            await popa.setRegistry('0xfedcbafedcbafedcbafedcbafedcbafedcbafdec');
+
+            const registryAfter= await popa.registry();
+
+            assert.notEqual(registryBefore, registryAfter);
+            assert.equal(registryAfter, '0xfedcbafedcbafedcbafedcbafedcbafedcbafdec');
+        });
+    });
+
+    contract('', () => {
+        it('should not allow someone that\'s not the owner to change the registry', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const registryBefore = await popa.registry();
+
+            await popa.setRegistry( '0xfedcbafedcbafedcbafedcbafedcbafedcbafdec', { from: accounts[1] })
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const registryAfter= await popa.registry();
+
+                        assert.equal(registryBefore, registryAfter);
+                    }
+                );
+        });
+    });
+});
+
 contract('helpers', function(accounts) {
     // userExists
     contract('', () => {
