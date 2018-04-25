@@ -384,6 +384,30 @@ contract('address registration (fail)', function(accounts) {
                 );
         });
     });
+
+    contract('', () => {
+        it('registerAddress should fail if address was already registered', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let addresses = await popa.totalAddresses();
+            assert.equal(+addresses, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            addresses = await popa.totalAddresses();
+            assert.equal(+addresses, 1);
+
+            await registerAddress(popa, args, accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const addresses = await popa.totalAddresses();
+                        assert.equal(+addresses, 1);
+                    }
+                );
+        });
+    });
 });
 
 contract('address removal', function(accounts) {
