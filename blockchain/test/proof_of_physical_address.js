@@ -88,9 +88,6 @@ contract('address registration (success)', function(accounts) {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args = buildRegisterAddressArgs(accounts[0]);
 
-            let confirmed = await popa.totalConfirmed();
-            assert.equal(+confirmed, 0);
-
             await registerAddress(popa, args, accounts[0]);
 
             const [country, state, city, location, zip] = await popa.userAddress(accounts[0], 0);
@@ -100,6 +97,105 @@ contract('address registration (success)', function(accounts) {
             assert.equal(city, args.city);
             assert.equal(location, args.address);
             assert.equal(zip, args.zip);
+        });
+    });
+
+    contract('', () => {
+        it('should allow a user to register two different addresses', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+
+            let addresses = await popa.totalAddresses();
+            let users = await popa.totalUsers();
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 0);
+            assert.equal(+users, 0);
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args1, accounts[0]);
+
+            addresses = await popa.totalAddresses();
+            users = await popa.totalUsers();
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 1);
+            assert.equal(+users, 1);
+            assert.equal(+confirmed, 0);
+
+            const args2 = buildRegisterAddressArgs(accounts[0], { state: 'al' });
+            await registerAddress(popa, args2, accounts[0]);
+
+            addresses = await popa.totalAddresses();
+            users = await popa.totalUsers();
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 2);
+            assert.equal(+users, 1);
+            assert.equal(+confirmed, 0);
+        });
+    });
+
+    contract('', () => {
+        it('should allow different users to register different addresses', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+
+            let addresses = await popa.totalAddresses();
+            let users = await popa.totalUsers();
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 0);
+            assert.equal(+users, 0);
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args1, accounts[0]);
+
+            addresses = await popa.totalAddresses();
+            users = await popa.totalUsers();
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 1);
+            assert.equal(+users, 1);
+            assert.equal(+confirmed, 0);
+
+            const args2 = buildRegisterAddressArgs(accounts[1], { address: '742 evergreen terrace' });
+            await registerAddress(popa, args2, accounts[1]);
+
+            addresses = await popa.totalAddresses();
+            users = await popa.totalUsers();
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 2);
+            assert.equal(+users, 2);
+            assert.equal(+confirmed, 0);
+        });
+    });
+
+    contract('', () => {
+        it('should allow different users to register the same address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+
+            let addresses = await popa.totalAddresses();
+            let users = await popa.totalUsers();
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 0);
+            assert.equal(+users, 0);
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args1, accounts[0]);
+
+            addresses = await popa.totalAddresses();
+            users = await popa.totalUsers();
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 1);
+            assert.equal(+users, 1);
+            assert.equal(+confirmed, 0);
+
+            const args2 = buildRegisterAddressArgs(accounts[1]);
+            await registerAddress(popa, args2, accounts[1]);
+
+            addresses = await popa.totalAddresses();
+            users = await popa.totalUsers();
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+addresses, 2);
+            assert.equal(+users, 2);
+            assert.equal(+confirmed, 0);
         });
     });
 });
