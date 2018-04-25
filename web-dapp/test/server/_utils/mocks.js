@@ -15,7 +15,7 @@ const confirmationCodes = [
 ];
 
 const confirmationCodesSha3 = [
-    '0x8c4d9d5a199f6619fe6ab0a3e319122048f0b10c10ace064d39657cbd37f123f'
+    '0x8c4d9d5a199f6619fe6ab0a3e319122048f0b10c10ace064d39657cbd37f123f',
 ];
 
 const sessionKeys = [
@@ -55,8 +55,8 @@ const mockDb = {
 const mockGetTransaction = (txId) => {
     const response = {
         error: null,
-        txDetails: null
-    }
+        txDetails: null,
+    };
     if (txId === txIds[5]) {
         response.error = 'Error getting transaction';
     }
