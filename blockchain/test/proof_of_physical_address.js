@@ -4,13 +4,17 @@ const ProofOfPhysicalAddress = artifacts.require('ProofOfPhysicalAddress');
 // this is necessary for the tests to pass both when running `truffle test` and
 // `solidity-coverage`
 let buildSignature = null;
+let sign = null;
 try {
     buildSignature = require('../web-dapp/server-lib/buildSignature');
+    sign = require('../web-dapp/server-lib/sign');
 } catch (e) {
     try {
         buildSignature = require('../../web-dapp/server-lib/buildSignature');
+        sign = require('../../web-dapp/server-lib/sign');
     } catch (e) {
         buildSignature = require('../../../web-dapp/server-lib/buildSignature');
+        sign = require('../../../web-dapp/server-lib/sign');
     }
 }
 
@@ -608,6 +612,151 @@ contract('address removal', function(accounts) {
     });
 });
 
+contract('address confirmation', function(accounts) {
+    contract('', () => {
+        it('should succeed if the arguments are correct', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            let confirmed = await popa.totalConfirmed();
+            let users = await popa.totalUsers();
+            assert.equal(+addressesCount, 0);
+            assert.equal(+confirmed, 0);
+            assert.equal(+users, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            confirmed = await popa.totalConfirmed();
+            users = await popa.totalUsers();
+            let [, , confirmationBlock] = await popa.userAddressInfo(accounts[0], 0);
+            assert.equal(+addressesCount, 1);
+            assert.equal(+confirmed, 0);
+            assert.equal(+users, 1);
+            assert.equal(+confirmationBlock, 0);
+
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            confirmed = await popa.totalConfirmed();
+            users = await popa.totalUsers();
+            [, , confirmationBlock] = await popa.userAddressInfo(accounts[0], 0);
+            assert.equal(+addressesCount, 1);
+            assert.equal(+confirmed, 1);
+            assert.equal(+users, 1);
+            assert.equal(+confirmationBlock, web3.eth.blockNumber);
+        });
+    });
+
+    contract('', () => {
+        it('should fail if the confirmation code is empty', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, '', accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        confirmed = await popa.totalConfirmed();
+                        assert.equal(+confirmed, 0);
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should fail if the sender is different than the account that registered', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, args.cc, accounts[1])
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        confirmed = await popa.totalConfirmed();
+                        assert.equal(+confirmed, 0);
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should fail if the data is signed with a different private key', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, args.cc, accounts[0], privateKeys[1])
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        confirmed = await popa.totalConfirmed();
+                        assert.equal(+confirmed, 0);
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should fail if the confirmation code is invalid', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            await confirmAddress(popa, 'foobar', accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        confirmed = await popa.totalConfirmed();
+                        assert.equal(+confirmed, 0);
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should fail if the address is already confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let confirmed = await popa.totalConfirmed();
+            assert.equal(+confirmed, 0);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            confirmed = await popa.totalConfirmed();
+            assert.equal(+confirmed, 1);
+
+            await confirmAddress(popa, args.cc, accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        confirmed = await popa.totalConfirmed();
+                        assert.equal(+confirmed, 1);
+                    }
+                );
+        });
+    });
+});
+
 /**
  * Build arguments for registerAddress method
  *
@@ -656,6 +805,21 @@ function registerAddress(popa, args, account, value = args.priceWei) {
         {
             from: account,
             value: value,
+        }
+    );
+}
+
+function confirmAddress(popa, cc, account, privateKey = privateKeys[0]) {
+    const ccBuffer = Buffer.from(cc).toString('hex');
+    const text2Sign = account + ccBuffer;
+    const { v, r, s } = sign(text2Sign, privateKey);
+    return popa.confirmAddress(
+        cc,
+        v,
+        r,
+        s,
+        {
+            from: account,
         }
     );
 }
