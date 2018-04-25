@@ -89,23 +89,6 @@ contract('address registration (success)', function(accounts) {
     });
 
     contract('', () => {
-        it('registered address should have the proper structure', async () => {
-            const popa = await ProofOfPhysicalAddress.deployed();
-            const args = buildRegisterAddressArgs(accounts[0]);
-
-            await registerAddress(popa, args, accounts[0]);
-
-            const [country, state, city, location, zip] = await popa.userAddress(accounts[0], 0);
-
-            assert.equal(country, args.country);
-            assert.equal(state, args.state);
-            assert.equal(city, args.city);
-            assert.equal(location, args.address);
-            assert.equal(zip, args.zip);
-        });
-    });
-
-    contract('', () => {
         it('should allow a user to register two different addresses', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args1 = buildRegisterAddressArgs(accounts[0]);
@@ -951,6 +934,519 @@ contract('setSigner', function(accounts) {
 
             const resultAfter = await popa.signerIsValid(data, v, r, s);
             assert.isFalse(resultAfter);
+        });
+    });
+});
+
+contract('helpers', function(accounts) {
+    // userExists
+    contract('', () => {
+        it('userExists should return true after an user is added', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            let userExists = await popa.userExists(accounts[0]);
+            assert.isFalse(userExists);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            userExists = await popa.userExists(accounts[0]);
+            assert.isTrue(userExists);
+        });
+    });
+
+    // userAddressConfirmed
+    contract('', () => {
+        it('userAddressConfirmed should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userAddressConfirmed(accounts[0], 0)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressConfirmed should return true after an address is confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            let isConfirmed = await popa.userAddressConfirmed(accounts[0], 0);
+            assert.isFalse(isConfirmed);
+
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            isConfirmed = await popa.userAddressConfirmed(accounts[0], 0);
+            assert.isTrue(isConfirmed);
+        });
+    });
+
+    // userAddressByCreationBlock
+    contract('', () => {
+        it('userAddressByCreationBlock should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userAddressByCreationBlock(accounts[0], web3.eth.blockNumber)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByCreationBlock should return the index of the address created at that block', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            const creationBlock = web3.eth.blockNumber;
+
+            const [found, index, isConfirmed] = await popa.userAddressByCreationBlock(accounts[0], creationBlock);
+            assert.isTrue(found);
+            assert.equal(+index, 0);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByCreationBlock should indicate if the address is confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            const creationBlock = web3.eth.blockNumber;
+
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByCreationBlock(accounts[0], creationBlock);
+            assert.isTrue(found);
+            assert.equal(+index, 0);
+            assert.isTrue(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByCreationBlock should return false if the user exists but has no addresses created at that block', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            const creationBlock = web3.eth.blockNumber;
+
+            const [found, index, isConfirmed] = await popa.userAddressByCreationBlock(accounts[0], creationBlock - 1);
+            assert.isFalse(found);
+            assert.equal(+index, 0);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByCreationBlock should work if the user has more than one address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+            const args2 = buildRegisterAddressArgs(accounts[0], { state: 'al' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            const creationBlock = web3.eth.blockNumber;
+
+            const [found, index, isConfirmed] = await popa.userAddressByCreationBlock(accounts[0], creationBlock);
+            assert.isTrue(found);
+            assert.equal(+index, 1);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    // userAddressByConfirmationCode
+    contract('', () => {
+        it('userAddressByConfirmationCode should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await popa.userAddressByConfirmationCode(accounts[0], args.sha3cc)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByConfirmationCode should return the index of the address created with that code', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByConfirmationCode(accounts[0], args.sha3cc);
+            assert.isTrue(found);
+            assert.equal(+index, 0);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByConfirmationCode should indicate if the address is confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByConfirmationCode(accounts[0], args.sha3cc);
+            assert.isTrue(found);
+            assert.equal(+index, 0);
+            assert.isTrue(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByConfirmationCode should return false if the user exists but has no addresses created with that code', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'quux' });
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByConfirmationCode(accounts[0], args2.sha3cc);
+            assert.isFalse(found);
+            assert.equal(+index, 0);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByConfirmationCode should work if the user has more than one address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+            const args2 = buildRegisterAddressArgs(accounts[0], { state: 'al', cc: 'quux' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByConfirmationCode(accounts[0], args2.sha3cc);
+            assert.isTrue(found);
+            assert.equal(+index, 1);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    // userAddressByAddress
+    contract('', () => {
+        it('userAddressByAddress should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await popa.userAddressByAddress(accounts[0], args.country, args.state, args.city, args.address, args.zip)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByAddress should return the index of the matching address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByAddress(accounts[0], args.country, args.state, args.city, args.address, args.zip);
+            assert.isTrue(found);
+            assert.equal(+index, 0);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByAddress should indicate if the address is confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByAddress(accounts[0], args.country, args.state, args.city, args.address, args.zip);
+            assert.isTrue(found);
+            assert.equal(+index, 0);
+            assert.isTrue(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByAddress should return false if the user exists but has no matching addresses', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByAddress(accounts[0], args.country, 'al', args.city, args.address, args.zip);
+            assert.isFalse(found);
+            assert.equal(+index, 0);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    contract('', () => {
+        it('userAddressByAddress should work if the user has more than one address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+            const args2 = buildRegisterAddressArgs(accounts[0], { state: 'al' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+
+            const [found, index, isConfirmed] = await popa.userAddressByAddress(accounts[0], args2.country, args2.state, args2.city, args2.address, args2.zip);
+            assert.isTrue(found);
+            assert.equal(+index, 1);
+            assert.isFalse(isConfirmed);
+        });
+    });
+
+    // userLastSubmittedName
+    contract('', () => {
+        it('userLastSubmittedName should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userLastSubmittedName(accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userLastSubmittedName should return the last submitted name', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const name = await popa.userLastSubmittedName(accounts[0]);
+            assert.equal(name, args.name);
+        });
+    });
+
+    contract('', () => {
+        it('userLastSubmittedName should work if there are multiple addresses', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+
+            const name = await popa.userLastSubmittedName(accounts[0]);
+            assert.equal(name, args2.name);
+        });
+    });
+
+    // userLastConfirmedName
+    contract('', () => {
+        it('userLastConfirmedName should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userLastConfirmedName(accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userLastConfirmedName should return the last confirmed name', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            const name = await popa.userLastConfirmedName(accounts[0]);
+            assert.equal(name, args.name);
+        });
+    });
+
+    contract('', () => {
+        it('userLastConfirmedName should work if there are multiple addresses confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { cc: 'foo', name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'bar', name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            await confirmAddress(popa, args1.cc, accounts[0]);
+            await confirmAddress(popa, args2.cc, accounts[0]);
+
+            const name = await popa.userLastConfirmedName(accounts[0]);
+            assert.equal(name, args2.name);
+        });
+    });
+
+    contract('', () => {
+        it('userLastConfirmedName should work if there is a non-confirmed address and a confirmed address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { cc: 'foo', name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'bar', name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            await confirmAddress(popa, args2.cc, accounts[0]);
+
+            const name = await popa.userLastConfirmedName(accounts[0]);
+            assert.equal(name, args2.name);
+        });
+    });
+
+    contract('', () => {
+        it('userLastConfirmedName should work if there is a confirmed address and a non-confirmed address', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { cc: 'foo', name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'bar', name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            await confirmAddress(popa, args1.cc, accounts[0]);
+
+            const name = await popa.userLastConfirmedName(accounts[0]);
+            assert.equal(name, args1.name);
+        });
+    });
+
+    contract('', () => {
+        it('userLastConfirmedName should return an empty string if there are addresses but none is confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { cc: 'foo', name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'bar', name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+
+            const name = await popa.userLastConfirmedName(accounts[0]);
+            assert.equal(name, '');
+        });
+    });
+
+    // userSubmittedAddressesCount
+    contract('', () => {
+        it('userSubmittedAddressesCount should return 0 if the user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const submittedCount = await popa.userSubmittedAddressesCount(accounts[0]);
+
+            assert.equal(+submittedCount, 0);
+        });
+    });
+
+    contract('', () => {
+        it('userSubmittedAddressesCount should return the number of registered addresses', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { cc: 'foo', name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'bar', name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            let submittedCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+submittedCount, 1);
+
+            await registerAddress(popa, args2, accounts[0]);
+            submittedCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+submittedCount, 2);
+        });
+    });
+
+    // userConfirmedAddressesCount
+    contract('', () => {
+        it('userConfirmedAddressesCount should return 0 if the user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const confirmedCount = await popa.userConfirmedAddressesCount(accounts[0]);
+
+            assert.equal(+confirmedCount, 0);
+        });
+    });
+
+    contract('', () => {
+        it('userConfirmedAddressesCount should return the number of confirmed addresses', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { cc: 'foo', name: 'john', address: '1 street'});
+            const args2 = buildRegisterAddressArgs(accounts[0], { cc: 'bar', name: 'paul', address: '2 street'});
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+
+            await confirmAddress(popa, args1.cc, accounts[0]);
+            let confirmedCount = await popa.userConfirmedAddressesCount(accounts[0]);
+            assert.equal(+confirmedCount, 1);
+
+            await confirmAddress(popa, args2.cc, accounts[0]);
+            confirmedCount = await popa.userConfirmedAddressesCount(accounts[0]);
+            assert.equal(+confirmedCount, 2);
+        });
+    });
+
+    // userAddress
+    contract('', () => {
+        it('userAddress must fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userAddress(accounts[0], 0)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddress must return the address data for the given index', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const [country, state, city, location, zip] = await popa.userAddress(accounts[0], 0);
+
+            assert.equal(country, args.country);
+            assert.equal(state, args.state);
+            assert.equal(city, args.city);
+            assert.equal(location, args.address);
+            assert.equal(zip, args.zip);
+        });
+    });
+
+    // userAddressInfo
+    contract('', () => {
+        it('userAddressInfo must fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userAddressInfo(accounts[0], 0)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressInfo must return the address info for the given index', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const [name, creationBlock, confirmationBlock, keccakIdentifier] = await popa.userAddressInfo(accounts[0], 0);
+
+            assert.equal(name, args.name);
+            assert.equal(+creationBlock, web3.eth.blockNumber);
+            assert.equal(+confirmationBlock, 0);
+            assert.equal(keccakIdentifier, web3.sha3(args.country + args.state + args.city + args.address + args.zip));
         });
     });
 });
