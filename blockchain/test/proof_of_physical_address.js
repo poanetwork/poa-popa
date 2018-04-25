@@ -1,4 +1,5 @@
 const ProofOfPhysicalAddress = artifacts.require('ProofOfPhysicalAddress');
+const BigNumber = require('bignumber.js');
 
 // solidity-coverage copies all the files to a directory one level deeper, so
 // this is necessary for the tests to pass both when running `truffle test` and
@@ -751,6 +752,150 @@ contract('address confirmation', function(accounts) {
                     async () => {
                         confirmed = await popa.totalConfirmed();
                         assert.equal(+confirmed, 1);
+                    }
+                );
+        });
+    });
+});
+
+contract('withdrawals', function(accounts) {
+    contract('', () => {
+        it('should allow the owner to withdraw some', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const contractBalanceBefore = web3.eth.getBalance(popa.address);
+            const ownerBalanceBefore = web3.eth.getBalance(accounts[0]);
+            assert.equal(contractBalanceBefore.toFixed(), args.priceWei);
+
+            const withdrawalAmount = '1000000';
+            const tx = await popa.withdrawSome(withdrawalAmount, {
+                gasPrice: '1', // make 1 gas === 1 wei
+            });
+            const gasUsed = tx.receipt.gasUsed;
+
+            const contractBalanceAfter = web3.eth.getBalance(popa.address);
+            const ownerBalanceAfter = web3.eth.getBalance(accounts[0]);
+            assert.equal(contractBalanceAfter.toFixed(), contractBalanceBefore.minus(withdrawalAmount).toFixed());
+            assert.equal(ownerBalanceAfter.toFixed(), ownerBalanceBefore.plus(withdrawalAmount).minus(gasUsed).toFixed());
+        });
+    });
+
+    contract('', () => {
+        it('should not allow to withdraw more than the contract\'s balance', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const contractBalanceBefore = web3.eth.getBalance(popa.address);
+            const ownerBalanceBefore = web3.eth.getBalance(accounts[0]);
+            assert.equal(contractBalanceBefore.toFixed(), args.priceWei);
+
+            const withdrawalAmount = new BigNumber(args.priceWei).plus(1);
+            await popa.withdrawSome(withdrawalAmount, { gasPrice: '1' })
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const contractBalanceAfter = web3.eth.getBalance(popa.address);
+                        const ownerBalanceAfter = web3.eth.getBalance(accounts[0]);
+                        assert.equal(contractBalanceAfter.toFixed(), contractBalanceBefore.toFixed());
+                        assert.isTrue(ownerBalanceAfter.lt(ownerBalanceBefore));
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should not allow someone other than the owner to withdraw some', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const contractBalanceBefore = web3.eth.getBalance(popa.address);
+            const userBalanceBefore = web3.eth.getBalance(accounts[1]);
+            assert.equal(contractBalanceBefore.toFixed(), args.priceWei);
+
+            const withdrawalAmount = '1000000';
+            await popa.withdrawSome(withdrawalAmount, { from: accounts[1], gasPrice: '1' })
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const contractBalanceAfter = web3.eth.getBalance(popa.address);
+                        const userBalanceAfter = web3.eth.getBalance(accounts[1]);
+                        assert.equal(contractBalanceAfter.toFixed(), contractBalanceBefore.toFixed());
+                        assert.isTrue(userBalanceAfter.lt(userBalanceBefore));
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should allow the owner to withdraw all', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const contractBalanceBefore = web3.eth.getBalance(popa.address);
+            const ownerBalanceBefore = web3.eth.getBalance(accounts[0]);
+            assert.equal(contractBalanceBefore.toFixed(), args.priceWei);
+
+            const tx = await popa.withdrawAll({
+                gasPrice: '1', // make 1 gas === 1 wei
+            });
+            const gasUsed = tx.receipt.gasUsed;
+
+            const contractBalanceAfter = web3.eth.getBalance(popa.address);
+            const ownerBalanceAfter = web3.eth.getBalance(accounts[0]);
+            assert.equal(contractBalanceAfter.toFixed(), '0');
+            assert.equal(ownerBalanceAfter.toFixed(), ownerBalanceBefore.plus(args.priceWei).minus(gasUsed).toFixed());
+        });
+
+    });
+    contract('', () => {
+        it('should not allow the owner to withdraw all if the contract\'s balance is 0', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const contractBalanceBefore = web3.eth.getBalance(popa.address);
+            const ownerBalanceBefore = web3.eth.getBalance(accounts[0]);
+            assert.equal(contractBalanceBefore.toFixed(), '0');
+
+            await popa.withdrawAll({ gasPrice: '1' })
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const contractBalanceAfter = web3.eth.getBalance(popa.address);
+                        const ownerBalanceAfter = web3.eth.getBalance(accounts[0]);
+                        assert.equal(contractBalanceAfter.toFixed(), '0');
+                        assert.isTrue(ownerBalanceAfter.lt(ownerBalanceBefore));
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should not allow someone other than the owner to withdraw all', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            const contractBalanceBefore = web3.eth.getBalance(popa.address);
+            const userBalanceBefore = web3.eth.getBalance(accounts[1]);
+            assert.equal(contractBalanceBefore.toFixed(), args.priceWei);
+
+            await popa.withdrawAll({ from: accounts[1], gasPrice: '1' })
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const contractBalanceAfter = web3.eth.getBalance(popa.address);
+                        const userBalanceAfter = web3.eth.getBalance(accounts[1]);
+                        assert.equal(contractBalanceAfter.toFixed(), contractBalanceBefore.toFixed());
+                        assert.isTrue(userBalanceAfter.lt(userBalanceBefore));
                     }
                 );
         });
