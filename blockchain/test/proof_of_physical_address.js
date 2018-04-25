@@ -37,7 +37,7 @@ contract('ownership', (accounts) => {
   });
 })
 
-contract('address registration', function(accounts) {
+contract('address registration (success)', function(accounts) {
   contract('', () => {
     it('registerAddress should register an address', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
@@ -53,6 +53,58 @@ contract('address registration', function(accounts) {
     })
   })
 
+  contract('', () => {
+    it('total_users should be incremented if it\'s the first address for that user', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      let users = await popa.totalUsers()
+      assert.equal(+users, 0)
+
+      await registerAddress(popa, args, accounts[0])
+
+      users = await popa.totalUsers()
+      assert.equal(+users, 1)
+    })
+  })
+
+  contract('', () => {
+    it('total_confirmed should not change after registering an address', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      let confirmed = await popa.totalConfirmed()
+      assert.equal(+confirmed, 0)
+
+      await registerAddress(popa, args, accounts[0])
+
+      confirmed = await popa.totalConfirmed()
+      assert.equal(+confirmed, 0)
+    })
+  })
+
+  contract('', () => {
+    it('registered address should have the proper structure', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      let confirmed = await popa.totalConfirmed()
+      assert.equal(+confirmed, 0)
+
+      await registerAddress(popa, args, accounts[0])
+
+      const [country, state, city, location, zip] = await popa.userAddress(accounts[0], 0)
+
+      assert.equal(country, args.country)
+      assert.equal(state, args.state)
+      assert.equal(city, args.city)
+      assert.equal(location, args.address)
+      assert.equal(zip, args.zip)
+    })
+  })
+})
+
+contract('address registration (fail)', function(accounts) {
   contract('', () => {
     it('registerAddress should fail if name is empty', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
