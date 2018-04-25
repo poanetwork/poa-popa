@@ -166,6 +166,160 @@ contract('address registration', function(accounts) {
   })
 
   contract('', () => {
+    it('registerAddress should fail if sender is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+
+      await registerAddress(popa, args, accounts[1])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if name is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.name += '!'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if country is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.country = 'ar'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if state is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.state = 'al'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if city is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.city = 'new york'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if location is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.address = '742 evergreen terrace'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if zip is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.zip = '12345'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if price is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.priceWei = '10'
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+
+  contract('', () => {
+    it('registerAddress should fail if sha3 is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0])
+      args.sha3cc = web3.sha3('foobar')
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
+})
+
+contract('address removal', function(accounts) {
+  contract('', () => {
     it('should allow to unregister an address', async () => {
       const popa = await ProofOfPhysicalAddress.deployed();
       const args = buildRegisterAddressArgs(accounts[0])
