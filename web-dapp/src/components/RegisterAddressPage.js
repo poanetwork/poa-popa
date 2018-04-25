@@ -430,10 +430,16 @@ class RegisterAddressPage extends React.Component {
                     });
                 });
             },
-            error: ({ statusText, status }) => {
+            error: ({ responseJSON, statusText, status }) => {
                 logger.debug('Server returned error on prepareRegTx: ' + statusText + ' (' + status + ')');
                 this.setState({ loading: false });
-                window.show_alert('error', 'Preparing register transaction', [['Server error', statusText + ' (' + status + ')']]);
+                const errorBody = [
+                    ['Server error', statusText + ' (' + status + ')']
+                ];
+                if (responseJSON && responseJSON.err) {
+                    errorBody.push([responseJSON.err]);
+                }
+                window.show_alert('error', 'Preparing register transaction', errorBody);
             }
         });
     };

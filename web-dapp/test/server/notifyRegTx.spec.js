@@ -24,7 +24,7 @@ const {
     mockGetAddressDetails } = require('./_utils/mocks');
 
 jest.mock('../../server-lib/session_store', () => ({
-    get: jest.fn(mockDb.get),
+    getAndLock: jest.fn(mockDb.get),
 }));
 jest.mock('../../server-lib/get_transaction', () => jest.fn(mockGetTransaction));
 jest.mock('../../server-lib/get_tx_receipt', () => jest.fn(mockGetTxReceipt));

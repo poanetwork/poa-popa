@@ -3,11 +3,11 @@
 const logger = require('../server-lib/logger');
 const express = require('express');
 const sendResponse = require('../server-lib/send_response');
+const postcardLimiter = require('../server-lib/postcard_limiter');
 
 const prepareRegTx = require('../controllers/prepareRegTx');
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (opts) => {
+module.exports = () => {
     const router = express.Router();
     router.post('/prepareRegTx', function(req, res) {
         const prelog = `[prepareRegTx] (${req.logPrfx}) `;
@@ -17,7 +17,14 @@ module.exports = (opts) => {
         let sha3cc;
         let priceWei;
         let signOutput;
-        return prepareRegTx.validateData(req.body)
+        return postcardLimiter.canSend()
+            .then(canSend => {
+                if (!canSend) {
+                    logger.error(`${prelog} Limit of postcards per day was reached`);
+                    return Promise.reject({ msg: 'Max limit of postcards reached, please try again tomorrow' });
+                }
+                return prepareRegTx.validateData(req.body);
+            })
             .then(data => {
                 wallet = data.wallet;
                 params = data.params;

@@ -38,7 +38,7 @@ module.exports = function () {
                 });
             });
         },
-        get: (k) => {
+        getAndLock: (k) => {
             return new Promise((resolve, reject) => {
                 client.rename(k, k1(k), (err) => {
                     if (err) return reject(err);
@@ -55,11 +55,28 @@ module.exports = function () {
                 });
             });
         },
+        get: (k) => {
+            return new Promise((resolve, reject) => {
+                client.get(k, (err, v) => {
+                    if (err) return reject(err);
+                    try {
+                        v = JSON.parse(v);
+                        return resolve(v);
+                    }
+                    catch (ex) {
+                        return reject(ex);
+                    }
+                });
+            });
+        },
         unset: (k) => {
             return new Promise((resolve) => {
                 client.del(k1(k));
                 return resolve(true);
             });
+        },
+        inc: (k) => {
+            return client.incr(k);
         },
     };
 };
