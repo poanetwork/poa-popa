@@ -1,0 +1,58 @@
+env:
+  es6: true
+  node: true
+extends:
+  - 'eslint:recommended'
+  - 'plugin:react/recommended'
+parserOptions:
+  sourceType: script
+  ecmaVersion: 8
+  ecmaFeatures:
+    jsx: true
+    modules: true
+    experimentalObjectRestSpread: true
+plugins:
+  - react
+  - jsx-a11y
+  - json
+globals:
+  jasmine: false
+  jest: false
+  describe: false
+  xdescribe: false
+  it: false
+  xit: false
+  after: false
+  afterAll: false
+  afterEach: false
+  before: false
+  beforeAll: false
+  beforeEach: false
+  expect: false
+  document: false
+  window: false
+  navigator: false
+  fetch: false
+  URL: false
+rules:
+  indent:
+    - warn
+    - 4
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - warn
+    - single
+  comma-dangle:
+    - warn
+    - always-multiline
+  semi:
+    - error
+    - always
+  eqeqeq:
+    - error
+    - smart
+  strict:
+    - error
+    - never
