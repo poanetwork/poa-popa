@@ -1,0 +1,5 @@
+root = true
+
+[*.{js,sol}]
+indent_style = space
+indent_size = 4
