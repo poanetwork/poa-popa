@@ -316,6 +316,22 @@ contract('address registration', function(accounts) {
         )
     })
   })
+
+  contract('', () => {
+    it('registerAddress should fail if args were signed with a different private key is different', async () => {
+      const popa = await ProofOfPhysicalAddress.deployed();
+      const args = buildRegisterAddressArgs(accounts[0], {}, privateKeys[1])
+
+      await registerAddress(popa, args, accounts[0])
+        .then(
+          () => assert.fail(), // should reject
+          async () => {
+            const addresses = await popa.totalAddresses()
+            assert.equal(+addresses, 0)
+          }
+        )
+    })
+  })
 })
 
 contract('address removal', function(accounts) {
@@ -427,7 +443,7 @@ contract('address removal', function(accounts) {
  * 1dd9083e16e190fa5413f87837025556063c546bf16e38cc53fd5d018a3acfbb, for the requester address
  * 0x7e7693f12bfd372042b754b729d1474572a2dd01
  */
-function buildRegisterAddressArgs(account, extraArgs = {}) {
+function buildRegisterAddressArgs(account, extraArgs = {}, privateKey = privateKeys[0]) {
   const baseArgs = {
     wallet: account,
     name: 'john doe',
@@ -444,7 +460,7 @@ function buildRegisterAddressArgs(account, extraArgs = {}) {
 
   args.sha3cc = web3.sha3(args.cc)
 
-  const { v, r, s } = buildSignature(args, privateKeys[0])
+  const { v, r, s } = buildSignature(args, privateKey)
   args.sigV = v
   args.sigR = r
   args.sigS = s
