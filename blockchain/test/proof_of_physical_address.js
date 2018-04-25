@@ -902,6 +902,59 @@ contract('withdrawals', function(accounts) {
     });
 });
 
+contract('setSigner', function(accounts) {
+    contract('', () => {
+        it('should allow the owner to change the signer', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const signerBefore = await popa.signer();
+
+            await popa.setSigner(accounts[1]);
+
+            const signerAfter= await popa.signer();
+
+            assert.notEqual(signerBefore, signerAfter);
+            assert.equal(accounts[1], signerAfter);
+        });
+    });
+
+    contract('', () => {
+        it('should not allow someone that\'s not the owner to change the signer', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const signerBefore = await popa.signer();
+
+            await popa.setSigner(accounts[2], { from: accounts[1] })
+                .then(
+                    () => assert.fail(), // should reject
+                    async () => {
+                        const signerAfter= await popa.signer();
+
+                        assert.equal(signerBefore, signerAfter);
+                    }
+                );
+        });
+    });
+
+    contract('', () => {
+        it('signerIsValid should change its result after the signer is changed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            const { v, r, s } = sign('foobar', privateKeys[0]);
+
+            const data = web3.sha3('foobar', { encoding: 'hex' });
+
+            const resultBefore = await popa.signerIsValid(data, v, r, s);
+            assert.isTrue(resultBefore);
+
+            await popa.setSigner(accounts[1]);
+
+            const resultAfter = await popa.signerIsValid(data, v, r, s);
+            assert.isFalse(resultAfter);
+        });
+    });
+});
+
 /**
  * Build arguments for registerAddress method
  *
