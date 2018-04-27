@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build --prefix web-dapp",
     "coverage": "lcov-result-merger '?(blockchain|web-dapp)/coverage/lcov.info' | coveralls",
-    "lint": "npm run lint --prefix web-dapp",
+    "lint": "eslint .",
     "postinstall": "npm install --prefix web-dapp && npm install --prefix blockchain",
     "prepush": "npm run lint && npm test",
     "prestart": "npm run build",
@@ -23,6 +23,10 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
+    "eslint": "^4.19.1",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
     "ganache-cli": "^6.1.0",
     "husky": "^0.14.3",
     "lcov-result-merger": "^2.0.0",

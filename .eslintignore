@@ -1,0 +1,8 @@
+build
+node_modules
+postcard
+public
+coverage
+web-dapp/src/assets
+web-dapp/src/components
+server-config-private.js

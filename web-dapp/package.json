@@ -6,7 +6,6 @@
     "start": "react-scripts start",
     "build": "npm run build-css && react-scripts build",
     "build-css": "node-sass ./src/assets/stylesheets/application.scss ./src/assets/stylesheets/application.css",
-    "lint": "eslint .",
     "test": "react-scripts test --testMatch **/test/server/**/*.spec.js **/src/**/*.test.js --env=jsdom --coverage"
   },
   "dependencies": {
@@ -30,10 +29,6 @@
   "devDependencies": {
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-15": "^1.0.5",
-    "eslint": "^4.17.0",
-    "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.6.1",
     "node-sass": "^4.8.3",
     "react-test-renderer": "^15.6.2",
     "sinon": "^4.3.0",
