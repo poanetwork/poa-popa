@@ -31,5 +31,11 @@ module.exports = function () {
                 return resolve(true);
             });
         },
+        inc: (k) => {
+            db[k] = db[k] || 0;
+            db[k]++;
+
+            return Promise.resolve(db[k]);
+        },
     };
 };

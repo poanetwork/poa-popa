@@ -13,6 +13,7 @@ const validateTxReceipt = require('../server-lib/validate_tx_receipt');
 const validateAddressIndex = require('../server-lib/validate_address_index');
 const getAddressIndex = require('../server-lib/get_address_index');
 const getAddressDetails = require('../server-lib/get_address_details');
+const postcardLimiter = require('../server-lib/postcard_limiter');
 
 const validateData = (opts, prelog = '') => {
     if (!opts.body) return createResponseObject(false, 'request body: empty');
@@ -108,15 +109,25 @@ const getAddressByBN = (opts, prelog = '') => {
 const createPostCard = (opts, prelog) => {
     const {wallet, txId, address, confirmationCodePlain} = opts;
 
-    return new Promise((resolve, reject) => {
-        postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
-            if (err) {
-                logger.error(`${prelog} error returned by create_postcard: ${err}`);
-                return reject(createResponseObject(false, 'error while sending postcard'));
+    return postcardLimiter.canSend()
+        .then(canSend => {
+            if (!canSend) {
+                logger.error(`${prelog} Limit of postcards per day was reached`);
+                return Promise.reject({ msg: 'Max limit of postcards reached, please try again tomorrow' });
             }
-            return resolve(result);
+
+            return new Promise((resolve, reject) => {
+                postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
+                    if (err) {
+                        logger.error(`${prelog} error returned by create_postcard: ${err}`);
+                        return reject(createResponseObject(false, 'error while sending postcard'));
+                    }
+                    postcardLimiter.inc();
+                    return resolve(result);
+                });
+            });
         });
-    });
+
 };
 
 const removeUsedSessionKey = (opts, prelog) => {

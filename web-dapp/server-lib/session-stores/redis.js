@@ -75,5 +75,8 @@ module.exports = function () {
                 return resolve(true);
             });
         },
+        inc: (k) => {
+            return client.incr(k);
+        },
     };
 };
