@@ -1,7 +1,7 @@
 const PhysicalAddressClaim = artifacts.require('PhysicalAddressClaim');
 
 contract('PhysicalAddressClaim', () => {
-    it.only('Should encodes the confirmation block number in a bytes32', async () => {
+    it('Should encodes the confirmation block number in a bytes32', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _confirmationBlockNumber = '0x0000000000000000000000000000000000000000000000000000000000FAFAFA';
         const expected = '0x0100000000000000000000000000000000000000000000000000000000fafafa';
@@ -11,7 +11,7 @@ contract('PhysicalAddressClaim', () => {
         );
     });
 
-    it.only('Should not encode if the confirmation block number is bigger than the Confirmation mask', async () => {
+    it('Should not encode if the confirmation block number is bigger than the Confirmation mask', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _confirmationBlockNumber = '0x0100000000000000000000000000000000000000000000000000000000FAFAFA';
 
@@ -22,7 +22,7 @@ contract('PhysicalAddressClaim', () => {
             );
     });
 
-    it.only('Should decodes the claim', async () => {
+    it('Should decodes the claim', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _claim = '0x0100000000000000000000000000000000000000000000000000000000FAFAFA';
         const [version, confirmation] = await contract.decode(_claim);
@@ -36,7 +36,7 @@ contract('PhysicalAddressClaim', () => {
         );
     });
 
-    it.only('Should not decode the claim if it is not the current version', async () => {
+    it('Should not decode the claim if it is not the current version', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _claim = '0x0200000000000000000000000000000000000000000000000000000000FAFAFA';
         await contract.decode(_claim)
@@ -46,7 +46,7 @@ contract('PhysicalAddressClaim', () => {
             );
     });
 
-    it.only('Should extracts the version', async () => {
+    it('Should extracts the version', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _claim = '0x0100000000000000000000000000000000000000000000000000000000FAFAFA';
         const expected = 1;
@@ -56,7 +56,7 @@ contract('PhysicalAddressClaim', () => {
         );
     });
 
-    it.only('Should extracts the confirmation block number', async () => {
+    it('Should extracts the confirmation block number', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _claim = '0x0100000000000000000000000000000000000000000000000000000000FAFAFA';
         const expected = parseInt('0x0000000000000000000000000000000000000000000000000000000000FAFAFA', 16);
