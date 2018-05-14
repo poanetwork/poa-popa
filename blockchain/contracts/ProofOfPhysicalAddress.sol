@@ -45,6 +45,29 @@ contract ProofOfPhysicalAddress {
     uint64 public totalAddresses;
     uint64 public totalConfirmed;
 
+    // Events:
+
+    event LogSignerChanged(address newSigner);
+    event LogRegistryChanged(address newRegistry);
+    event LogAddressRegistered(
+      address wallet,
+      string name,
+      string country,
+      string state,
+      string city,
+      string location,
+      string zip
+    );
+    event LogAddressUnregistered(
+      address wallet,
+      string country,
+      string state,
+      string city,
+      string location,
+      string zip
+    );
+    event LogAddressConfirmed(address wallet, bytes32 keccakIdentifier);
+
     // Helpers:
     function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
@@ -60,11 +83,13 @@ contract ProofOfPhysicalAddress {
     function setSigner(address newSigner) public {
         require(msg.sender == owner);
         signer = newSigner;
+        LogSignerChanged(newSigner);
     }
 
     function setRegistry(address newRegistry) public {
         require(msg.sender == owner);
         registry = EthereumClaimsRegistryInterface(newRegistry);
+        LogRegistryChanged(newRegistry);
     }
 
     // withdraw specified amount of eth in wei
@@ -287,6 +312,8 @@ contract ProofOfPhysicalAddress {
         users[msg.sender].physicalAddresses.push(pa);
 
         totalAddresses += 1;
+
+        LogAddressRegistered(msg.sender, name, country, state, city, location, zip);
     }
 
     function unregisterAddress(string country, string state, string city, string location, string zip) public {
@@ -316,6 +343,8 @@ contract ProofOfPhysicalAddress {
         if (users[msg.sender].physicalAddresses.length == 0) {
             delete users[msg.sender];
         }
+
+        LogAddressUnregistered(msg.sender, country, state, city, location, zip);
     }
 
     function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
@@ -343,5 +372,7 @@ contract ProofOfPhysicalAddress {
 
         registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
         totalConfirmed += 1;
+
+        LogAddressConfirmed(msg.sender, keccakIdentifier);
     }
 }
