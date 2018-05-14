@@ -66,7 +66,14 @@ contract ProofOfPhysicalAddress {
       string location,
       string zip
     );
-    event LogAddressConfirmed(address wallet, bytes32 keccakIdentifier);
+    event LogAddressConfirmed(
+      address wallet,
+      string country,
+      string state,
+      string city,
+      string location,
+      string zip
+    );
 
     // Helpers:
     function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
@@ -373,6 +380,13 @@ contract ProofOfPhysicalAddress {
         registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
         totalConfirmed += 1;
 
-        LogAddressConfirmed(msg.sender, keccakIdentifier);
+        string memory country;
+        string memory state;
+        string memory city;
+        string memory location;
+        string memory zip;
+        (country, state, city, location, zip) = userAddress(msg.sender, ai);
+
+        LogAddressConfirmed(msg.sender, country, state, city, location, zip);
     }
 }
