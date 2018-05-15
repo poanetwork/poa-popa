@@ -1,7 +1,9 @@
 pragma solidity 0.4.19;
 
+import "./EthereumClaimsRegistryInterface.sol";
 
-contract EthereumClaimsRegistry {
+
+contract EthereumClaimsRegistry is EthereumClaimsRegistryInterface {
 
     mapping(address => mapping(address => mapping(bytes32 => bytes32))) public registry;
 
