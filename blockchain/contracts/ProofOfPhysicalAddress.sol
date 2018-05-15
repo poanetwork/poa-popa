@@ -75,6 +75,17 @@ contract ProofOfPhysicalAddress {
       string zip
     );
 
+    // Modifiers:
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    modifier checkUserExists(address wallet) {
+        require(userExists(wallet));
+        _;
+    }
+
     // Helpers:
     function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
@@ -87,32 +98,28 @@ contract ProofOfPhysicalAddress {
     // Methods:
     // set address that is used on server-side to calculate signatures
     // and on contract-side to verify them
-    function setSigner(address newSigner) public {
-        require(msg.sender == owner);
+    function setSigner(address newSigner) public onlyOwner {
         signer = newSigner;
         LogSignerChanged(newSigner);
     }
 
-    function setRegistry(address newRegistry) public {
-        require(msg.sender == owner);
+    function setRegistry(address newRegistry) public onlyOwner {
         registry = EthereumClaimsRegistryInterface(newRegistry);
         LogRegistryChanged(newRegistry);
     }
 
     // withdraw specified amount of eth in wei
     function withdrawSome(uint256 amountWei)
-    public
+    public onlyOwner
     {
-        require(msg.sender == owner);
         require(address(this).balance >= amountWei);
         owner.transfer(amountWei);
     }
 
     // withdraw all available eth
     function withdrawAll()
-    public
+    public onlyOwner
     {
-        require(msg.sender == owner);
         require(address(this).balance > 0);
         owner.transfer(address(this).balance);
     }
@@ -124,9 +131,8 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddressConfirmed(address wallet, uint256 addressIndex)
-    public constant returns (bool)
+    public constant checkUserExists(wallet) returns (bool)
     {
-        require(userExists(wallet));
         bytes32 keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
         if (keccakIdentifier == 0x0) {
@@ -138,9 +144,8 @@ contract ProofOfPhysicalAddress {
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
     function userAddressByCreationBlock(address wallet, uint256 creationBlock)
-    public constant returns (bool, uint256, bool)
+    public constant checkUserExists(wallet) returns (bool, uint256, bool)
     {
-        require(userExists(wallet));
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].creationBlock == creationBlock) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
@@ -156,9 +161,9 @@ contract ProofOfPhysicalAddress {
     )
         public
         constant
+        checkUserExists(wallet)
         returns(bool, uint256, bool, bytes32)
     {
-        require(userExists(wallet));
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].confirmationCodeSha3 == confirmationCodeSha3) {
                 return (
@@ -174,9 +179,8 @@ contract ProofOfPhysicalAddress {
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
     function userAddressByAddress(address wallet, string country, string state, string city, string location, string zip)
-    public constant returns(bool, uint256, bool)
+    public constant checkUserExists(wallet) returns(bool, uint256, bool)
     {
-        require(userExists(wallet));
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
@@ -188,18 +192,15 @@ contract ProofOfPhysicalAddress {
 
     // returns last name submitted to PoPA contract
     function userLastSubmittedName(address wallet)
-    public constant returns (string)
+    public constant checkUserExists(wallet) returns (string)
     {
-        require(userExists(wallet));
         return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
     }
 
     // returns name from the last confirmed address. If no addresses were confirmed returns ''
     function userLastConfirmedName(address wallet)
-    public constant returns (string)
+    public constant checkUserExists(wallet) returns (string)
     {
-        require(userExists(wallet));
-
         for (uint256 ai = users[wallet].physicalAddresses.length; ai > 0;) {
             ai--;
             if (userAddressConfirmed(wallet, ai)) {
@@ -230,10 +231,9 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddress(address wallet, uint256 addressIndex)
-    public constant returns (
+    public constant checkUserExists(wallet) returns (
         string country, string state, string city, string location, string zip)
     {
-        require(userExists(wallet));
         return (
             users[wallet].physicalAddresses[addressIndex].country,
             users[wallet].physicalAddresses[addressIndex].state,
@@ -244,21 +244,21 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddressInfo(address wallet, uint256 addressIndex)
-    public constant returns (
+    public constant checkUserExists(wallet) returns (
         string name,
         uint256 creationBlock,
         uint256 confirmationBlock,
         bytes32 keccakIdentifier
     ) {
-        require(userExists(wallet));
+        uint256 _confirmationBlock = PhysicalAddressClaim.decodeConfirmation(registry.getClaim(
+            address(this),
+            wallet,
+            users[wallet].physicalAddresses[addressIndex].keccakIdentifier)
+        );
         return (
             users[wallet].physicalAddresses[addressIndex].name,
             users[wallet].physicalAddresses[addressIndex].creationBlock,
-            PhysicalAddressClaim.decodeConfirmation(registry.getClaim(
-                address(this),
-                wallet,
-                users[wallet].physicalAddresses[addressIndex].keccakIdentifier)
-            ),
+            _confirmationBlock,
             users[wallet].physicalAddresses[addressIndex].keccakIdentifier
         );
     }
@@ -323,9 +323,9 @@ contract ProofOfPhysicalAddress {
         LogAddressRegistered(msg.sender, name, country, state, city, location, zip);
     }
 
-    function unregisterAddress(string country, string state, string city, string location, string zip) public {
-        require(userExists(msg.sender));
-
+    function unregisterAddress(string country, string state, string city, string location, string zip)
+        public checkUserExists(msg.sender)
+    {
         bool found;
         uint256 index;
         (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
@@ -355,16 +355,14 @@ contract ProofOfPhysicalAddress {
     }
 
     function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
-    public
+    public checkUserExists(msg.sender)
     {
         require(bytes(confirmationCodePlain).length > 0);
-        require(userExists(msg.sender));
 
-        bytes32 data = keccak256(
+        require(signerIsValid(keccak256(
             msg.sender,
             confirmationCodePlain
-        );
-        require(signerIsValid(data, sigV, sigR, sigS));
+        ), sigV, sigR, sigS));
 
         bool found;
         uint ai;
