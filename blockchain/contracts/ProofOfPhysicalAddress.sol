@@ -2,6 +2,7 @@ pragma solidity 0.4.19;
 
 import "./EthereumClaimsRegistryInterface.sol";
 import "./PhysicalAddressClaim.sol";
+import "./ERC20.sol";
 
 
 // Checks -> Effects -> Interactions
@@ -44,6 +45,10 @@ contract ProofOfPhysicalAddress {
     uint64 public totalUsers;
     uint64 public totalAddresses;
     uint64 public totalConfirmed;
+
+    // Events:
+
+    event ClaimedTokens(address token, address to, uint256 amount);
 
     // Modifiers:
     modifier onlyOwner() {
@@ -342,5 +347,15 @@ contract ProofOfPhysicalAddress {
 
         registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
         totalConfirmed += 1;
+    }
+
+    function claimTokens(address _token, address _to) public onlyOwner {
+        require(_token != address(0));
+        require(_to != address(0));
+
+        ERC20 token = ERC20(_token);
+        uint256 balance = token.balanceOf(this);
+        token.transfer(_to, balance);
+        ClaimedTokens(_token, _to, balance);
     }
 }
