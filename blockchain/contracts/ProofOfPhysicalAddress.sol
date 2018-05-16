@@ -160,6 +160,13 @@ contract ProofOfPhysicalAddress {
     public constant checkUserExists(wallet) returns(bool, uint256, bool)
     {
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
+        return userAddressByKeccakIdentifier(wallet, keccakIdentifier);
+    }
+
+    // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
+    function userAddressByKeccakIdentifier(address wallet, bytes32 keccakIdentifier)
+    public constant checkUserExists(wallet) returns(bool, uint256, bool)
+    {
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
