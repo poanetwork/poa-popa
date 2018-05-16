@@ -45,6 +45,14 @@ contract ProofOfPhysicalAddress {
     uint64 public totalAddresses;
     uint64 public totalConfirmed;
 
+    // Events:
+
+    event LogSignerChanged(address newSigner);
+    event LogRegistryChanged(address newRegistry);
+    event LogAddressRegistered(address indexed wallet, bytes32 keccakIdentifier);
+    event LogAddressUnregistered(address indexed wallet, bytes32 keccakIdentifier);
+    event LogAddressConfirmed(address indexed wallet, bytes32 keccakIdentifier);
+
     // Modifiers:
     modifier onlyOwner() {
         require(msg.sender == owner);
@@ -70,10 +78,12 @@ contract ProofOfPhysicalAddress {
     // and on contract-side to verify them
     function setSigner(address newSigner) public onlyOwner {
         signer = newSigner;
+        LogSignerChanged(newSigner);
     }
 
     function setRegistry(address newRegistry) public onlyOwner {
         registry = EthereumClaimsRegistryInterface(newRegistry);
+        LogRegistryChanged(newRegistry);
     }
 
     // withdraw specified amount of eth in wei
@@ -150,6 +160,13 @@ contract ProofOfPhysicalAddress {
     public constant checkUserExists(wallet) returns(bool, uint256, bool)
     {
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
+        return userAddressByKeccakIdentifier(wallet, keccakIdentifier);
+    }
+
+    // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
+    function userAddressByKeccakIdentifier(address wallet, bytes32 keccakIdentifier)
+    public constant checkUserExists(wallet) returns(bool, uint256, bool)
+    {
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
                 return (true, ai, userAddressConfirmed(wallet, ai));
@@ -287,6 +304,8 @@ contract ProofOfPhysicalAddress {
         users[msg.sender].physicalAddresses.push(pa);
 
         totalAddresses += 1;
+
+        LogAddressRegistered(msg.sender, pa.keccakIdentifier);
     }
 
     function unregisterAddress(string country, string state, string city, string location, string zip)
@@ -297,10 +316,11 @@ contract ProofOfPhysicalAddress {
         (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
         require(found);
 
+        bytes32 keccakIdentifier = users[msg.sender].physicalAddresses[index].keccakIdentifier;
         registry.removeClaim(
             address(this),
             msg.sender,
-            users[msg.sender].physicalAddresses[index].keccakIdentifier
+            keccakIdentifier
         );
 
         // Remove physical address from list
@@ -316,6 +336,8 @@ contract ProofOfPhysicalAddress {
         if (users[msg.sender].physicalAddresses.length == 0) {
             delete users[msg.sender];
         }
+
+        LogAddressUnregistered(msg.sender, keccakIdentifier);
     }
 
     function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
@@ -342,5 +364,7 @@ contract ProofOfPhysicalAddress {
 
         registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
         totalConfirmed += 1;
+
+        LogAddressConfirmed(msg.sender, keccakIdentifier);
     }
 }
