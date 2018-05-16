@@ -1,4 +1,5 @@
 const ProofOfPhysicalAddress = artifacts.require('ProofOfPhysicalAddress');
+const TestERC20 = artifacts.require('TestERC20');
 const BigNumber = require('bignumber.js');
 
 // solidity-coverage copies all the files to a directory one level deeper, so
@@ -971,6 +972,53 @@ contract('setRegistry', function(accounts) {
                 );
         });
     });
+});
+
+contract('claimTokens', function(accounts) {
+    contract('', () => {
+        it('should allow the owner to send tokens in the contract to another user', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const token = await TestERC20.deployed();
+
+            const initialBalance = Number(await token.balanceOf(accounts[0]));
+
+            await token.transfer(popa.address, initialBalance);
+
+            assert.equal(Number(await token.balanceOf(popa.address)), initialBalance);
+            assert.equal(Number(await token.balanceOf(accounts[0])), 0);
+
+            await popa.claimTokens(token.address, accounts[0]);
+
+            assert.equal(Number(await token.balanceOf(popa.address)), 0);
+            assert.equal(Number(await token.balanceOf(accounts[0])), initialBalance);
+        });
+    });
+
+    contract('', () => {
+        it('should revert if token address is 0', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            return popa.claimTokens('0x0', accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('should revert if recipient address is 0', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const token = await TestERC20.deployed();
+
+            return popa.claimTokens(token.address, '0x0')
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
 });
 
 contract('helpers', function(accounts) {

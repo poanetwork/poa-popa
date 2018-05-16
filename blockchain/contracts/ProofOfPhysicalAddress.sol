@@ -2,6 +2,7 @@ pragma solidity 0.4.19;
 
 import "./EthereumClaimsRegistryInterface.sol";
 import "./PhysicalAddressClaim.sol";
+import "./ERC20.sol";
 
 
 // Checks -> Effects -> Interactions
@@ -52,6 +53,7 @@ contract ProofOfPhysicalAddress {
     event LogAddressRegistered(address indexed wallet, bytes32 keccakIdentifier);
     event LogAddressUnregistered(address indexed wallet, bytes32 keccakIdentifier);
     event LogAddressConfirmed(address indexed wallet, bytes32 keccakIdentifier);
+    event LogClaimedTokens(address token, address to, uint256 amount);
 
     // Modifiers:
     modifier onlyOwner() {
@@ -366,5 +368,15 @@ contract ProofOfPhysicalAddress {
         totalConfirmed += 1;
 
         LogAddressConfirmed(msg.sender, keccakIdentifier);
+    }
+
+    function claimTokens(address _token, address _to) public onlyOwner {
+        require(_token != address(0));
+        require(_to != address(0));
+
+        ERC20 token = ERC20(_token);
+        uint256 balance = token.balanceOf(this);
+        token.transfer(_to, balance);
+        LogClaimedTokens(_token, _to, balance);
     }
 }

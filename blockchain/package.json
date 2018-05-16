@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "coverage": "NODE_ENV=test solidity-coverage",
-    "test": "NODE_ENV=test truffle test"
+    "test": "NODE_ENV=test truffle test --network test"
   },
   "dependencies": {},
   "devDependencies": {
