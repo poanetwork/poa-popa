@@ -49,31 +49,9 @@ contract ProofOfPhysicalAddress {
 
     event LogSignerChanged(address newSigner);
     event LogRegistryChanged(address newRegistry);
-    event LogAddressRegistered(
-      address wallet,
-      string name,
-      string country,
-      string state,
-      string city,
-      string location,
-      string zip
-    );
-    event LogAddressUnregistered(
-      address wallet,
-      string country,
-      string state,
-      string city,
-      string location,
-      string zip
-    );
-    event LogAddressConfirmed(
-      address wallet,
-      string country,
-      string state,
-      string city,
-      string location,
-      string zip
-    );
+    event LogAddressRegistered(address wallet, bytes32 keccakIdentifier);
+    event LogAddressUnregistered(address wallet, bytes32 keccakIdentifier);
+    event LogAddressConfirmed(address wallet, bytes32 keccakIdentifier);
 
     // Modifiers:
     modifier onlyOwner() {
@@ -320,7 +298,7 @@ contract ProofOfPhysicalAddress {
 
         totalAddresses += 1;
 
-        LogAddressRegistered(msg.sender, name, country, state, city, location, zip);
+        LogAddressRegistered(msg.sender, pa.keccakIdentifier);
     }
 
     function unregisterAddress(string country, string state, string city, string location, string zip)
@@ -331,10 +309,11 @@ contract ProofOfPhysicalAddress {
         (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
         require(found);
 
+        bytes32 keccakIdentifier = users[msg.sender].physicalAddresses[index].keccakIdentifier;
         registry.removeClaim(
             address(this),
             msg.sender,
-            users[msg.sender].physicalAddresses[index].keccakIdentifier
+            keccakIdentifier
         );
 
         // Remove physical address from list
@@ -351,7 +330,7 @@ contract ProofOfPhysicalAddress {
             delete users[msg.sender];
         }
 
-        LogAddressUnregistered(msg.sender, country, state, city, location, zip);
+        LogAddressUnregistered(msg.sender, keccakIdentifier);
     }
 
     function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
@@ -359,10 +338,11 @@ contract ProofOfPhysicalAddress {
     {
         require(bytes(confirmationCodePlain).length > 0);
 
-        require(signerIsValid(keccak256(
+        bytes32 data = keccak256(
             msg.sender,
             confirmationCodePlain
-        ), sigV, sigR, sigS));
+        );
+        require(signerIsValid(data, sigV, sigR, sigS));
 
         bool found;
         uint ai;
@@ -378,13 +358,6 @@ contract ProofOfPhysicalAddress {
         registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
         totalConfirmed += 1;
 
-        string memory country;
-        string memory state;
-        string memory city;
-        string memory location;
-        string memory zip;
-        (country, state, city, location, zip) = userAddress(msg.sender, ai);
-
-        LogAddressConfirmed(msg.sender, country, state, city, location, zip);
+        LogAddressConfirmed(msg.sender, keccakIdentifier);
     }
 }
