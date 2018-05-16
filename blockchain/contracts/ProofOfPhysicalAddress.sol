@@ -49,9 +49,9 @@ contract ProofOfPhysicalAddress {
 
     event LogSignerChanged(address newSigner);
     event LogRegistryChanged(address newRegistry);
-    event LogAddressRegistered(address wallet, bytes32 keccakIdentifier);
-    event LogAddressUnregistered(address wallet, bytes32 keccakIdentifier);
-    event LogAddressConfirmed(address wallet, bytes32 keccakIdentifier);
+    event LogAddressRegistered(address indexed wallet, bytes32 keccakIdentifier);
+    event LogAddressUnregistered(address indexed wallet, bytes32 keccakIdentifier);
+    event LogAddressConfirmed(address indexed wallet, bytes32 keccakIdentifier);
 
     // Modifiers:
     modifier onlyOwner() {
