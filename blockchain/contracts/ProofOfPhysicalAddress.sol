@@ -315,7 +315,8 @@ contract ProofOfPhysicalAddress {
     {
         bool found;
         uint256 index;
-        (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
+        bool confirmed;
+        (found, index, confirmed) = userAddressByAddress(msg.sender, country, state, city, location, zip);
         require(found);
 
         bytes32 keccakIdentifier = users[msg.sender].physicalAddresses[index].keccakIdentifier;
@@ -337,6 +338,12 @@ contract ProofOfPhysicalAddress {
 
         if (users[msg.sender].physicalAddresses.length == 0) {
             delete users[msg.sender];
+            totalUsers--;
+        }
+
+        totalAddresses--;
+        if (confirmed) {
+            totalConfirmed--;
         }
 
         LogAddressUnregistered(msg.sender, keccakIdentifier);
