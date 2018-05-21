@@ -17,6 +17,7 @@
     "test": "npm test --prefix web-dapp"
   },
   "dependencies": {
+    "bootstrap": "^4.1.1",
     "font-awesome": "^4.7.0",
     "solc": "0.4.19",
     "web3": "^0.20.4"
