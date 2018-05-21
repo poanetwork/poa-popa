@@ -297,35 +297,50 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='confirmation-page'>
-                <section className="content postcard-container table">
-                    <div className="table-cell">
-                        <div className="postcard-inner">
-                            <div className="postcard">
-                                <p className="postcard-title">Enter your unique code here:</p>
-                                <form action="" className="postcard-form">
-                                    <input
-                                        className={'postcard-input ' + this.state.confirmed_class}
-                                        type="text"
-                                        name="confirmationCodePlain"
-                                        value={this.state.confirmationCodePlain}
-                                        onChange={this.on_change}
-                                    />
-                                    <button type="button" className="postcard-button" onClick={this.confirm_clicked}/>
-                                </form>
-                                <p>
-                                    Type code from the postcard. Letter case is irrelevant.
-                                </p>
+            <div className="col-md-12">
+                <div className="content">
+                    <div className="block-card">
+                        <div className="inner-card">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="enter-c-title">
+                                        Enter your POA Network
+                                        Proof of Physical Address
+                                        confirmation code here:
+                                    </div>
+
+                                    <form id="contactForm" className="form-order" name="sentMessage" noValidate>
+                                        <div className="form-group cart-order">
+                                            <input className="form-control" type="email" required
+                                                   data-validation-required-message="Please enter your email." />
+                                                <button type="submit" className="enter-btn-img btn btn-primary"
+                                                        id="btnSubmit"></button>
+                                        </div>
+                                    </form>
+
+                                    <div className="small-c-copy">
+                                        Lorem ipsum dolor sit amet,
+                                        consectetur adipiscing elit, sed
+                                        do eiusmod tempor incididunt
+                                        ut labore et dolore.
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <img src={require('../assets/images/card/card-2.svg')} alt="card" />
+                                </div>
                             </div>
-                            <h1 className="title">Verify your address</h1>
-                            <p className="description">
-                                Enter confirmation code from the postcard you received, sign the transaction and
-                                finalize the verification process.
-                            </p>
                         </div>
                     </div>
-                </section>
-                <Loading show={this.state.loading}/>
+                    <h4 className="second-title">
+                        Lorem ipsum dolor sit amet
+                    </h4>
+                    <p className="second-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <button type="submit" className="primary-btn mt-3">
+                        Back
+                        <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                    </button>
+                </div>
             </div>
         );
     }

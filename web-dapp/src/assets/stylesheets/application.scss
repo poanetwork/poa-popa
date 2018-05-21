@@ -1,14 +1,11 @@
-@import './application/_0_variables';
-@import './application/_1_mixins';
-@import './application/_2_placeholders';
-@import './application/_3_fonts';
-@import './application/_4_base';
-@import './application/address';
-@import './application/controls';
-@import './application/footer';
-@import './application/header';
-@import './application/how-to';
-@import './application/loading';
-@import './application/postcard';
-@import './application/socials';
-@import './application/swipe';
+// Core variables and mixins
+@import "application/_variables.scss";
+// Fonts
+@import "application/_fonts.scss";
+// Global CSS
+@import "application/_global.scss";
+@import "application/_order.scss";
+@import "application/_card.scss";
+@import "application/_card-item.scss";
+// Components
+@import "application/_media.scss";

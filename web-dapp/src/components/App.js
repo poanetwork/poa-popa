@@ -10,6 +10,7 @@ import MyAddressesPage from './MyAddressesPage';
 
 import '../assets/javascripts/init-my-web3.js';
 import '../assets/javascripts/show-alert.js';
+import IndexPage from "./IndexPage";
 
 const WEB3_CHECKER_INTERV_MS = 500;
 const GOOGLE_CHROME_URL = 'https://www.google.com/chrome/browser';
@@ -116,15 +117,25 @@ class App extends Component {
         if (this.state.my_web3 && this.state.contract) {
             return (
                 <BrowserRouter>
-                    <div>
-                        <Header/>
-                        <Route exact path="/" component={() => <RegisterAddressPage my_web3={this.state.my_web3}
-                                                                                    contract={this.state.contract}/>}/>
-                        <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3}
-                                                                                  contract={this.state.contract}/>}/>
-                        <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
-                                                                                  contract={this.state.contract}/>}/>
-                        <Footer/>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="sidebar d-sm-none d-md-block">
+                                <div className="image"></div>
+                            </div>
+                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
+                                <div className="row">
+                                    <Header/>
+                                    <Route exact path="/" component={() => <IndexPage />}/>
+                                    <Route path="/register" component={() => <RegisterAddressPage my_web3={this.state.my_web3}
+                                                                                                contract={this.state.contract}/>}/>
+                                    <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3}
+                                                                                              contract={this.state.contract}/>}/>
+                                    <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
+                                                                                              contract={this.state.contract}/>}/>
+                                    <Footer/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </BrowserRouter>
             );
@@ -134,14 +145,16 @@ class App extends Component {
 
             return (
                 <BrowserRouter>
-                    <div>
-                        <Header/>
-                        <div className="page container">
-                            <h2>Contract is not deployed</h2>
-                            PoPA contract is not deployed on this network, please switch network in metamask<br/>
-                            <br/>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <Header/>
+                            <div className="page container">
+                                <h2>Contract is not deployed</h2>
+                                PoPA contract is not deployed on this network, please switch network in metamask<br/>
+                                <br/>
+                            </div>
+                            <Footer/>
                         </div>
-                        <Footer/>
                     </div>
                 </BrowserRouter>
             );
