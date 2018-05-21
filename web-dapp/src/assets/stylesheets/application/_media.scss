@@ -1,0 +1,207 @@
+@media only screen and (max-width : 480px){
+	.block-card{
+		width: 100%;
+	}
+  .card-item{
+    flex-direction: column;
+  }
+  .item-adress{
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  .wrap-btn{
+    right: 0;
+    text-align: center;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .verify-btn{
+    margin: 0;
+  }
+  .card-item img{
+    margin-right: 0;
+  }
+}
+@media only screen and (max-width : 768px){
+	.order-title, .main-title, .second-title{
+		padding: 20px 0;
+		line-height: 1;
+		font-size: 26px;
+	}
+	.pd-sm-3{
+		padding-top: 20px;
+	}
+	.sm-center{
+		text-align: center !important;
+	}
+	.container{
+		padding-right: 15px;
+    padding-left: 15px;
+	}
+	.full-height{
+	  padding-left: 0;
+	}
+	.action-btn, .primary-btn{
+		width: 100%;
+	}
+	.card-user-name{
+		width: 100px;
+		font-size: 12px;
+	}
+}
+
+
+@media only screen and (min-width: 320px) {
+
+  .banner-image{
+  	position: absolute;
+  	left: 0;
+  	top: 0;
+  	display: none;
+  }
+  .logo{
+  	display: block;
+  	height: 26px;
+  	margin-top: 23px;
+  	background: url(../images/logo/logo-top.svg) no-repeat;
+  }
+  .main-title{
+    padding-top: 40px;
+  }
+  .second-title{
+    margin-top: 20px;
+  }
+  .content{
+    margin-top: 40px;
+  }
+  footer{
+    margin-top: 40px;
+  }
+  .d-xs-none{
+    display: none!important;
+  }
+  .mb-xs-4{
+    margin-bottom: 1.8rem;
+  }
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2)      and (min-width: 320px),
+only screen and (   min--moz-device-pixel-ratio: 2)      and (min-width: 320px),
+only screen and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 320px),
+only screen and (        min-device-pixel-ratio: 2)      and (min-width: 320px),
+only screen and (                min-resolution: 192dpi) and (min-width: 320px),
+only screen and (                min-resolution: 2dppx)  and (min-width: 320px) { 
+
+  .logo{
+  	background: url(../images/logo/logo-top.svg) no-repeat;
+  }
+
+}
+
+@media only screen and (min-width: 700px) {
+	.banner-image{
+  	display: block;
+  }
+  .image{
+  	height: 100%;
+    background: url(../images/banner-image/pic@2x.jpg) no-repeat;
+  }
+  .second-title{
+    margin-top: 40px;
+  }
+  footer{
+    margin-top: 80px;
+  }
+  .sidebar{
+    padding-left: 0;
+    padding-right: 0;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
+    width: 37%;
+  }
+  .card-item img{
+    margin-right: 25px;
+  }
+
+}
+
+@media only screen and (min-width: 992px) {
+  .sidebar{
+    width: 45%;
+  }
+  .content{
+    opacity: 1;
+    -webkit-transform: translateY(2rem);
+    -ms-transform: translateY(2rem);
+    -o-transform: translateY(2rem);
+    transform: translateY(2rem);
+  }
+  .animate{
+    opacity: 1;
+    -webkit-transform: translateY(0rem);
+    -ms-transform: translateY(0rem);
+    -o-transform: translateY(0rem);
+    transform: translateY(0rem);
+    -webkit-transition: 1s 0.3s ease;
+    -o-transition: 1s 0.3s ease;
+    transition: 1s 0.3s ease;
+  }
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2)      and (min-width: 700px),
+only screen and (   min--moz-device-pixel-ratio: 2)      and (min-width: 700px),
+only screen and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 700px),
+only screen and (        min-device-pixel-ratio: 2)      and (min-width: 700px),
+only screen and (                min-resolution: 192dpi) and (min-width: 700px),
+only screen and (                min-resolution: 2dppx)  and (min-width: 700px) { 
+
+  .image{
+    background: url(../images/banner-image/pic@2x.jpg) no-repeat;
+  }
+
+}
+
+@media only screen and (min-width: 1300px) {
+
+  .logo{
+    background: url(../images/logo/logo-top.png) no-repeat;
+  }
+  .second-title{
+    margin-top: 60px;
+  }
+  .image{
+    height: 100%;
+    background: url(../images/banner-image/pic@3x.jpg) no-repeat;
+  }
+  .content{
+    margin-top: 80px;
+  }
+  footer{
+    margin-top: 110px;
+  }
+
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2)      and (min-width: 1920px),
+only screen and (   min--moz-device-pixel-ratio: 2)      and (min-width: 1920px),
+only screen and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 1920px),
+only screen and (        min-device-pixel-ratio: 2)      and (min-width: 1920px),
+only screen and (                min-resolution: 192dpi) and (min-width: 1920px),
+only screen and (                min-resolution: 2dppx)  and (min-width: 1920px) { 
+	
+  .image{
+  	background: url(../images/banner-image/pic@3x.jpg) no-repeat;
+  }
+
+}

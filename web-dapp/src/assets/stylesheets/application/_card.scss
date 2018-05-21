@@ -1,0 +1,132 @@
+// Card Style
+.block-card{
+	width: 500px;
+}
+.inner-card{
+	padding: 40px 34px;
+	border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0px 20px 40px 0 rgba(76, 43, 134, 0.2);
+}
+.card-image{
+	position: relative;
+	width: 100%;
+  object-fit: contain;
+}
+.card-user-name{
+	position: absolute;
+	width: 160px;
+	bottom: 0;
+	right: 0;
+	text-align: right;
+  font-size: 15.5px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.41;
+  letter-spacing: normal;
+  text-align: right;
+  color: #5b32a2;
+}
+
+// Card enter
+.enter-c-title{
+	font-size: 14.1px;
+	line-height: 1.41;
+  color: #333333;
+  margin-bottom: 30px;
+}
+.small-c-copy{
+	margin-top: 20px;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.51;
+  letter-spacing: normal;
+  text-align: left;
+  color: #777777;
+}
+.btn-success{
+	background-color: $success;
+	border-color: $success;
+}
+.btn-primary{
+	background: $primary;
+}
+.form-order{
+  position: relative;
+}
+.form-order input{
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333333;
+}
+.form-group .has-feedback #btnSubmit{
+  position: relative;
+}
+.form-order .form-group i{
+  position: absolute;
+  top: 15px;
+  right: 16px;
+  z-index: 99;
+  color: white;
+}
+#btnSubmit{
+  position: absolute;
+  padding: 10px;
+  width: 45px;
+  height: 44px;
+  margin: 0;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  opacity: 1;
+  border: none !important;
+  background-color: $primary;
+}
+#btnSubmit:before{
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 14px;
+  background: url(../images/card/arrow.svg) no-repeat;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.success #btnSubmit{
+  background-color: #61db98!important;
+  border: none !important;
+}
+.success #btnSubmit:before{
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 14px;
+  background: url(../images/card/verify.svg) no-repeat;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.warning #btnSubmit{
+  background-color: #db184f!important;
+  border: none !important;
+}
+.warning #btnSubmit:before{
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 14px;
+  background: url(../images/card/warning.svg) no-repeat;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.warning #btnSubmit:hover{
+  background-color: #db184f!important;
+}
+.warning #btnSubmit:hover{
+  background-color: #db184f!important;
+}
