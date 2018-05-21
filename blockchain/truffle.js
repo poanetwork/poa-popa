@@ -30,7 +30,7 @@ module.exports = {
         },
         sokol: {
             provider: new HDWalletProvider(mnemonic, sokolUrl),
-            network_id: 4,
+            network_id: 77,
         },
     },
 };
