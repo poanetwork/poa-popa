@@ -2,6 +2,7 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 
 const mnemonic = 'toddler weather rocket off sentence chat unlock flame organ shuffle treat awful';
 const rinkebyUrl = 'https://rinkeby.infura.io';
+const sokolUrl = 'https://sokol.poa.network';
 
 module.exports = {
     networks: {
@@ -25,6 +26,10 @@ module.exports = {
         },
         rinkeby: {
             provider: new HDWalletProvider(mnemonic, rinkebyUrl),
+            network_id: 4,
+        },
+        sokol: {
+            provider: new HDWalletProvider(mnemonic, sokolUrl),
             network_id: 4,
         },
     },

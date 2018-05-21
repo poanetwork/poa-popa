@@ -14,7 +14,7 @@ module.exports = function(deployer, network) {
             let ethereumClaimsRegistry = await EthereumClaimsRegistry.deployed();
             ethereumClaimsRegistryAddress = ethereumClaimsRegistry.address;
         } else {
-            ethereumClaimsRegistryAddress = '0xaca1bcd8d0f5a9bfc95aff331da4c250cd9ac2da';
+            ethereumClaimsRegistryAddress = '0xec9cd1a18CA13E8703bdbCc68419E0d08AEb3528';
         }
 
         if (network === 'test' || network === 'coverage') {
