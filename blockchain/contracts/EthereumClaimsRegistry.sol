@@ -32,7 +32,7 @@ contract EthereumClaimsRegistry is EthereumClaimsRegistryInterface {
     }
 
     function removeClaim(address issuer, address subject, bytes32 key) external {
-        require(msg.sender == issuer || msg.sender == subject);
+        require(msg.sender == issuer);
         delete registry[issuer][subject][key];
         ClaimRemoved(msg.sender, subject, key, now);
     }

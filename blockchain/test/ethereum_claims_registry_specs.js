@@ -40,23 +40,28 @@ contract('EthereumClaimsRegistry', accounts => {
         );
     });
 
-    it('Can remove a Claim as Subject', async () => {
+    it('Can\'t remove a Claim as Subject', async () => {
         const erc780 = await EthereumClaimsRegistry.deployed();
         await erc780.setClaim(accounts[1], web3.sha3('Key'), web3.sha3('Value'), {
             from: accounts[0],
         });
 
-        await erc780.removeClaim(accounts[0], accounts[1], web3.sha3('Key'), {
-            from: accounts[1],
-        });
+        try {
+            await erc780.removeClaim(accounts[0], accounts[1], web3.sha3('Key'), {
+                from: accounts[1],
+            });
+            assert.fail('should have thrown before');
+        } catch (error) {
+            assertRevert(error);
+        }
 
         assert.equal(
             await erc780.getClaim(accounts[0], accounts[1], web3.sha3('Key')),
-            0x0
+            web3.sha3('Value')
         );
     });
 
-    it('Can\'t remove a Claim if not a Subject or Issuer', async () => {
+    it('Can\'t remove a Claim if not the Issuer', async () => {
         const erc780 = await EthereumClaimsRegistry.deployed();
         await erc780.setClaim(accounts[1], web3.sha3('Key'), web3.sha3('Value'), {
             from: accounts[0],
