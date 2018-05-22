@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import * as log from 'loglevel';
 
 import { Loading } from './Loading';
@@ -303,27 +305,16 @@ class ConfirmationPage extends React.Component {
                         <div className="inner-card">
                             <div className="row">
                                 <div className="col-md-6">
-                                    <div className="enter-c-title">
-                                        Enter your POA Network
-                                        Proof of Physical Address
-                                        confirmation code here:
-                                    </div>
-
-                                    <form id="contactForm" className="form-order" name="sentMessage" noValidate>
+                                    <div className="enter-c-title">Enter your POA Network Proof of Physical Address confirmation code here:</div>
+                                    <form id="postcard-form" className="form-order" name="postcardForm" noValidate>
                                         <div className="form-group cart-order">
-                                            <input className="form-control" type="email" required
-                                                   data-validation-required-message="Please enter your email." />
-                                                <button type="submit" className="enter-btn-img btn btn-primary"
-                                                        id="btnSubmit"></button>
+                                            <input className="form-control" type="text" name="confirmationCodePlain" value={this.state.confirmationCodePlain}
+                                                   onChange={this.on_change}/>
+                                                <button type="button" className="enter-btn-img btn btn-primary"
+                                                        id="btnSubmit" onClick={this.confirm_clicked}></button>
                                         </div>
                                     </form>
-
-                                    <div className="small-c-copy">
-                                        Lorem ipsum dolor sit amet,
-                                        consectetur adipiscing elit, sed
-                                        do eiusmod tempor incididunt
-                                        ut labore et dolore.
-                                    </div>
+                                    <div className="small-c-copy">Type code from the postcard. Letter case is irrelevant.</div>
                                 </div>
                                 <div className="col-md-6">
                                     <img src={require('../assets/images/card/card-2.svg')} alt="card" />
@@ -331,16 +322,17 @@ class ConfirmationPage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <h4 className="second-title">
-                        Lorem ipsum dolor sit amet
-                    </h4>
-                    <p className="second-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <button type="submit" className="primary-btn mt-3">
-                        Back
-                        <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
-                    </button>
+                    <h4 className="second-title">Verify your address</h4>
+                    <p className="second-text">Enter confirmation code from the postcard you received, sign the transaction and
+                        finalize the verification process.</p>
+                    <Link to="/">
+                        <button className="primary-btn mt-3">
+                            Back
+                            <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                        </button>
+                    </Link>
                 </div>
+                <Loading show={this.state.loading}/>
             </div>
         );
     }

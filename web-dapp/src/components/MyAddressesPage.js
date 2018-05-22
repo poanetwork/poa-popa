@@ -131,87 +131,32 @@ class ConfirmationPage extends React.Component {
     render() {
         return (
             <div className="col-md-12">
-                <div className="content mb-4">
-                    <div className="card-item d-flex wait-to-verify mt-3 p-3">
-                        <img className="image-no-verify d-flex" src={require('../assets/images/card-item/clock.png')}
-                             srcSet={`
-                                ${require('../assets/images/card-item/clock@2x.png')} 2x,
-                                ${require('../assets/images/card-item/clock@3x.png')} 3x
-                             `} className="clock" />
-                            <div className="item-adress">
-                                2883 Old House Drive Columbus, OH 43215, US
-                            </div>
-                            <div className="wrap-btn">
-                                <button className="verify-btn">
-                                    Verify
-                                </button>
-                            </div>
-                            <div className="item-data">
-                                23 Aptil 2018
-                            </div>
+                {this.state.addresses.length !== 0 ? (
+                    <div className="content mb-4">
+                        { this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
+                                <div className="card-item d-flex wait-to-verify mt-3 p-3">
+                                    <img className={confirmed ? 'image-verify d-flex' : 'image-no-verify d-flex'} src={require('../assets/images/card-item/clock.png')}
+                                         srcSet={`
+                                            ${require('../assets/images/card-item/clock@2x.png')} 2x,
+                                            ${require('../assets/images/card-item/clock@3x.png')} 3x
+                                         `} className="clock" />
+                                        <div className="item-adress">
+                                            {location}, {zip}, {city}, {state}, {country}
+                                        </div>
+                                        <div className="wrap-btn">
+                                            <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
+                                                <i className="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                </div>
+                            )) }
                     </div>
-                    <div className="card-item d-flex wait-to-verify mt-3 p-3">
-                        <img className="image-no-verify d-flex" src={require('../assets/images/card-item/clock.png')}
-                             srcSet={`
-                                ${require('../assets/images/card-item/clock@2x.png')} 2x,
-                                ${require('../assets/images/card-item/clock@3x.png')} 3x
-                             `} className="clock" />
-                            <div className="item-adress">
-                                567 Emerson Road
-                                Doyline, LA 71023
-                            </div>
-                            <div className="wrap-btn">
-                                <button className="verify-btn">
-                                    Verify
-                                </button>
-                            </div>
-                            <div className="item-data">
-                                23 Aptil 2018
-                            </div>
+                ) : null}
+                {this.state.addresses.length === 0 ? (
+                    <div className="content mb-4">
+                        <p>There are no addresses registered for account <b>{this.state.wallet}</b></p>
                     </div>
-                    <div className="card-item d-flex verify mt-3 p-3">
-                        <img className="image-verify d-flex" src={require('../assets/images/card-item/done.png')}
-                             srcSet={`
-                                ${require('../assets/images/card-item/done@2x.png')} 2x,
-                                ${require('../assets/images/card-item/done@3x.png')} 3x
-                             `} className="done" />
-                            <div className="item-adress">
-                                567 Emerson Road
-                                Doyline, LA 71023
-                            </div>
-                            <div className="item-data">
-                                23 Aptil 2018
-                            </div>
-                    </div>
-                    <div className="card-item d-flex verify mt-3 p-3">
-                        <img className="image-verify d-flex" src={require('../assets/images/card-item/done.png')}
-                             srcSet={`
-                                ${require('../assets/images/card-item/done@2x.png')} 2x,
-                                ${require('../assets/images/card-item/done@3x.png')} 3x
-                             `} className="done" />
-                            <div className="item-adress">
-                                567 Emerson Road
-                                Doyline, LA 71023
-                            </div>
-                            <div className="item-data">
-                                23 Aptil 2018
-                            </div>
-                    </div>
-                    <div className="card-item d-flex verify mt-3 p-3">
-                        <img className="image-verify d-flex" src={require('../assets/images/card-item/done.png')}
-                             srcSet={`
-                                ${require('../assets/images/card-item/done@2x.png')} 2x,
-                                ${require('../assets/images/card-item/done@3x.png')} 3x
-                             `} className="done" />
-                            <div className="item-adress">
-                                567 Emerson Road
-                                Doyline, LA 71023
-                            </div>
-                            <div className="item-data">
-                                23 Aptil 2018
-                            </div>
-                    </div>
-                </div>
+                ) : null}
             </div>
         );
     }

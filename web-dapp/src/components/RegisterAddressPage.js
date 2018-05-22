@@ -450,81 +450,46 @@ class RegisterAddressPage extends React.Component {
         return (
             <div className="col-md-12">
                 <div className="content">
-                    <form id="contactForm" name="sentMessage" noValidate>
+                    <form id="registerForm">
                         <div className="form-group">
                             <label>Name</label>
-                            <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                <div className="hidden-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                    Maiores quam iure, eaque tempore in fugit quasi! Tempora perspiciatis, ipsa, officiis
-                                    quae totam incidunt aperiam, possimus, fugit animi vitae inventore voluptatibus?
-                                </div>
-                            </div>
-                            <input type="name" className="form-control" placeholder="Enter here *" required
-                                   data-validation-required-message="Please enter your name." value={this.state.name}
+                            <input type="text" className="form-control" placeholder="Enter your full name" name="name" value={this.state.name}
                                    onChange={this.on_change} />
-                                <p className="help-block text-danger"></p>
                         </div>
                         <div className="form-group">
                             <label>Address</label>
-                            <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                <div className="hidden-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                    Maiores quam iure, eaque tempore in fugit quasi! Tempora perspiciatis, ipsa, officiis
-                                    quae totam incidunt aperiam, possimus, fugit animi vitae inventore voluptatibus?
-                                </div>
-                            </div>
-                            <input type="address" className="form-control" placeholder="Enter here" value={this.state.address}
+                            <input type="text" className="form-control" placeholder="Enter your full address" name="address" value={this.state.address}
                                    onChange={this.on_change} />
                         </div>
                         <div className="form-group row">
                             <div className="col-md-6 mb-xs-4 mb-sm-4 mb-md-0">
                                 <label>City</label>
-                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                    <div className="hidden-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Maiores quam iure, eaque tempore in fugit quasi! Tempora perspiciatis, ipsa,
-                                        officiis quae totam incidunt aperiam, possimus, fugit animi vitae inventore
-                                        voluptatibus?
-                                    </div>
-                                </div>
-                                <input type="city" className="form-control" placeholder="Enter here" value={this.state.city}
+                                <input type="text" className="form-control" placeholder="Enter here" name="city" value={this.state.city}
                                        onChange={this.on_change} />
                             </div>
                             <div className="col-md-6">
                                 <label>State</label>
-                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                    <div className="hidden-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Maiores quam iure, eaque tempore in fugit quasi! Tempora perspiciatis, ipsa,
-                                        officiis quae totam incidunt aperiam, possimus, fugit animi vitae inventore
-                                        voluptatibus?
-                                    </div>
-                                </div>
-                                <input type="state" className="form-control" placeholder="Enter here" value={this.state.state}
-                                       onChange={this.on_change} />
+                                <select className="form-control" name="state" value={this.state.state} onChange={this.on_change}>
+                                    {
+                                        listOfStates.map((state, index) => (
+                                            <option value={state.code} key={index}>{state.label}</option>
+                                        ))
+                                    }
+                                </select>
+                                <p className="help-block">Select one of the states from the dropdown list</p>
                             </div>
                         </div>
                         <div className="form-group row">
                             <div className="col-md-6 mb-xs-4 mb-sm-4 mb-md-0">
                                 <label>Zip</label>
-                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                    <div className="hidden-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Maiores quam iure, eaque tempore in fugit quasi! Tempora perspiciatis, ipsa,
-                                        officiis quae totam incidunt aperiam, possimus, fugit animi vitae inventore
-                                        voluptatibus?
-                                    </div>
-                                </div>
-                                <input type="zip" className="form-control" placeholder="Enter here" value={this.state.zip}
+                                <input type="text" className="form-control" placeholder="Enter ZIP code"  name="zip" value={this.state.zip}
                                        onChange={this.on_change} />
                             </div>
                             <div className="col-md-6">
                                 <label>Country</label>
-                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                    <div className="hidden-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Maiores quam iure, eaque tempore in fugit quasi! Tempora perspiciatis, ipsa,
-                                        officiis quae totam incidunt aperiam, possimus, fugit animi vitae inventore
-                                        voluptatibus?
-                                    </div>
-                                </div>
-                                <input type="country" className="form-control" placeholder="Enter here" value={this.state.country}
+                                <input type="text" className="form-control" placeholder="Enter the country" name="country" value={this.state.country}
                                        onChange={this.on_change} />
+                                <p className="help-block">At the present moment address verification is available only in the United States.</p>
                             </div>
                         </div>
                         <Link to="/">
@@ -533,12 +498,14 @@ class RegisterAddressPage extends React.Component {
                                 <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
                             </button>
                         </Link>
-                        <button id="sendMessageButton" type="submit" className="action-btn mt-3" onClick={this.order_clicked}>
+                        <button id="sendMessageButton" type="button" className="action-btn mt-3" onClick={this.order_clicked}>
                             Order
                             <img className="btn-arrow" src={require('../assets/images/arrow.svg')} alt="arrow" />
                         </button>
                     </form>
+                    <div className="small-c-copy"><strong>0.04 ETH</strong> This is the price we charge for sending a postcard to you</div>
                 </div>
+                <Loading show={this.state.loading}/>
             </div>
         );
     }

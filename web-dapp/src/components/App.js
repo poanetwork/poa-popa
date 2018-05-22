@@ -141,6 +141,7 @@ class App extends Component {
             );
         }
         else if (this.state.my_web3 && !this.state.contract) {
+            window.show_alert('error', 'Contract not deployed', 'PoPA contract is not deployed on this network');
             return (
                 <BrowserRouter>
                     <div className="container-fluid">
