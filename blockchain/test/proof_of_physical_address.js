@@ -1140,6 +1140,26 @@ contract('helpers', function(accounts) {
     });
 
     contract('', () => {
+        it('userAddressConfirmed should fail if the index is out of bounds', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            let isConfirmed = await popa.userAddressConfirmed(accounts[0], 0);
+            assert.isFalse(isConfirmed);
+
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            await popa.userAddressConfirmed(accounts[0], 1)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
         it('userAddressConfirmed should return true after an address is confirmed', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args = buildRegisterAddressArgs(accounts[0]);
@@ -1576,6 +1596,21 @@ contract('helpers', function(accounts) {
     });
 
     contract('', () => {
+        it('userAddress must fail if the index is out of bounds', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            await popa.userAddress(accounts[0], 1)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
         it('userAddress must return the address data for the given index', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args = buildRegisterAddressArgs(accounts[0]);
@@ -1598,6 +1633,21 @@ contract('helpers', function(accounts) {
             const popa = await ProofOfPhysicalAddress.deployed();
 
             await popa.userAddressInfo(accounts[0], 0)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressInfo must fail if the index is out of bounds', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            await popa.userAddressInfo(accounts[0], 1)
                 .then(
                     () => assert.fail(), // should reject
                     () => {}
