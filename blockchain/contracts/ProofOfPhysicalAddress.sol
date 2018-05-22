@@ -273,6 +273,7 @@ contract ProofOfPhysicalAddress {
         require(bytes(location).length > 0);
         require(bytes(zip).length > 0);
         require(msg.value >= priceWei);
+        require(users[msg.sender].physicalAddresses.length < 2**256-1);
 
         bytes32 data = keccak256(
             msg.sender,
