@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import * as log from 'loglevel';
 
 import {Loading} from './Loading';
@@ -134,20 +136,23 @@ class ConfirmationPage extends React.Component {
                 {this.state.addresses.length !== 0 ? (
                     <div className="content mb-4">
                         { this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
-                                <div className="card-item d-flex wait-to-verify mt-3 p-3">
+                                <div className="card-item d-flex wait-to-verify mt-3 p-3" key={index}>
                                     <img className={confirmed ? 'image-verify d-flex' : 'image-no-verify d-flex'} src={require('../assets/images/card-item/clock.png')}
-                                         srcSet={`
+                                         srcSet={confirmed ? `
+                                            ${require('../assets/images/card-item/done@2x.png')} 2x,
+                                            ${require('../assets/images/card-item/done@3x.png')} 3x
+                                         ` : `
                                             ${require('../assets/images/card-item/clock@2x.png')} 2x,
                                             ${require('../assets/images/card-item/clock@3x.png')} 3x
-                                         `} className="clock" />
-                                        <div className="item-adress">
-                                            {location}, {zip}, {city}, {state}, {country}
-                                        </div>
-                                        <div className="wrap-btn">
-                                            <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
-                                                <i className="fa fa-trash"></i>
-                                            </a>
-                                        </div>
+                                         `} className={confirmed ? 'done' : 'clock'} />
+                                    <div className="item-adress">
+                                        {location}, {zip}, {city}, {state}, {country}
+                                    </div>
+                                    <div className="wrap-btn">
+                                        <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
+                                            <i className="fa fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             )) }
                     </div>
@@ -157,6 +162,12 @@ class ConfirmationPage extends React.Component {
                         <p>There are no addresses registered for account <b>{this.state.wallet}</b></p>
                     </div>
                 ) : null}
+                <Link to="/">
+                    <button className="primary-btn mt-3">
+                        Back
+                        <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                    </button>
+                </Link>
             </div>
         );
     }
