@@ -132,19 +132,19 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className="col-md-12">
+            <div className="col-md-12 my-addresses">
                 {this.state.addresses.length !== 0 ? (
                     <div className="content mb-4">
                         { this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
-                                <div className="card-item d-flex wait-to-verify mt-3 p-3" key={index}>
-                                    <img className={confirmed ? 'image-verify d-flex' : 'image-no-verify d-flex'} src={require('../assets/images/card-item/clock.png')}
+                                <div className="card-item d-flex wait-to-verify mt-3 p-3 address" key={index}>
+                                    <img className={confirmed ? 'image-verify d-flex done' : 'image-no-verify d-flex clock'} src={require('../assets/images/card-item/clock.png')}
                                          srcSet={confirmed ? `
                                             ${require('../assets/images/card-item/done@2x.png')} 2x,
                                             ${require('../assets/images/card-item/done@3x.png')} 3x
                                          ` : `
                                             ${require('../assets/images/card-item/clock@2x.png')} 2x,
                                             ${require('../assets/images/card-item/clock@3x.png')} 3x
-                                         `} className={confirmed ? 'done' : 'clock'} />
+                                         `} />
                                     <div className="item-adress">
                                         {location}, {zip}, {city}, {state}, {country}
                                     </div>
