@@ -453,22 +453,34 @@ class RegisterAddressPage extends React.Component {
                     <form id="registerForm">
                         <div className="form-group">
                             <label>Name</label>
+                            <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                <div className="hidden-info">Enter your full name</div>
+                            </div>
                             <input type="text" className="form-control" placeholder="Enter your full name" name="name" value={this.state.name}
                                    onChange={this.on_change} />
                         </div>
                         <div className="form-group">
                             <label>Address</label>
+                            <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                <div className="hidden-info">Enter your full address</div>
+                            </div>
                             <input type="text" className="form-control" placeholder="Enter your full address" name="address" value={this.state.address}
                                    onChange={this.on_change} />
                         </div>
                         <div className="form-group row">
                             <div className="col-md-6 mb-xs-4 mb-sm-4 mb-md-0">
                                 <label>City</label>
-                                <input type="text" className="form-control" placeholder="Enter here" name="city" value={this.state.city}
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">Enter the name of the city</div>
+                                </div>
+                                <input type="text" className="form-control" placeholder="Enter the city" name="city" value={this.state.city}
                                        onChange={this.on_change} />
                             </div>
                             <div className="col-md-6">
                                 <label>State</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">Select one of the states from the dropdown list</div>
+                                </div>
                                 <select className="form-control" name="state" value={this.state.state} onChange={this.on_change}>
                                     {
                                         listOfStates.map((state, index) => (
@@ -482,11 +494,17 @@ class RegisterAddressPage extends React.Component {
                         <div className="form-group row">
                             <div className="col-md-6 mb-xs-4 mb-sm-4 mb-md-0">
                                 <label>Zip</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">Enter ZIP code</div>
+                                </div>
                                 <input type="text" className="form-control" placeholder="Enter ZIP code"  name="zip" value={this.state.zip}
                                        onChange={this.on_change} />
                             </div>
                             <div className="col-md-6">
                                 <label>Country</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">At the present moment address verification is available only in the United States.</div>
+                                </div>
                                 <input type="text" className="form-control" placeholder="Enter the country" name="country" value={this.state.country}
                                        onChange={this.on_change} />
                                 <p className="help-block">At the present moment address verification is available only in the United States.</p>
