@@ -157,7 +157,9 @@ class ConfirmationPage extends React.Component {
         })
     }
 
-    confirm_clicked() {
+    confirm_clicked(event) {
+        event.preventDefault()
+
         const confirmationCodePlain = this.state.confirmationCodePlain.trim();
 
         if (!confirmationCodePlain) {
@@ -306,12 +308,11 @@ class ConfirmationPage extends React.Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="enter-c-title">Enter your POA Network Proof of Physical Address confirmation code here:</div>
-                                    <form id="postcard-form" className="form-order" name="postcardForm" noValidate>
+                                    <form id="postcard-form" className="form-order" name="postcardForm" noValidate onSubmit={this.confirm_clicked}>
                                         <div className="form-group cart-order">
                                             <input className="form-control" type="text" name="confirmationCodePlain" value={this.state.confirmationCodePlain}
                                                    onChange={this.on_change}/>
-                                                <button type="button" className="enter-btn-img btn btn-primary"
-                                                        id="btnSubmit" onClick={this.confirm_clicked}></button>
+                                                <button type="submit" className="enter-btn-img btn btn-primary" id="btnSubmit"></button>
                                         </div>
                                     </form>
                                     <div className="small-c-copy">Type code from the postcard. Letter case is irrelevant.</div>
