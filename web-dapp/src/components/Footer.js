@@ -3,8 +3,8 @@ import React from 'react';
 class Footer extends React.Component {
     render () {
         return (
-            <footer className="main-footer align-self-end">
-                <div className="col-md-12">
+            <footer className="main-footer align-self-end footer">
+                <div className="col-md-12 container">
                     <div className="row">
 
                         <div className="col-md-6 sm-center pd-sm-3">
