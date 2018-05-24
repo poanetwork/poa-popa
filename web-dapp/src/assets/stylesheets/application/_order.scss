@@ -42,3 +42,7 @@
 	border: solid 1px lighten($placeholder, 15%);
 	z-index: 99;
 }
+.info:hover .hidden-info {
+  display: block;
+  transition: opacity 1s;
+}
