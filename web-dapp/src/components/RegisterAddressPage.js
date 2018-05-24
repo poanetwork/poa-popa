@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import * as log from 'loglevel';
 
@@ -510,12 +509,10 @@ class RegisterAddressPage extends React.Component {
                                 <p className="help-block">At the present moment address verification is available only in the United States.</p>
                             </div>
                         </div>
-                        <Link to="/">
-                            <button className="primary-btn mt-3">
-                                Back
-                                <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
-                            </button>
-                        </Link>
+                        <a href="/" className="primary-btn mt-3">
+                            Back
+                            <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                        </a>
                         <button id="sendMessageButton" type="button" className="action-btn mt-3" onClick={this.order_clicked}>
                             Order
                             <img className="btn-arrow" src={require('../assets/images/arrow.svg')} alt="arrow" />

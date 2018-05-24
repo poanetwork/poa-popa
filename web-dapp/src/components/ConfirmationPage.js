@@ -308,11 +308,11 @@ class ConfirmationPage extends React.Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="enter-c-title">Enter your POA Network Proof of Physical Address confirmation code here:</div>
-                                    <form id="postcard-form" className="form-order" name="postcardForm" noValidate onSubmit={this.confirm_clicked}>
+                                    <form id="postcard-form" className="postcard-form form-order" name="postcardForm" noValidate onSubmit={this.confirm_clicked}>
                                         <div className="form-group cart-order">
-                                            <input className="form-control" type="text" name="confirmationCodePlain" value={this.state.confirmationCodePlain}
+                                            <input className="postcard-input form-control" type="text" name="confirmationCodePlain" value={this.state.confirmationCodePlain}
                                                    onChange={this.on_change}/>
-                                                <button type="submit" className="enter-btn-img btn btn-primary" id="btnSubmit"></button>
+                                                <button type="submit" className="postcard-button enter-btn-img btn btn-primary" id="btnSubmit"></button>
                                         </div>
                                     </form>
                                     <div className="small-c-copy">Type code from the postcard. Letter case is irrelevant.</div>
@@ -326,12 +326,10 @@ class ConfirmationPage extends React.Component {
                     <h4 className="second-title">Verify your address</h4>
                     <p className="second-text">Enter confirmation code from the postcard you received, sign the transaction and
                         finalize the verification process.</p>
-                    <Link to="/">
-                        <button className="primary-btn mt-3">
-                            Back
-                            <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
-                        </button>
-                    </Link>
+                    <a href="/" className="primary-btn mt-3">
+                        Back
+                        <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                    </a>
                 </div>
                 <Loading show={this.state.loading}/>
             </div>
