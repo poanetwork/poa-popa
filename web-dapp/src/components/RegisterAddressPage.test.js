@@ -29,7 +29,7 @@ describe('<RegisterAddressPage />', () => {
     ]);
 
     it('renders correctly', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
+        const page = mount(<RegisterAddressPage/>);
 
         expect(page.root()).toHaveLength(1);
         expect(page.find('#registerForm')).toHaveLength(1);
@@ -42,38 +42,33 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('calls componentDidMount()', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
+        const page = mount(<RegisterAddressPage/>);
 
         expect(page.root()).toHaveLength(1);
         expect(componentDidMount).toHaveBeenCalled();
     });
 
     it('receive web3 instance as property', () => {
-        const page = shallow(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
-
-        const wrapper = mount(page.get(0)).children()
+        const page = mount(<RegisterAddressPage my_web3={web3}/>);
 
         expect(componentDidMount).toHaveBeenCalled();
-        expect(wrapper.prop('my_web3')).toBe(web3);
+        expect(page.prop('my_web3')).toBe(web3);
     });
 
     it('receive contract as property', () => {
-        const page = shallow(<BrowserRouter><RegisterAddressPage contract={contract}/></BrowserRouter>);
-
-        const wrapper = mount(page.get(0)).children()
+        const page = mount(<RegisterAddressPage contract={contract}/>);
 
         expect(componentDidMount).toHaveBeenCalled();
-        expect(wrapper.prop('contract')).toBe(contract);
+        expect(page.prop('contract')).toBe(contract);
     });
 
     it('handles form changes', () => {
-        const page = shallow(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
-        const wrapper = mount(page.get(0)).children()
+        const page = mount(<RegisterAddressPage/>);
 
         for (const field of fields) {
             const value = sample.get(field);
 
-            const input = wrapper.find(`[name="${field}"]`);
+            const input = page.find(`[name="${field}"]`);
             expect(input).toHaveLength(1);
 
             input.simulate('change', { target: { name: field, value } });
@@ -83,9 +78,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays an alert message if MetaMask isn\'t unlocked', () => {
-        const page = shallow(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
-        const wrapper = mount(page.get(0)).children();
-        const orderButton = wrapper.find('#sendMessageButton');
+        const page = shallow(<RegisterAddressPage/>);
+        const orderButton = page.find('#sendMessageButton');
 
         orderButton.simulate('click');
 
@@ -99,9 +93,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('should displays alert messages if there is empty fields', () => {
-        const page = shallow(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
-        const wrapper = mount(page.get(0)).children();
-        const orderButton = wrapper.find('#sendMessageButton');
+        const page = mount(<RegisterAddressPage/>);
+        const orderButton = page.find('#sendMessageButton');
 
         page.setProps({ my_web3: web3 });
 
@@ -127,8 +120,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received an error response', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
-        const orderButton = page.find('.button_order');
+        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -149,8 +142,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received an empty response from server', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
-        const orderButton = page.find('.button_order');
+        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -169,8 +162,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received a not valid response', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
-        const orderButton = page.find('.button_order');
+        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -189,8 +182,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received a response without result', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
-        const orderButton = page.find('.button_order');
+        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -209,8 +202,8 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if user not exists', () => {
-        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3} contract={contract}/></BrowserRouter>);
-        const orderButton = page.find('.button_order');
+        const page = mount(<RegisterAddressPage my_web3={web3} contract={contract}/>);
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -257,7 +250,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -309,7 +302,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -361,7 +354,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -426,7 +419,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -494,7 +487,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -562,7 +555,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -632,7 +625,7 @@ describe('<RegisterAddressPage />', () => {
             />
         );
 
-        const orderButton = page.find('.button_order');
+        const orderButton = page.find('#sendMessageButton');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
