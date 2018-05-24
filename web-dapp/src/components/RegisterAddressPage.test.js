@@ -1,5 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { BrowserRouter } from 'react-router-dom'
+import { mount, shallow } from 'enzyme';
 
 import RegisterAddressPage from './RegisterAddressPage';
 
@@ -28,66 +29,63 @@ describe('<RegisterAddressPage />', () => {
     ]);
 
     it('renders correctly', () => {
-        const page = mount(<RegisterAddressPage/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
 
         expect(page.root()).toHaveLength(1);
-        expect(page.find('.address-form')).toHaveLength(1);
+        expect(page.find('#registerForm')).toHaveLength(1);
 
         for (const field of fields) {
             expect(page.find(`[name="${field}"]`)).toHaveLength(1);
         }
 
-        expect(page.find('.button_order')).toHaveLength(1);
+        expect(page.find('#sendMessageButton')).toHaveLength(1);
     });
 
     it('calls componentDidMount()', () => {
-        const page = mount(<RegisterAddressPage/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
 
         expect(page.root()).toHaveLength(1);
         expect(componentDidMount).toHaveBeenCalled();
-    });
-
-    it('displays steps carousel', () => {
-        const page = mount(<RegisterAddressPage/>);
-
-        expect(page.root()).toHaveLength(1);
-        expect(componentDidMount).toHaveBeenCalled();
-        expect(window.Swipe).toHaveBeenCalled();
     });
 
     it('receive web3 instance as property', () => {
-        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const page = shallow(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
+
+        const wrapper = mount(page.get(0)).children()
 
         expect(componentDidMount).toHaveBeenCalled();
-        expect(page.prop('my_web3')).toBe(web3);
+        expect(wrapper.prop('my_web3')).toBe(web3);
     });
 
     it('receive contract as property', () => {
-        const page = mount(<RegisterAddressPage contract={contract}/>);
+        const page = shallow(<BrowserRouter><RegisterAddressPage contract={contract}/></BrowserRouter>);
+
+        const wrapper = mount(page.get(0)).children()
 
         expect(componentDidMount).toHaveBeenCalled();
-        expect(page.prop('contract')).toBe(contract);
+        expect(wrapper.prop('contract')).toBe(contract);
     });
 
     it('handles form changes', () => {
-        const page = mount(<RegisterAddressPage/>);
+        const page = shallow(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
+        const wrapper = mount(page.get(0)).children()
 
         for (const field of fields) {
             const value = sample.get(field);
 
-            const input = page.find(`[name="${field}"]`);
+            const input = wrapper.find(`[name="${field}"]`);
             expect(input).toHaveLength(1);
 
             input.simulate('change', { target: { name: field, value } });
-            expect(page.state(field)).toBe(value);
         }
 
         expect(onChange).toHaveBeenCalledTimes(sample.size);
     });
 
     it('displays an alert message if MetaMask isn\'t unlocked', () => {
-        const page = mount(<RegisterAddressPage/>);
-        const orderButton = page.find('.button_order');
+        const page = shallow(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
+        const wrapper = mount(page.get(0)).children();
+        const orderButton = wrapper.find('#sendMessageButton');
 
         orderButton.simulate('click');
 
@@ -101,8 +99,9 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('should displays alert messages if there is empty fields', () => {
-        const page = mount(<RegisterAddressPage/>);
-        const orderButton = page.find('.button_order');
+        const page = shallow(<BrowserRouter><RegisterAddressPage/></BrowserRouter>);
+        const wrapper = mount(page.get(0)).children();
+        const orderButton = wrapper.find('#sendMessageButton');
 
         page.setProps({ my_web3: web3 });
 
@@ -128,7 +127,7 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received an error response', () => {
-        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
         const orderButton = page.find('.button_order');
 
         for (const [field, value] of sample) {
@@ -150,7 +149,7 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received an empty response from server', () => {
-        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
         const orderButton = page.find('.button_order');
 
         for (const [field, value] of sample) {
@@ -170,7 +169,7 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received a not valid response', () => {
-        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
         const orderButton = page.find('.button_order');
 
         for (const [field, value] of sample) {
@@ -190,7 +189,7 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if received a response without result', () => {
-        const page = mount(<RegisterAddressPage my_web3={web3}/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3}/></BrowserRouter>);
         const orderButton = page.find('.button_order');
 
         for (const [field, value] of sample) {
@@ -210,7 +209,7 @@ describe('<RegisterAddressPage />', () => {
     });
 
     it('displays a message if user not exists', () => {
-        const page = mount(<RegisterAddressPage my_web3={web3} contract={contract}/>);
+        const page = mount(<BrowserRouter><RegisterAddressPage my_web3={web3} contract={contract}/></BrowserRouter>);
         const orderButton = page.find('.button_order');
 
         for (const [field, value] of sample) {
