@@ -145,7 +145,7 @@ input {
 .btn-arrow {
   position: absolute;
   right: 15px;
-  top: 10px; }
+  top: 7px; }
 
 .primary-btn {
   display: inline-block;
@@ -253,6 +253,7 @@ input {
   position: relative;
   display: inline-block;
   margin-left: 5px;
+  margin-top: -3px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -277,6 +278,10 @@ input {
   background: white;
   border: solid 1px #dadada;
   z-index: 99; }
+
+.info:hover .hidden-info {
+  display: block;
+  transition: opacity 1s; }
 
 .block-card {
   width: 500px; }
@@ -354,7 +359,7 @@ input {
   position: absolute;
   padding: 10px;
   width: 45px;
-  height: 44px;
+  height: 42px;
   margin: 0;
   top: 0;
   right: 0;

@@ -595,6 +595,94 @@ contract('address removal', function(accounts) {
             assert.equal(+addressesCount, 1);
         });
     });
+
+    contract('', () => {
+        it('should decrement totalAddresses value', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            let totalAddresses = await popa.totalAddresses();
+            assert.equal(+totalAddresses, 1);
+
+            await unregisterAddress(popa, args, accounts[0]);
+
+            totalAddresses = await popa.totalAddresses();
+            assert.equal(+totalAddresses, 0);
+        });
+    });
+
+    contract('', () => {
+        it('should decrement totalConfirmed value if address was confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            let totalConfirmed = await popa.totalConfirmed();
+            assert.equal(+totalConfirmed, 1);
+
+            await unregisterAddress(popa, args, accounts[0]);
+
+            totalConfirmed = await popa.totalConfirmed();
+            assert.equal(+totalConfirmed, 0);
+        });
+    });
+
+    contract('', () => {
+        it('should not decrement totalConfirmed value if address was not confirmed', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            let totalConfirmed = await popa.totalConfirmed();
+            assert.equal(+totalConfirmed, 0);
+
+            await unregisterAddress(popa, args, accounts[0]);
+
+            totalConfirmed = await popa.totalConfirmed();
+            assert.equal(+totalConfirmed, 0);
+        });
+    });
+
+    contract('', () => {
+        it('should decrement totalUsers value if the unregistered address was the only one for that user', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            let totalUsers = await popa.totalUsers();
+            assert.equal(+totalUsers, 1);
+
+            await unregisterAddress(popa, args, accounts[0]);
+
+            totalUsers = await popa.totalUsers();
+            assert.equal(+totalUsers, 0);
+        });
+    });
+
+    contract('', () => {
+        it('should not decrement totalUsers value if the unregistered address was not the only one for that user', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0]);
+            const args2 = buildRegisterAddressArgs(accounts[0], { address: '742 evergreen terrace' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+
+            let totalUsers = await popa.totalUsers();
+            assert.equal(+totalUsers, 1);
+
+            await unregisterAddress(popa, args1, accounts[0]);
+
+            totalUsers = await popa.totalUsers();
+            assert.equal(+totalUsers, 1);
+        });
+    });
 });
 
 contract('address confirmation', function(accounts) {
@@ -1052,6 +1140,26 @@ contract('helpers', function(accounts) {
     });
 
     contract('', () => {
+        it('userAddressConfirmed should fail if the index is out of bounds', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            let isConfirmed = await popa.userAddressConfirmed(accounts[0], 0);
+            assert.isFalse(isConfirmed);
+
+            await confirmAddress(popa, args.cc, accounts[0]);
+
+            await popa.userAddressConfirmed(accounts[0], 1)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
         it('userAddressConfirmed should return true after an address is confirmed', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args = buildRegisterAddressArgs(accounts[0]);
@@ -1488,6 +1596,21 @@ contract('helpers', function(accounts) {
     });
 
     contract('', () => {
+        it('userAddress must fail if the index is out of bounds', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            await popa.userAddress(accounts[0], 1)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
         it('userAddress must return the address data for the given index', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args = buildRegisterAddressArgs(accounts[0]);
@@ -1510,6 +1633,21 @@ contract('helpers', function(accounts) {
             const popa = await ProofOfPhysicalAddress.deployed();
 
             await popa.userAddressInfo(accounts[0], 0)
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
+        it('userAddressInfo must fail if the index is out of bounds', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args = buildRegisterAddressArgs(accounts[0]);
+
+            await registerAddress(popa, args, accounts[0]);
+
+            await popa.userAddressInfo(accounts[0], 1)
                 .then(
                     () => assert.fail(), // should reject
                     () => {}

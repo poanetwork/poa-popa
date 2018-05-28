@@ -66,6 +66,11 @@ contract ProofOfPhysicalAddress {
         _;
     }
 
+    modifier validIndex(address wallet, uint256 addressIndex) {
+        require(addressIndex < users[wallet].physicalAddresses.length);
+        _;
+    }
+
     // Helpers:
     function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
     public constant returns (bool)
@@ -111,7 +116,7 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddressConfirmed(address wallet, uint256 addressIndex)
-    public constant checkUserExists(wallet) returns (bool)
+    public constant checkUserExists(wallet) validIndex(wallet, addressIndex) returns (bool)
     {
         bytes32 keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
@@ -218,7 +223,7 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddress(address wallet, uint256 addressIndex)
-    public constant checkUserExists(wallet) returns (
+    public constant checkUserExists(wallet) validIndex(wallet, addressIndex) returns (
         string country, string state, string city, string location, string zip)
     {
         return (
@@ -231,22 +236,25 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddressInfo(address wallet, uint256 addressIndex)
-    public constant checkUserExists(wallet) returns (
+    public constant checkUserExists(wallet) validIndex(wallet, addressIndex) returns (
         string name,
         uint256 creationBlock,
         uint256 confirmationBlock,
         bytes32 keccakIdentifier
     ) {
+        bytes32 _keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
+
         uint256 _confirmationBlock = PhysicalAddressClaim.decodeConfirmation(registry.getClaim(
             address(this),
             wallet,
-            users[wallet].physicalAddresses[addressIndex].keccakIdentifier)
+            _keccakIdentifier)
         );
+
         return (
             users[wallet].physicalAddresses[addressIndex].name,
             users[wallet].physicalAddresses[addressIndex].creationBlock,
             _confirmationBlock,
-            users[wallet].physicalAddresses[addressIndex].keccakIdentifier
+            _keccakIdentifier
         );
     }
 
@@ -265,6 +273,7 @@ contract ProofOfPhysicalAddress {
         require(bytes(location).length > 0);
         require(bytes(zip).length > 0);
         require(msg.value >= priceWei);
+        require(users[msg.sender].physicalAddresses.length < 2**256-1);
 
         bytes32 data = keccak256(
             msg.sender,
@@ -315,7 +324,8 @@ contract ProofOfPhysicalAddress {
     {
         bool found;
         uint256 index;
-        (found, index, ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
+        bool confirmed;
+        (found, index, confirmed) = userAddressByAddress(msg.sender, country, state, city, location, zip);
         require(found);
 
         bytes32 keccakIdentifier = users[msg.sender].physicalAddresses[index].keccakIdentifier;
@@ -337,6 +347,12 @@ contract ProofOfPhysicalAddress {
 
         if (users[msg.sender].physicalAddresses.length == 0) {
             delete users[msg.sender];
+            totalUsers--;
+        }
+
+        totalAddresses--;
+        if (confirmed) {
+            totalConfirmed--;
         }
 
         LogAddressUnregistered(msg.sender, keccakIdentifier);
