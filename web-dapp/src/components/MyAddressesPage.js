@@ -165,7 +165,7 @@ class ConfirmationPage extends React.Component {
                 <Link to="/">
                     <button className="primary-btn mt-3">
                         Back
-                        <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                        <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
                     </button>
                 </Link>
             </div>

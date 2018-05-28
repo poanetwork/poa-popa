@@ -328,7 +328,7 @@ class ConfirmationPage extends React.Component {
                         finalize the verification process.</p>
                     <a href="/" className="primary-btn mt-3">
                         Back
-                        <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                        <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
                     </a>
                 </div>
                 <Loading show={this.state.loading}/>

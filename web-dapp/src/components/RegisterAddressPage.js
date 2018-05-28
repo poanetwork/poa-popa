@@ -511,7 +511,7 @@ class RegisterAddressPage extends React.Component {
                         </div>
                         <a href="/" className="primary-btn mt-3">
                             Back
-                            <img className="btn-arrow" src={require('../assets/images/back.svg')} alt="arrow" />
+                            <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
                         </a>
                         <button id="sendMessageButton" type="button" className="action-btn mt-3" onClick={this.order_clicked}>
                             Order

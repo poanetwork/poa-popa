@@ -120,7 +120,11 @@ input{
 .btn-arrow{
   position: absolute;
   right: 15px;
-  top: 7px;
+  top: 10px;
+
+  &.btn-back {
+    top: 7px;
+  }
 }
 .primary-btn{
   display: inline-block;
