@@ -10,10 +10,12 @@ class IndexPage extends React.Component {
                     <p className="main-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                         exercitation ullamco laboris.</p>
-                    <button className="primary-btn mt-3">
-                        How it works
-                        <img className="btn-arrow" src={require('../assets/images/how-it-works.svg')} alt="how-it-works" />
-                    </button>
+                    <Link to="/help">
+                        <button className="primary-btn mt-3">
+                            How it works
+                            <img className="btn-arrow" src={require('../assets/images/how-it-works.svg')} alt="how-it-works" />
+                        </button>
+                    </Link>
                     <Link to="/register">
                         <button className="action-btn mt-3">
                             Continue
