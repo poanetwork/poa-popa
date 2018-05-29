@@ -22,10 +22,12 @@
       text-decoration: none;
     }
 
-    #banner {
+    #banner-front {
       position: absolute;
-      right: 0.5in;
-      top: 0.5075in;
+      padding: 0.4in;
+    }
+    #banner-front img{
+      width: 100%;
     }
 
     /* do not put text outside of the safe area */
@@ -37,18 +39,19 @@
       top: 0.1875in;
     }
 
-    #message {
+    #message-front {
       position: absolute;
       width: 2.2in;
-      height: 2in;
-      top: 0.8in;
-      left: 0.5in;
+      height: 0.7in;
+      top: 2.3875in;
+      left: 2.70in;
     }
 
-    .main-text{
-      font-family: 'Nunito', sans-serif;
-      font-weight: normal;
-      font-size: .162in;
+    .front-text{
+      font-size: 0.155in;
+      line-height: 1.41;
+      color: #5b32a2;
+      text-transform: uppercase;
     }
 
     .bottom-text{
@@ -86,29 +89,15 @@
 </head>
 <body>
 <div id="safe-area">
-  <div id="banner">
-    <img src="https://image.ibb.co/cxHKao/card_2.png" alt="card_2" border="0">
+  <div id="banner-front">
+    <img src="https://preview.ibb.co/jevjao/3997_A98_DF8_EA78598_BBB517_C7_BFF3001911_F0904_AB25149_FCC_pimgpsh_fullsize_distr.png" >
   </div>
-  <div id="message">
-      <span class="main-text">
-        Your POA Network Proof of <br>
-        Physical Address confirmation <br>
-        code:
+  <div id="message-front">
+      <span class="front-text">
+        {{name}}<br>
+        {{address}}<br>
+        {{city}}, {{state}} {{zip}}<br>
       </span>
-    <br><br>
-    <div id="code-banner">
-      <div id="code">
-        {{code}}
-      </div>
-    </div>
-    <br>
-    <span class="bottom-text">
-        Open <a id="accent" href="{{confirmationPageUrl}}">{{confirmationPageUrl}}</a><br />
-        in your browser and enter<br />
-        confirmation code above<br />
-        ( case insensitive )
-      </span>
-    <br><br>
   </div>
 </div>
 </body>
