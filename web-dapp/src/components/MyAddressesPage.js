@@ -133,8 +133,9 @@ class ConfirmationPage extends React.Component {
     render() {
         return (
             <div className="col-md-12 my-addresses">
+                <div className="content">
                 {this.state.addresses.length !== 0 ? (
-                    <div className="content mb-4">
+                    <div className="mb-4">
                         { this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
                                 <div className="card-item d-flex wait-to-verify mt-3 p-3 address" key={index}>
                                     <img className={confirmed ? 'image-verify d-flex done' : 'image-no-verify d-flex clock'} src={require('../assets/images/card-item/clock.png')}
@@ -158,16 +159,15 @@ class ConfirmationPage extends React.Component {
                     </div>
                 ) : null}
                 {this.state.addresses.length === 0 ? (
-                    <div className="content mb-4">
+                    <div className="mb-4">
                         <p>There are no addresses registered for account <b>{this.state.wallet}</b></p>
                     </div>
                 ) : null}
-                <Link to="/">
-                    <button className="primary-btn mt-3">
+                    <a href="/" className="primary-btn mt-3">
                         Back
                         <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
-                    </button>
-                </Link>
+                    </a>
+                </div>
             </div>
         );
     }

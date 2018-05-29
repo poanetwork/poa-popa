@@ -7,11 +7,11 @@ import Footer from './Footer';
 import RegisterAddressPage from './RegisterAddressPage';
 import ConfirmationPage from './ConfirmationPage';
 import MyAddressesPage from './MyAddressesPage';
+import IndexPage from "./IndexPage";
 import HelpPage from "./HelpPage";
 
 import '../assets/javascripts/init-my-web3.js';
 import '../assets/javascripts/show-alert.js';
-import IndexPage from "./IndexPage";
 
 const WEB3_CHECKER_INTERV_MS = 500;
 const GOOGLE_CHROME_URL = 'https://www.google.com/chrome/browser';

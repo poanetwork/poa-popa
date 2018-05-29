@@ -449,6 +449,7 @@ class RegisterAddressPage extends React.Component {
         return (
             <div className="col-md-12">
                 <div className="content">
+                    <h1 className="main-title">Register your Physical Address</h1>
                     <form id="registerForm">
                         <div className="form-group">
                             <label>Name</label>
