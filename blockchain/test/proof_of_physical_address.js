@@ -552,6 +552,89 @@ contract('address removal', function(accounts) {
     });
 
     contract('', () => {
+        it('should allow to unregister an address (1 of 3)', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { address: '742 evergreen terrace' });
+            const args2 = buildRegisterAddressArgs(accounts[0], { address: '743 evergreen terrace' });
+            const args3 = buildRegisterAddressArgs(accounts[0], { address: '744 evergreen terrace' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            await registerAddress(popa, args3, accounts[0]);
+
+            let addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+addressesCount, 3);
+
+            await unregisterAddress(popa, args1, accounts[0]);
+
+            addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+addressesCount, 2);
+
+            const [, , , location1] = await popa.userAddress(accounts[0], 0);
+            const [, , , location2] = await popa.userAddress(accounts[0], 1);
+            assert.equal(location1, '744 evergreen terrace');
+            assert.equal(location2, '743 evergreen terrace');
+        });
+    });
+
+    contract('', () => {
+        it('should allow to unregister an address (2 of 3)', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { address: '742 evergreen terrace' });
+            const args2 = buildRegisterAddressArgs(accounts[0], { address: '743 evergreen terrace' });
+            const args3 = buildRegisterAddressArgs(accounts[0], { address: '744 evergreen terrace' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            await registerAddress(popa, args3, accounts[0]);
+
+            let addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+addressesCount, 3);
+
+            await unregisterAddress(popa, args2, accounts[0]);
+
+            addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+addressesCount, 2);
+
+            const [, , , location1] = await popa.userAddress(accounts[0], 0);
+            const [, , , location2] = await popa.userAddress(accounts[0], 1);
+            assert.equal(location1, '742 evergreen terrace');
+            assert.equal(location2, '744 evergreen terrace');
+        });
+    });
+
+    contract('', () => {
+        it('should allow to unregister an address (3 of 3)', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+            const args1 = buildRegisterAddressArgs(accounts[0], { address: '742 evergreen terrace' });
+            const args2 = buildRegisterAddressArgs(accounts[0], { address: '743 evergreen terrace' });
+            const args3 = buildRegisterAddressArgs(accounts[0], { address: '744 evergreen terrace' });
+
+            await registerAddress(popa, args1, accounts[0]);
+            await registerAddress(popa, args2, accounts[0]);
+            await registerAddress(popa, args3, accounts[0]);
+
+            let addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+addressesCount, 3);
+
+            await unregisterAddress(popa, args3, accounts[0]);
+
+            addressesCount = await popa.userSubmittedAddressesCount(accounts[0]);
+            assert.equal(+addressesCount, 2);
+
+            const [, , , location1] = await popa.userAddress(accounts[0], 0);
+            const [, , , location2] = await popa.userAddress(accounts[0], 1);
+            assert.equal(location1, '742 evergreen terrace');
+            assert.equal(location2, '743 evergreen terrace');
+        });
+    });
+
+
+
+
+
+
+    contract('', () => {
         it('should not delete the user if the unregistered address was not their last one', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args1 = buildRegisterAddressArgs(accounts[0]);
