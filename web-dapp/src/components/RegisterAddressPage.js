@@ -462,9 +462,9 @@ class RegisterAddressPage extends React.Component {
                         <div className="form-group">
                             <label>Address</label>
                             <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
-                                <div className="hidden-info">Enter your full address</div>
+                                <div className="hidden-info">Enter your full street address</div>
                             </div>
-                            <input type="text" className="form-control" placeholder="Enter your full address" name="address" value={this.state.address}
+                            <input type="text" className="form-control" placeholder="Enter your full street address" name="address" value={this.state.address}
                                    onChange={this.on_change} />
                         </div>
                         <div className="form-group row">
