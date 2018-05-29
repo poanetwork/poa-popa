@@ -124,7 +124,13 @@ contract ProofOfPhysicalAddress {
             return false;
         }
 
-        return PhysicalAddressClaim.decodeConfirmation(registry.getClaim(address(this), wallet, keccakIdentifier)) > 0;
+        bytes32 claim = registry.getClaim(address(this), wallet, keccakIdentifier);
+
+        if (claim == 0) {
+            return false;
+        }
+
+        return PhysicalAddressClaim.decodeConfirmation(claim) > 0;
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
