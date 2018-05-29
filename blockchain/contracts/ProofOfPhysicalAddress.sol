@@ -120,9 +120,7 @@ contract ProofOfPhysicalAddress {
     {
         bytes32 keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
-        if (keccakIdentifier == 0x0) {
-            return false;
-        }
+        assert(keccakIdentifier != 0x0);
 
         return PhysicalAddressClaim.decodeConfirmation(registry.getClaim(address(this), wallet, keccakIdentifier)) > 0;
     }
