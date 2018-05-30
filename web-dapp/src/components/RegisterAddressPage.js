@@ -460,7 +460,7 @@ class RegisterAddressPage extends React.Component {
                                    onChange={this.on_change} />
                         </div>
                         <div className="form-group">
-                            <label>Address</label>
+                            <label>Street Address</label>
                             <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
                                 <div className="hidden-info">Enter your full street address</div>
                             </div>
