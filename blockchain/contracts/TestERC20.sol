@@ -13,11 +13,11 @@ contract TestERC20 is ERC20 {
         balances[msg.sender] = _totalSupply;
     }
 
-    function totalSupply() public constant returns (uint256) {
+    function totalSupply() public view returns (uint256) {
         return _totalSupply;
     }
 
-    function balanceOf(address tokenOwner) public constant returns (uint256) {
+    function balanceOf(address tokenOwner) public view returns (uint256) {
         return balances[tokenOwner];
     }
 
@@ -29,7 +29,7 @@ contract TestERC20 is ERC20 {
 
     // not implemented
     // the bodies are just to avoid compiler warnings
-    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
+    function allowance(address tokenOwner, address spender) public view returns (uint remaining) {
         tokenOwner; spender;
         return 0;
     }
