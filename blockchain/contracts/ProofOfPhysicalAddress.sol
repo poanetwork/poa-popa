@@ -342,7 +342,9 @@ contract ProofOfPhysicalAddress {
         // Remove physical address from list
         uint256 length = users[msg.sender].physicalAddresses.length;
 
-        users[msg.sender].physicalAddresses[index] = users[msg.sender].physicalAddresses[length - 1];
+        if (length > 1) {
+            users[msg.sender].physicalAddresses[index] = users[msg.sender].physicalAddresses[length - 1];
+        }
         users[msg.sender].physicalAddresses.length--;
 
         if (users[msg.sender].physicalAddresses.length == 0) {
