@@ -6,9 +6,6 @@ class HelpPage extends React.Component {
             <div className="content">
                 <div className="col-md-12">
                     <h1 className="main-title">How it works?</h1>
-                    <p className="main-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris.</p>
                     <div className="how-to swipe" id="slider">
                         <div className="swipe-wrap">
                             <div className="how-to-i how-to-i_fill-form">
