@@ -21,8 +21,8 @@ module.exports = function(deployer, network) {
             await deployer.deploy(TestERC20);
         }
 
-        await deployer.deploy(POPA, ethereumClaimsRegistryAddress, {
-            gas: '6000000',
-        });
+        const gas = network === 'coverage' ? '0xfffffffffff' : '6000000';
+
+        await deployer.deploy(POPA, ethereumClaimsRegistryAddress, { gas });
     });
 };
