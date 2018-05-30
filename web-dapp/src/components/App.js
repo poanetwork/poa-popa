@@ -7,6 +7,8 @@ import Footer from './Footer';
 import RegisterAddressPage from './RegisterAddressPage';
 import ConfirmationPage from './ConfirmationPage';
 import MyAddressesPage from './MyAddressesPage';
+import IndexPage from "./IndexPage";
+import HelpPage from "./HelpPage";
 
 import '../assets/javascripts/init-my-web3.js';
 import '../assets/javascripts/show-alert.js';
@@ -116,59 +118,94 @@ class App extends Component {
         if (this.state.my_web3 && this.state.contract) {
             return (
                 <BrowserRouter>
-                    <div>
-                        <Header/>
-                        <Route exact path="/" component={() => <RegisterAddressPage my_web3={this.state.my_web3}
-                                                                                    contract={this.state.contract}/>}/>
-                        <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3}
-                                                                                  contract={this.state.contract}/>}/>
-                        <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
-                                                                                  contract={this.state.contract}/>}/>
-                        <Footer/>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="sidebar d-sm-none d-md-block">
+                                <div className="image"></div>
+                            </div>
+                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
+                                <div className="row">
+                                    <Header/>
+                                    <Route exact path="/" component={() => <IndexPage />}/>
+                                    <Route exact path="/help" component={() => <HelpPage />}/>
+                                    <Route path="/register" component={() => <RegisterAddressPage my_web3={this.state.my_web3}
+                                                                                                contract={this.state.contract}/>}/>
+                                    <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3}
+                                                                                              contract={this.state.contract}/>}/>
+                                    <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
+                                                                                              contract={this.state.contract}/>}/>
+                                    <Footer/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </BrowserRouter>
             );
         }
         else if (this.state.my_web3 && !this.state.contract) {
             window.show_alert('error', 'Contract not deployed', 'PoPA contract is not deployed on this network');
-
             return (
                 <BrowserRouter>
-                    <div>
-                        <Header/>
-                        <div className="page container">
-                            <h2>Contract is not deployed</h2>
-                            PoPA contract is not deployed on this network, please switch network in metamask<br/>
-                            <br/>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="sidebar d-sm-none d-md-block">
+                                <div className="image"></div>
+                            </div>
+                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="content-preloader d-flex">
+                                            <div className="wrap-mask">
+                                                <div className="mask-img">
+                                                    <img src={require('../assets/images/warning.svg')} alt="companyName" />
+                                                </div>
+                                                <div className="title-mask">
+                                                    Contract is not deployed
+                                                </div>
+                                                <div className="text-mask">
+                                                    PoPA contract is not deployed on this network, please switch network in metamask
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <Footer/>
                     </div>
                 </BrowserRouter>
             );
         }
         else if (this.state.web3CheckerDur > 1000) {
-            const googleChromeLink = (
-                <a href={GOOGLE_CHROME_URL} target="_blank" rel="noopener noreferrer">
-                    the latest version of Google Chrome
-                </a>
-            );
-
-            const metaMaskLink = (
-                <a href={META_MASK_URL} target="_blank" rel="noopener noreferrer">this link</a>
-            );
-
             return (
                 <BrowserRouter>
-                    <div>
-                        <Header/>
-                        <div className="page container">
-                            <h2>No MetaMask found!</h2>
-                            This application requires MetaMask extension for Google Chrome.<br/>
-                            <br/>
-                            Please make sure you are running {googleChromeLink}<br/>
-                            and follow {metaMaskLink} to install MetaMask.
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="sidebar d-sm-none d-md-block">
+                                <div className="image"></div>
+                            </div>
+                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="content-preloader d-flex">
+                                            <div className="wrap-mask">
+                                                <div className="mask-img">
+                                                    <img src={require('../assets/images/warning.svg')} alt="companyName" />
+                                                </div>
+                                                <div className="title-mask">
+                                                    No MetaMask found
+                                                </div>
+                                                <div className="text-mask">
+                                                    This application requires MetaMask extension for Google Chrome.
+                                                    Please make sure you are running the <a href={GOOGLE_CHROME_URL} target="_blank" rel="noopener noreferrer">latest version of
+                                                    Google Chrome</a> and follow this <a href={META_MASK_URL} target="_blank" rel="noopener noreferrer">link</a> to install
+                                                    MetaMask.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <Footer/>
                     </div>
                 </BrowserRouter>
             );
@@ -176,12 +213,23 @@ class App extends Component {
         else {
             return (
                 <BrowserRouter>
-                    <div>
-                        <Header/>
-                        <div className="page container">
-                            <h2>Loading, please wait</h2>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="sidebar d-sm-none d-md-none d-md-block">
+                                <div className="image"></div>
+                            </div>
+                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="content-preloader d-flex">
+                                            <div className="l-preload">
+                                                <img src={require('../assets/images/logo/logo-top-2.svg')} alt="companyName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <Footer/>
                     </div>
                 </BrowserRouter>
             );
