@@ -27,6 +27,11 @@ To verify the address server sends a postcard (via post office) with confirmatio
 A more detailed schematic view of the process:
 ![popa-scheme](https://raw.githubusercontent.com/poanetwork/wiki/master/assets/imgs/poa/papers/whitepaper/proof-of-address.png)
 
+## Audit report
+You can read the audit report from [BlockchainLabsNZ/audit](https://github.com/BlockchainLabsNZ/poa-popa/tree/blockchainlabs/audit/blockchain/audit)
+
+Also, you can download the audit report pdf from: [Audit Report PDF](https://github.com/poanetwork/poa-popa/blob/master/blockchain/audit/poa-popa-audit-report.pdf)
+
 ## How to test the current version locally
 1. Clone this repository:
 

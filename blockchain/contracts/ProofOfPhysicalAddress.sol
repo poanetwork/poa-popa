@@ -120,9 +120,7 @@ contract ProofOfPhysicalAddress {
     {
         bytes32 keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
-        if (keccakIdentifier == 0x0) {
-            return false;
-        }
+        assert(keccakIdentifier != 0x0);
 
         bytes32 claim = registry.getClaim(address(this), wallet, keccakIdentifier);
 
