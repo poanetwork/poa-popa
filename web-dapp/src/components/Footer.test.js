@@ -9,8 +9,7 @@ describe('<Footer />', () => {
 
         expect(wrapper.find('.footer')).toHaveLength(1);
         expect(wrapper.find('.footer .container')).toHaveLength(1);
-        expect(wrapper.find('.footer .container .rights')).toHaveLength(1);
-        expect(wrapper.find('.footer .container .logo')).toHaveLength(1);
-        expect(wrapper.find('.footer .container .socials')).toHaveLength(1);
+        expect(wrapper.find('.footer .container .bottom-copy')).toHaveLength(1);
+        expect(wrapper.find('.footer .container .footer-social')).toHaveLength(4);
     });
 });

@@ -6,7 +6,7 @@ import FakeProvider from 'web3-fake-provider';
 import App from './App';
 import Header from './Header';
 import Footer from './Footer';
-import RegisterAddressPage from './RegisterAddressPage';
+import IndexPage from './IndexPage'
 import ConfirmationPage from './ConfirmationPage';
 
 const web3 = new Web3(new FakeProvider());
@@ -26,6 +26,9 @@ describe('<App/>', () => {
     it('renders without crashing', () => {
         const wrapper = mount(<App/>);
 
+        jest.runTimersToTime(600);
+        wrapper.setState({ web3Checker: true, my_web3: web3, contract });
+
         expect(wrapper.find(Header)).toHaveLength(1);
         expect(wrapper.find(Footer)).toHaveLength(1);
     });
@@ -41,19 +44,16 @@ describe('<App/>', () => {
     it('displays loading message', () => {
         const wrapper = mount(<App/>);
 
-        expect(wrapper.find('h2').text()).toEqual('Loading, please wait');
+        expect(wrapper.find('.l-preload')).toHaveLength(1);
     });
 
     it('provides download information if no MetaMask found', () => {
         const wrapper = mount(<App/>);
 
-        wrapper.setState({ my_web3: null, web3CheckerDur: 500 });
-        expect(wrapper.find('h2').text()).toEqual('Loading, please wait');
-
         jest.runTimersToTime(999);
 
         wrapper.setState({ my_web3: null, web3CheckerDur: 1001 });
-        expect(wrapper.find('h2').text()).toEqual('No MetaMask found!');
+        expect(wrapper.find('.title-mask').text()).toEqual('No MetaMask found');
     });
 
     it('detects when contract is not deployed', async () => {
@@ -61,16 +61,16 @@ describe('<App/>', () => {
 
         wrapper.setState({ my_web3: web3, contract: null });
 
-        expect(wrapper.find('h2').text()).toEqual('Contract is not deployed');
+        expect(wrapper.find('.title-mask').text()).toEqual('Contract is not deployed');
     });
 
-    it('renders register address page', async () => {
+    it('renders index page', async () => {
         const wrapper = mount(<App/>);
 
         jest.runTimersToTime(600);
         wrapper.setState({ web3Checker: true, my_web3: web3, contract });
 
-        expect(wrapper.find(RegisterAddressPage)).toHaveLength(1);
+        expect(wrapper.find(IndexPage)).toHaveLength(1);
     });
 
     it('renders confirmation page', async () => {
