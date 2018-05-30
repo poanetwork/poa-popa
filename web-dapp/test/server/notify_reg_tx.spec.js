@@ -11,7 +11,6 @@ jest.mock('../../controllers/notifyRegTx', () => ({
     }),
     normalizeData: jest.fn((opts) => {
         let { wallet } = opts;
-        console.log('🦄 wallet', wallet);
         let sessionKey;
         if (wallet === '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a3') {
             sessionKey = '0.9177204204187007';
@@ -28,7 +27,7 @@ jest.mock('../../controllers/notifyRegTx', () => ({
         if (opts.wallet === '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1' && opts.sessionKey !== '0.8177204204187007') {
             return Promise.reject({ error: 'Error' });
         }
-        return Promise.resolve({ confirmationCodePlain: 'ABC1234DEF' })
+        return Promise.resolve({ confirmationCodePlain: 'ABC1234DEF' });
     }),
     getTxBlockNumber: jest.fn(() => Promise.resolve(10)),
     getAddressByBN: jest.fn(() => Promise.resolve('0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a3')),
