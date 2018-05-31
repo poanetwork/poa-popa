@@ -58,7 +58,7 @@ function create_postcard(wallet, address_details, txId, confirmationCodePlain, d
             address: address_details.location.toUpperCase(),
             city: address_details.city.toUpperCase(),
             state: address_details.state.toUpperCase(),
-            zip: address_details.zip.toUpperCase()
+            zip: address_details.zip.toUpperCase(),
         },
     }, {
         'idempotency-key': new_idempotency_key(),

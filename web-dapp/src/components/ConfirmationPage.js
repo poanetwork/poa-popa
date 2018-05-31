@@ -303,6 +303,9 @@ class ConfirmationPage extends React.Component {
         return (
             <div className="col-md-12">
                 <div className="content">
+                    <h1 className="main-title">Verify your address</h1>
+                    <p className="second-text">Enter confirmation code from the postcard you received, sign the transaction and
+                        finalize the verification process.</p>
                     <div className="block-card">
                         <div className="inner-card">
                             <div className="row">
@@ -323,9 +326,6 @@ class ConfirmationPage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <h4 className="second-title">Verify your address</h4>
-                    <p className="second-text">Enter confirmation code from the postcard you received, sign the transaction and
-                        finalize the verification process.</p>
                     <a href="/" className="primary-btn mt-3">
                         Back
                         <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />

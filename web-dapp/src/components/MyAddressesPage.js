@@ -134,7 +134,8 @@ class ConfirmationPage extends React.Component {
         return (
             <div className="col-md-12 my-addresses">
                 <div className="content">
-                {this.state.addresses.length !== 0 ? (
+                    <h1 className="main-title">Manage your addresses</h1>
+                    {this.state.addresses.length !== 0 ? (
                     <div className="mb-4">
                         { this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
                                 <div className="card-item d-flex wait-to-verify mt-3 p-3 address" key={index}>
