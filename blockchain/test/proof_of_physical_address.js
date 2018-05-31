@@ -1485,6 +1485,18 @@ contract('helpers', function(accounts) {
 
     // userLastSubmittedName
     contract('', () => {
+        it('userLastSubmittedName should fail if user does not exist', async () => {
+            const popa = await ProofOfPhysicalAddress.deployed();
+
+            await popa.userLastSubmittedName(accounts[0])
+                .then(
+                    () => assert.fail(), // should reject
+                    () => {}
+                );
+        });
+    });
+
+    contract('', () => {
         it('userLastSubmittedName should return the last submitted name', async () => {
             const popa = await ProofOfPhysicalAddress.deployed();
             const args = buildRegisterAddressArgs(accounts[0]);
