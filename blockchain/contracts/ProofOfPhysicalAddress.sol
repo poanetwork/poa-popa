@@ -248,16 +248,16 @@ contract ProofOfPhysicalAddress {
     ) {
         bytes32 _keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
-        uint256 _confirmationBlock = PhysicalAddressClaim.decodeConfirmation(registry.getClaim(
+        bytes32 claim = registry.getClaim(
             address(this),
             wallet,
-            _keccakIdentifier)
+            _keccakIdentifier
         );
 
         return (
             users[wallet].physicalAddresses[addressIndex].name,
             users[wallet].physicalAddresses[addressIndex].creationBlock,
-            _confirmationBlock,
+            claim != 0 ? PhysicalAddressClaim.decodeConfirmation(claim) : 0,
             _keccakIdentifier
         );
     }
