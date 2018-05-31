@@ -107,11 +107,6 @@ class RegisterAddressPage extends React.Component {
             }
         });
 
-        window.$('.how-to-navigation-i').on('click', function () {
-            const index = window.$(this).index();
-            window.mySwipe.slide(index);
-        });
-
         const [wallet] = this.props.my_web3 && this.props.my_web3.eth.accounts
             ? this.props.my_web3.eth.accounts
             : [];
@@ -460,7 +455,7 @@ class RegisterAddressPage extends React.Component {
                                    onChange={this.on_change} />
                         </div>
                         <div className="form-group">
-                            <label>Street Address</label>
+                            <label>Street   Address</label>
                             <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
                                 <div className="hidden-info">Enter your full street address</div>
                             </div>

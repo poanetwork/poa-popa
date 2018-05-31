@@ -3,7 +3,7 @@ import React from 'react';
 class HelpPage extends React.Component {
     render () {
         return (
-            <div className="content">
+            <div className="content help-page">
                 <div className="col-md-12">
                     <h1 className="main-title">How it works?</h1>
                     <div className="how-to swipe" id="slider">

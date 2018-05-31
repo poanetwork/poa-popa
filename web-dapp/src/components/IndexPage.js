@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 class IndexPage extends React.Component {
     render () {
         return (
-            <div className="content">
+            <div className="content home-page">
                 <div className="col-md-12">
                     <h1 className="main-title">Proof of Physical Address</h1>
                     <p className="main-text">Complete the form with your information to verify your physical address and remember that you can register as many physical addresses as you want.
