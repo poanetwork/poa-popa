@@ -73,7 +73,7 @@ contract ProofOfPhysicalAddress {
 
     // Helpers:
     function signerIsValid(bytes32 data, uint8 v, bytes32 r, bytes32 s)
-    public constant returns (bool)
+    public view returns (bool)
     {
         bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes32 prefixed = keccak256(prefix, data);
@@ -110,26 +110,30 @@ contract ProofOfPhysicalAddress {
     }
 
     function userExists(address wallet)
-    public constant returns (bool)
+    public view returns (bool)
     {
         return (users[wallet].creationBlock > 0);
     }
 
     function userAddressConfirmed(address wallet, uint256 addressIndex)
-    public constant checkUserExists(wallet) validIndex(wallet, addressIndex) returns (bool)
+    public view checkUserExists(wallet) validIndex(wallet, addressIndex) returns (bool)
     {
         bytes32 keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
-        if (keccakIdentifier == 0x0) {
+        assert(keccakIdentifier != 0x0);
+
+        bytes32 claim = registry.getClaim(address(this), wallet, keccakIdentifier);
+
+        if (claim == 0) {
             return false;
         }
 
-        return PhysicalAddressClaim.decodeConfirmation(registry.getClaim(address(this), wallet, keccakIdentifier)) > 0;
+        return PhysicalAddressClaim.decodeConfirmation(claim) > 0;
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
     function userAddressByCreationBlock(address wallet, uint256 creationBlock)
-    public constant checkUserExists(wallet) returns (bool, uint256, bool)
+    public view checkUserExists(wallet) returns (bool, uint256, bool)
     {
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].creationBlock == creationBlock) {
@@ -145,7 +149,7 @@ contract ProofOfPhysicalAddress {
         bytes32 confirmationCodeSha3
     )
         public
-        constant
+        view
         checkUserExists(wallet)
         returns(bool, uint256, bool, bytes32)
     {
@@ -164,7 +168,7 @@ contract ProofOfPhysicalAddress {
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
     function userAddressByAddress(address wallet, string country, string state, string city, string location, string zip)
-    public constant checkUserExists(wallet) returns(bool, uint256, bool)
+    public view checkUserExists(wallet) returns(bool, uint256, bool)
     {
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
         return userAddressByKeccakIdentifier(wallet, keccakIdentifier);
@@ -172,7 +176,7 @@ contract ProofOfPhysicalAddress {
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
     function userAddressByKeccakIdentifier(address wallet, bytes32 keccakIdentifier)
-    public constant checkUserExists(wallet) returns(bool, uint256, bool)
+    public view checkUserExists(wallet) returns(bool, uint256, bool)
     {
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
             if (users[wallet].physicalAddresses[ai].keccakIdentifier == keccakIdentifier) {
@@ -184,7 +188,7 @@ contract ProofOfPhysicalAddress {
 
     // returns last name submitted to PoPA contract
     function userLastSubmittedName(address wallet)
-    public constant checkUserExists(wallet) returns (string)
+    public view checkUserExists(wallet) returns (string)
     {
         if (users[wallet].physicalAddresses.length > 0) {
             return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
@@ -208,14 +212,14 @@ contract ProofOfPhysicalAddress {
 
     // returns how many addresses there are in PoPA contract. If user does not exist, returns 0
     function userSubmittedAddressesCount(address wallet)
-    public constant returns (uint256)
+    public view returns (uint256)
     {
         return users[wallet].physicalAddresses.length;
     }
 
     // returns how many addresses from PoPA contract are confirmed. If user does not exist, returns 0
     function userConfirmedAddressesCount(address wallet)
-    public constant returns (uint256)
+    public view returns (uint256)
     {
         uint256 c = 0;
         for (uint256 ai = 0; ai < users[wallet].physicalAddresses.length; ai++) {
@@ -227,7 +231,7 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddress(address wallet, uint256 addressIndex)
-    public constant checkUserExists(wallet) validIndex(wallet, addressIndex) returns (
+    public view checkUserExists(wallet) validIndex(wallet, addressIndex) returns (
         string country, string state, string city, string location, string zip)
     {
         return (
@@ -240,7 +244,7 @@ contract ProofOfPhysicalAddress {
     }
 
     function userAddressInfo(address wallet, uint256 addressIndex)
-    public constant checkUserExists(wallet) validIndex(wallet, addressIndex) returns (
+    public view checkUserExists(wallet) validIndex(wallet, addressIndex) returns (
         string name,
         uint256 creationBlock,
         uint256 confirmationBlock,
@@ -248,16 +252,16 @@ contract ProofOfPhysicalAddress {
     ) {
         bytes32 _keccakIdentifier = users[wallet].physicalAddresses[addressIndex].keccakIdentifier;
 
-        uint256 _confirmationBlock = PhysicalAddressClaim.decodeConfirmation(registry.getClaim(
+        bytes32 claim = registry.getClaim(
             address(this),
             wallet,
-            _keccakIdentifier)
+            _keccakIdentifier
         );
 
         return (
             users[wallet].physicalAddresses[addressIndex].name,
             users[wallet].physicalAddresses[addressIndex].creationBlock,
-            _confirmationBlock,
+            claim != 0 ? PhysicalAddressClaim.decodeConfirmation(claim) : 0,
             _keccakIdentifier
         );
     }
@@ -342,11 +346,9 @@ contract ProofOfPhysicalAddress {
         // Remove physical address from list
         uint256 length = users[msg.sender].physicalAddresses.length;
 
-        for (uint256 i = index; i < length - 1; i++) {
-            users[msg.sender].physicalAddresses[i] = users[msg.sender].physicalAddresses[i+1];
+        if (index != length - 1) {
+            users[msg.sender].physicalAddresses[index] = users[msg.sender].physicalAddresses[length - 1];
         }
-
-        delete users[msg.sender].physicalAddresses[length - 1];
         users[msg.sender].physicalAddresses.length--;
 
         if (users[msg.sender].physicalAddresses.length == 0) {

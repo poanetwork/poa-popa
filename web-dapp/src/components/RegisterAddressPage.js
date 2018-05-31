@@ -1,4 +1,5 @@
 import React from 'react';
+
 import * as log from 'loglevel';
 
 import { Loading } from './Loading';
@@ -446,187 +447,80 @@ class RegisterAddressPage extends React.Component {
 
     render() {
         return (
-            <div className='register-address-page'>
-                <section className="content address table">
-                    <div className="table-cell table-cell_left">
-                        <div className="address-content">
-                            <h1 className="title">Proof of physical address</h1>
-                            <p className="description">
-                                This DApps can be used to verify that you have access to a certain postal address in
-                                U.S. by receiving a postcard with confirmation code.
-                            </p>
-                            <form action="" className="address-form">
-                                <div className="address-form-i">
-                                    <label htmlFor="" className="label">
-                                        Name
-                                        <span className="address-question">
-                                        <span className="address-question-tooltip">
-                                            <span className="text">
-                                                Enter your full name
-                                            </span>
-                                        </span>
-                                    </span>
-                                    </label>
-                                    <input type="text" className="input" name="name" value={this.state.name}
-                                           onChange={this.on_change}/>
+            <div className="col-md-12">
+                <div className="content">
+                    <h1 className="main-title">Register your Physical Address</h1>
+                    <form id="registerForm">
+                        <div className="form-group">
+                            <label>Name</label>
+                            <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                <div className="hidden-info">Enter your full name</div>
+                            </div>
+                            <input type="text" className="form-control" placeholder="Enter your full name" name="name" value={this.state.name}
+                                   onChange={this.on_change} />
+                        </div>
+                        <div className="form-group">
+                            <label>Street Address</label>
+                            <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                <div className="hidden-info">Enter your full street address</div>
+                            </div>
+                            <input type="text" className="form-control" placeholder="Enter your full street address" name="address" value={this.state.address}
+                                   onChange={this.on_change} />
+                        </div>
+                        <div className="form-group row">
+                            <div className="col-md-6 mb-xs-4 mb-sm-4 mb-md-0">
+                                <label>City</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">Enter the name of the city</div>
                                 </div>
-                                <div className="address-form-i">
-                                    <div className="left">
-                                        <label htmlFor="" className="label">
-                                            Country
-                                            <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    At the present moment address verification is available only in the United States.
-                                                </span>
-                                            </span>
-                                        </span>
-                                        </label>
-                                        <input type="text" className="input" readOnly={true} name="country"
-                                               value={this.state.country} onChange={this.on_change}/>
-                                    </div>
-                                    <div className="right">
-                                        <label htmlFor="" className="label">
-                                            State
-                                            <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Select one of the states from the dropdown list
-                                                </span>
-                                            </span>
-                                        </span>
-                                        </label>
-                                        {/*
-                                    <input type="text" className="input" name="state" value={this.state.state} onChange={this.on_change} />
-                                    */}
-                                        <select className="input" name="state" style={{ 'backgroundColor': 'white' }}
-                                                value={this.state.state} onChange={this.on_change}>
-                                            {
-                                                listOfStates.map((state, index) => (
-                                                    <option value={state.code} key={index}>{state.label}</option>
-                                                ))
-                                            }
-                                        </select>
-                                    </div>
+                                <input type="text" className="form-control" placeholder="Enter the city" name="city" value={this.state.city}
+                                       onChange={this.on_change} />
+                            </div>
+                            <div className="col-md-6">
+                                <label>State</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">Select one of the states from the dropdown list</div>
                                 </div>
-                                <div className="address-form-i">
-                                    <div className="left">
-                                        <label htmlFor="" className="label">
-                                            City
-                                            <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Enter full name of the city
-                                                </span>
-                                            </span>
-                                        </span>
-                                        </label>
-                                        <input type="text" className="input" name="city" value={this.state.city}
-                                               onChange={this.on_change}/>
-                                    </div>
-                                    <div className="right">
-                                        <label htmlFor="" className="label">
-                                            ZIP
-                                            <span className="address-question">
-                                            <span className="address-question-tooltip">
-                                                <span className="text">
-                                                    Enter ZIP code
-                                                </span>
-                                            </span>
-                                        </span>
-                                        </label>
-                                        <input type="text" className="input" name="zip" value={this.state.zip}
-                                               onChange={this.on_change}/>
-                                    </div>
-                                </div>
-                                <div className="address-form-i">
-                                    <label htmlFor="" className="label">
-                                        Address
-                                        <span className="address-question">
-                                        <span className="address-question-tooltip">
-                                            <span className="text">
-                                                Enter the rest of the address
-                                            </span>
-                                        </span>
-                                    </span>
-                                    </label>
-                                    <input type="text" className="input" name="address" value={this.state.address}
-                                           onChange={this.on_change}/>
-                                </div>
-                                <button type="button" className="button button_order"
-                                        onClick={this.order_clicked}>Order
-                                </button>
-                            </form>
-                            <div className="address-postcard">
-                                <p className="address-postcard-title">0.04 ETH</p>
-                                <p className="address-postcard-description">
-                                    This is the price we charge for sending a postcard to you
-                                </p>
+                                <select className="form-control" name="state" value={this.state.state} onChange={this.on_change}>
+                                    {
+                                        listOfStates.map((state, index) => (
+                                            <option value={state.code} key={index}>{state.label}</option>
+                                        ))
+                                    }
+                                </select>
+                                <p className="help-block">Select one of the states from the dropdown list</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="table-cell table-cell_right">
-                        <div className="address-content">
-                            <div className="how-to swipe" id="slider">
-                                <div className="swipe-wrap">
-                                    <div className="how-to-i how-to-i_fill-form">
-                                        <p className="how-to-title">
-                                            <span>Step 1: </span>
-                                            Fill form
-                                        </p>
-                                        <p className="how-to-description">
-                                            Fill the form with your full name and postal address
-                                        </p>
-                                    </div>
-                                    <div className="how-to-i how-to-i_sign-transaction">
-                                        <p className="how-to-title">
-                                            <span>Step 2: </span>
-                                            Sign transaction
-                                        </p>
-                                        <p className="how-to-description">
-                                            Sign transaction in MetaMask to add your data to smart contract and send you
-                                            a postcard
-                                        </p>
-                                    </div>
-                                    <div className="how-to-i how-to-i_get-postcard">
-                                        <p className="how-to-title">
-                                            <span>Step 3: </span>
-                                            Get postcard
-                                        </p>
-                                        <p className="how-to-description">
-                                            Check your mailbox for the postcard with confirmation code on it
-                                        </p>
-                                    </div>
-                                    <div className="how-to-i how-to-i_type-code">
-                                        <p className="how-to-title">
-                                            <span>Step 4: </span>
-                                            Type code
-                                        </p>
-                                        <p className="how-to-description">
-                                            Open the webpage specified on the postcard and type in confirmation code
-                                        </p>
-                                    </div>
-                                    <div className="how-to-i how-to-i_finalize-proof">
-                                        <p className="how-to-title">
-                                            <span>Step 5: </span>
-                                            Finalize proof
-                                        </p>
-                                        <p className="how-to-description">
-                                            Sign the second transaction to verify the code and finalize the process
-                                        </p>
-                                    </div>
+                        <div className="form-group row">
+                            <div className="col-md-6 mb-xs-4 mb-sm-4 mb-md-0">
+                                <label>Zip</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">Enter ZIP code</div>
                                 </div>
-                                <div className="how-to-navigation">
-                                    <div className="how-to-navigation-i how-to-navigation-i_active"/>
-                                    <div className="how-to-navigation-i"/>
-                                    <div className="how-to-navigation-i"/>
-                                    <div className="how-to-navigation-i"/>
-                                    <div className="how-to-navigation-i"/>
+                                <input type="text" className="form-control" placeholder="Enter ZIP code"  name="zip" value={this.state.zip}
+                                       onChange={this.on_change} />
+                            </div>
+                            <div className="col-md-6">
+                                <label>Country</label>
+                                <div className="info"><img className="svg-info" src={require('../assets/images/info.svg')} alt="info" />
+                                    <div className="hidden-info">At the present moment address verification is available only in the United States.</div>
                                 </div>
+                                <input type="text" className="form-control" placeholder="Enter the country" name="country" value={this.state.country}
+                                       onChange={this.on_change} />
+                                <p className="help-block">At the present moment address verification is available only in the United States.</p>
                             </div>
                         </div>
-                    </div>
-                </section>
+                        <a href="/" className="primary-btn mt-3">
+                            Back
+                            <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
+                        </a>
+                        <button id="sendMessageButton" type="button" className="action-btn mt-3" onClick={this.order_clicked}>
+                            Order
+                            <img className="btn-arrow" src={require('../assets/images/arrow.svg')} alt="arrow" />
+                        </button>
+                    </form>
+                    <div className="small-c-copy"><strong>0.04 ETH</strong> This is the price we charge for sending a postcard to you</div>
+                </div>
                 <Loading show={this.state.loading}/>
             </div>
         );

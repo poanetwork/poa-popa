@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import * as log from 'loglevel';
 
 import { Loading } from './Loading';
@@ -155,7 +157,9 @@ class ConfirmationPage extends React.Component {
         })
     }
 
-    confirm_clicked() {
+    confirm_clicked(event) {
+        event.preventDefault()
+
         const confirmationCodePlain = this.state.confirmationCodePlain.trim();
 
         if (!confirmationCodePlain) {
@@ -297,34 +301,36 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='confirmation-page'>
-                <section className="content postcard-container table">
-                    <div className="table-cell">
-                        <div className="postcard-inner">
-                            <div className="postcard">
-                                <p className="postcard-title">Enter your unique code here:</p>
-                                <form action="" className="postcard-form">
-                                    <input
-                                        className={'postcard-input ' + this.state.confirmed_class}
-                                        type="text"
-                                        name="confirmationCodePlain"
-                                        value={this.state.confirmationCodePlain}
-                                        onChange={this.on_change}
-                                    />
-                                    <button type="button" className="postcard-button" onClick={this.confirm_clicked}/>
-                                </form>
-                                <p>
-                                    Type code from the postcard. Letter case is irrelevant.
-                                </p>
+            <div className="col-md-12">
+                <div className="content">
+                    <h1 className="main-title">Verify your address</h1>
+                    <p className="second-text">Enter confirmation code from the postcard you received, sign the transaction and
+                        finalize the verification process.</p>
+                    <div className="block-card">
+                        <div className="inner-card">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="enter-c-title">Enter your POA Network Proof of Physical Address confirmation code here:</div>
+                                    <form id="postcard-form" className="postcard-form form-order" name="postcardForm" noValidate onSubmit={this.confirm_clicked}>
+                                        <div className="form-group cart-order">
+                                            <input className="postcard-input form-control" type="text" name="confirmationCodePlain" value={this.state.confirmationCodePlain}
+                                                   onChange={this.on_change}/>
+                                                <button type="submit" className="postcard-button enter-btn-img btn btn-primary" id="btnSubmit"></button>
+                                        </div>
+                                    </form>
+                                    <div className="small-c-copy">Type code from the postcard. Letter case is irrelevant.</div>
+                                </div>
+                                <div className="col-md-6">
+                                    <img src={require('../assets/images/card/card-2.svg')} alt="card" />
+                                </div>
                             </div>
-                            <h1 className="title">Verify your address</h1>
-                            <p className="description">
-                                Enter confirmation code from the postcard you received, sign the transaction and
-                                finalize the verification process.
-                            </p>
                         </div>
                     </div>
-                </section>
+                    <a href="/" className="primary-btn mt-3">
+                        Back
+                        <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
+                    </a>
+                </div>
                 <Loading show={this.state.loading}/>
             </div>
         );

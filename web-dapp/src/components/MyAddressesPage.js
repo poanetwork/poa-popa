@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import * as log from 'loglevel';
 
 import {Loading} from './Loading';
@@ -130,40 +132,43 @@ class ConfirmationPage extends React.Component {
 
     render() {
         return (
-            <div className='my-addresses'>
-                <section className="content address table">
-                    <div className="table-cell">
-                        <div className="container">
-                            <h1 className="title">My Addresses</h1>
-                        </div>
-                        {this.state.addresses.length !== 0 ? (
-                            <div className="wrapper">
-                                {
-                                    this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
-                                    <div className="box">
-                                        <p className="description">
-                                            <strong>Country:</strong> {country} <br/>
-                                            <strong>State:</strong> {state} <br/>
-                                            <strong>City:</strong> {city} <br/>
-                                            <strong>Locations:</strong> {location} <br/>
-                                            <strong>Zip:</strong> {zip} <br/>
-                                            <strong>Confirmed?:</strong> {confirmed ? 'yes' : 'no'} <br/>
-                                            <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
-                                                <i className="fa fa-trash"></i>
-                                            </a>
-                                        </p>
+            <div className="col-md-12 my-addresses">
+                <div className="content">
+                    <h1 className="main-title">Manage your addresses</h1>
+                    {this.state.addresses.length !== 0 ? (
+                    <div className="mb-4">
+                        { this.state.addresses.map(({country, state, city, location, zip, confirmed}, index) => (
+                                <div className="card-item d-flex wait-to-verify mt-3 p-3 address" key={index}>
+                                    <img className={confirmed ? 'image-verify d-flex done' : 'image-no-verify d-flex clock'} src={require('../assets/images/card-item/clock.png')}
+                                         srcSet={confirmed ? `
+                                            ${require('../assets/images/card-item/done@2x.png')} 2x,
+                                            ${require('../assets/images/card-item/done@3x.png')} 3x
+                                         ` : `
+                                            ${require('../assets/images/card-item/clock@2x.png')} 2x,
+                                            ${require('../assets/images/card-item/clock@3x.png')} 3x
+                                         `} />
+                                    <div className="item-adress">
+                                        {location}, {zip}, {city}, {state}, {country}
                                     </div>
-                                    ))
-                                }
-                            </div>
-                        ) : null}
-                        {this.state.addresses.length === 0 ? (
-                            <p className="description">There are no addresses registered for
-                                account <b>{this.state.wallet}</b></p>
-                        ) : null}
+                                    <div className="wrap-btn">
+                                        <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
+                                            <i className="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            )) }
                     </div>
-                </section>
-                <Loading show={this.state.loading}/>
+                ) : null}
+                {this.state.addresses.length === 0 ? (
+                    <div className="mb-4">
+                        <p>There are no addresses registered for account <b>{this.state.wallet}</b></p>
+                    </div>
+                ) : null}
+                    <a href="/" className="primary-btn mt-3">
+                        Back
+                        <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
+                    </a>
+                </div>
             </div>
         );
     }

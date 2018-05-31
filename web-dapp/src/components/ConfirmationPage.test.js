@@ -77,7 +77,7 @@ describe('<ConfirmationPage />', () => {
         const page = mount(<ConfirmationPage/>);
         const confirmButton = page.find('.postcard-button');
 
-        confirmButton.simulate('click');
+        confirmButton.simulate('submit');
 
         expect(confirmClicked).toHaveBeenCalled();
         expect(showAlert).toHaveBeenCalledWith(
@@ -95,7 +95,7 @@ describe('<ConfirmationPage />', () => {
         input.simulate('change');
 
         const confirmButton = page.find('.postcard-button');
-        confirmButton.simulate('click');
+        confirmButton.simulate('submit');
 
         expect(confirmClicked).toHaveBeenCalled();
         expect(showAlert).toHaveBeenCalledWith(
@@ -114,7 +114,7 @@ describe('<ConfirmationPage />', () => {
         );
 
         page.setState({ confirmationCodePlain: 'h44hh7n5545' });
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe('<ConfirmationPage />', () => {
         );
 
         page.setState({ confirmationCodePlain: 'h44hh7n5545' });
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -161,7 +161,7 @@ describe('<ConfirmationPage />', () => {
             return error({ statusText: 'Server Error', status: 500 });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -187,7 +187,7 @@ describe('<ConfirmationPage />', () => {
             return success();
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -213,7 +213,7 @@ describe('<ConfirmationPage />', () => {
             return success({ x_id: 'test', err: 'fake error' });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -239,7 +239,7 @@ describe('<ConfirmationPage />', () => {
             return success({ ok: true, x_id: 'test' });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -269,7 +269,7 @@ describe('<ConfirmationPage />', () => {
             return callback({ message: 'fake error' });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -300,7 +300,7 @@ describe('<ConfirmationPage />', () => {
 
         page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -334,7 +334,7 @@ describe('<ConfirmationPage />', () => {
 
         page.setState({ confirmationCodePlain: 'h44hh7n5545' });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         expect(checkUserExists).toHaveBeenCalled();
         expect(checkWalletSame).toHaveBeenCalled();
@@ -378,7 +378,7 @@ describe('<ConfirmationPage />', () => {
             return Promise.reject({ message: 'fake confirmation error' });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         setTimeout(() => {
             expect(checkUserExists).toHaveBeenCalled();
@@ -416,7 +416,7 @@ describe('<ConfirmationPage />', () => {
             return Promise.resolve();
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         setTimeout(() => {
             expect(checkUserExists).toHaveBeenCalled();
@@ -466,7 +466,7 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: true, ...addressDetails });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         setTimeout(() => {
             expect(checkUserExists).toHaveBeenCalled();
@@ -517,7 +517,7 @@ describe('<ConfirmationPage />', () => {
             return callback(null, { found: true, ...addressDetails });
         });
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         setTimeout(() => {
             expect(checkUserExists).toHaveBeenCalled();
@@ -565,7 +565,7 @@ describe('<ConfirmationPage />', () => {
 
         waitForTransaction.default = jest.fn().mockImplementationOnce(() => Promise.resolve())
 
-        page.find('.postcard-button').simulate('click');
+        page.find('.postcard-button').simulate('submit');
 
         setTimeout(() => {
             expect(checkUserExists).toHaveBeenCalled();
