@@ -190,7 +190,11 @@ contract ProofOfPhysicalAddress {
     function userLastSubmittedName(address wallet)
     public view checkUserExists(wallet) returns (string)
     {
-        return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
+        if (users[wallet].physicalAddresses.length > 0) {
+            return users[wallet].physicalAddresses[users[wallet].physicalAddresses.length-1].name;
+        }
+
+        return "";
     }
 
     // returns name from the last confirmed address. If no addresses were confirmed returns ''
