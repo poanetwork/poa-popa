@@ -17,7 +17,10 @@ function recalc(done) {
     updating = true;
     logger.log(prelog + 'updating currentPriceWei, old value: ' + currentPriceWei);
 
-    // random exchange rate for now
+    // random exchange rate for now, throw if not in test env
+    if (process.env.NODE_ENV !== 'test') {
+        throw new Error('Dynamic price is not implemented');
+    }
     setTimeout((done) => {
         updating = false;
 
