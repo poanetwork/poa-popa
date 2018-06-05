@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const config = require('./server-config');
 
 const app = express();
 
@@ -16,10 +17,9 @@ app.use('/confirm', express.static(path.join(__dirname, 'build')));
 app.use('/help', express.static(path.join(__dirname, 'build')));
 app.use('/my-addresses', express.static(path.join(__dirname, 'build')));
 
-const BODY_SIZE_LIMIT = '3kb';
 // api
-app.use(bodyParser.urlencoded({ extended: true, limit: BODY_SIZE_LIMIT }));
-app.use(bodyParser.json({ limit: BODY_SIZE_LIMIT }));
+app.use(bodyParser.urlencoded({ extended: true, limit: config.bodySizeLimit }));
+app.use(bodyParser.json({ limit: config.bodySizeLimit }));
 
 const routes = require('./routes')({});
 app.use('/api', routes);
