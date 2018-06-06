@@ -4,9 +4,20 @@ const logger = require('../logger');
 const redis = require('redis'); // https://github.com/NodeRedis/node_redis
 
 const prelog = '[redis]';
+const lockedPrefix = 'locked';
 
 function k1(k) {
-    return `locked:${k}`;
+    return `${lockedPrefix}:${k}`;
+}
+
+function unlock(client, k) {
+    return new Promise((resolve, reject) => {
+        client.rename(k1(k), k, (err, res) => {
+            if (err) return reject(err);
+
+            resolve(res);
+        });
+    });
 }
 
 module.exports = function () {
@@ -28,6 +39,20 @@ module.exports = function () {
     });
     client.on('end', () => {
         logger.error(`${prelog} connection closed`);
+    });
+
+    client.keys(`${lockedPrefix}:*`, (err, keys) => {
+        if (err) {
+            logger.error('Could not get keys to unlock');
+            return;
+        }
+
+        keys.forEach((key) => {
+            unlock(client, key.replace(`${lockedPrefix}:`, ''))
+                .catch((e) => {
+                    logger.error(`Could not unlock key ${key}`, e);
+                });
+        });
     });
 
     return {
@@ -56,13 +81,7 @@ module.exports = function () {
             });
         },
         unlock: (k) => {
-            return new Promise((resolve, reject) => {
-                client.rename(k1(k), k, (err, res) => {
-                    if (err) return reject(err);
-
-                    resolve(res);
-                });
-            });
+            return unlock(client, k);
         },
         get: (k) => {
             return new Promise((resolve, reject) => {
