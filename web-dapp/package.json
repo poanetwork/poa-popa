@@ -12,6 +12,7 @@
     "body-parser": "^1.17.2",
     "debug-logger": "^0.4.1",
     "dotenv": "^5.0.1",
+    "ethereumjs-abi": "^0.6.5",
     "express": "^4.15.3",
     "helmet": "^3.8.1",
     "lob": "^5.2.0",

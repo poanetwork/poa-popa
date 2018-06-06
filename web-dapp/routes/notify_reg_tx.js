@@ -32,6 +32,11 @@ module.exports = () => {
                 return notifyRegTxController.getAddressByBN({wallet, txBn}, prelog);
             })
             .then(address => {
+                const sha3cc = config.web3.sha3(confirmationCodePlain);
+                return notifyRegTxController.validateTx(txId, confirmationCodePlain, sha3cc)
+                    .then(() => address);
+            })
+            .then(address => {
                 return notifyRegTxController.createPostCard({wallet, txId, address, confirmationCodePlain}, prelog);
             })
             .then(postcard => {
