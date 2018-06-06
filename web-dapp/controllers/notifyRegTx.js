@@ -1,5 +1,6 @@
 'use strict';
 
+const sem = require('q-semaphore')(1);
 const db = require('../server-lib/session_store');
 const postApi = require('../server-lib/post_api');
 const logger = require('../server-lib/logger');
@@ -109,25 +110,27 @@ const getAddressByBN = (opts, prelog = '') => {
 const createPostCard = (opts, prelog) => {
     const {wallet, txId, address, confirmationCodePlain} = opts;
 
-    return postcardLimiter.canSend()
-        .then(canSend => {
-            if (!canSend) {
-                logger.error(`${prelog} Limit of postcards per day was reached`);
-                return Promise.reject({ msg: 'Max limit of postcards reached, please try again tomorrow' });
-            }
+    return sem.take()
+        .then(() => postcardLimiter.canSend()
+            .then(canSend => {
+                sem.leave();
+                if (!canSend) {
+                    logger.error(`${prelog} Limit of postcards per day was reached`);
+                    return Promise.reject({ msg: 'Max limit of postcards reached, please try again tomorrow' });
+                }
 
-            return new Promise((resolve, reject) => {
-                postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
-                    if (err) {
-                        logger.error(`${prelog} error returned by create_postcard: ${err}`);
-                        return reject(createResponseObject(false, 'error while sending postcard'));
-                    }
-                    postcardLimiter.inc();
-                    return resolve(result);
+                return new Promise((resolve, reject) => {
+                    postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
+                        if (err) {
+                            logger.error(`${prelog} error returned by create_postcard: ${err}`);
+                            return reject(createResponseObject(false, 'error while sending postcard'));
+                        }
+                        postcardLimiter.inc();
+                        return resolve(result);
+                    });
                 });
-            });
-        });
-
+            })
+        );
 };
 
 const removeUsedSessionKey = (opts, prelog) => {
