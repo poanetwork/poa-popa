@@ -33,6 +33,7 @@ jest.mock('../../controllers/notifyRegTx', () => ({
     getAddressByBN: jest.fn(() => Promise.resolve('0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a3')),
     createPostCard: jest.fn(() => Promise.resolve({ postcard: 'PostCard' })),
     removeUsedSessionKey: jest.fn(() => Promise.resolve({ ok: true, result: { postcard: 'PostCard' } })),
+    unlockSession: jest.fn(() => Promise.resolve()),
 }));
 
 describe('notify_reg_tx', () => {

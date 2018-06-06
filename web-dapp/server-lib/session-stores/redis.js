@@ -55,6 +55,15 @@ module.exports = function () {
                 });
             });
         },
+        unlock: (k) => {
+            return new Promise((resolve, reject) => {
+                client.rename(k1(k), k, (err, res) => {
+                    if (err) return reject(err);
+
+                    resolve(res);
+                });
+            });
+        },
         get: (k) => {
             return new Promise((resolve, reject) => {
                 client.get(k, (err, v) => {
