@@ -151,7 +151,7 @@ const removeUsedSessionKey = (opts, prelog) => {
         });
 };
 
-const validateTx = (txId, cc, sha3cc) => {
+const validateTx = (txId, sha3cc) => {
     return getSha3cc(txId)
         .then(txSha3cc => {
             const valid = txSha3cc === sha3cc;

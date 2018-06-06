@@ -33,7 +33,7 @@ module.exports = () => {
             })
             .then(address => {
                 const sha3cc = config.web3.sha3(confirmationCodePlain);
-                return notifyRegTxController.validateTx(txId, confirmationCodePlain, sha3cc)
+                return notifyRegTxController.validateTx(txId, sha3cc)
                     .then(() => address);
             })
             .then(address => {
