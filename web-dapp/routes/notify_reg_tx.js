@@ -43,7 +43,15 @@ module.exports = () => {
             })
             .catch(error => {
                 logger.error(`${prelog} ${error.msg}`);
-                return sendResponse(res, { ok: false, err: error.msg });
+                return notifyRegTxController
+                    .unlockSession(sessionKey, prelog)
+                    .then(
+                        () => {},
+                        () => logger.error(`${prelog} Could not unlock key ${sessionKey}`)
+                    )
+                    .then(() => {
+                        return sendResponse(res, { ok: false, err: error.msg });
+                    });
             });
     });
 
