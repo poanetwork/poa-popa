@@ -161,6 +161,11 @@ const validateTx = (txId, sha3cc) => {
         });
 };
 
+const unlockSession = (sessionKey, prelog) => {
+    logger.log(`${prelog} unlocking session: ${sessionKey}`);
+    return db.unlock(sessionKey);
+};
+
 module.exports = {
     validateData,
     normalizeData,
@@ -170,4 +175,5 @@ module.exports = {
     createPostCard,
     removeUsedSessionKey,
     validateTx,
+    unlockSession,
 };

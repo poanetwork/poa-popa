@@ -34,6 +34,7 @@ jest.mock('../../controllers/notifyRegTx', () => ({
     createPostCard: jest.fn(() => Promise.resolve({ postcard: 'PostCard' })),
     removeUsedSessionKey: jest.fn(() => Promise.resolve({ ok: true, result: { postcard: 'PostCard' } })),
     validateTx: jest.fn(() => Promise.resolve()),
+    unlockSession: jest.fn(() => Promise.resolve()),
 }));
 
 describe('notify_reg_tx', () => {

@@ -14,6 +14,7 @@ var cfg = {
         type: 'memory',
         params: {},
     },
+    bodySizeLimit: '3kb',
 
     rpc: 'http://localhost:8545',
 

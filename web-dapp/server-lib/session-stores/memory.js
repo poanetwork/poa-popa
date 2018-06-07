@@ -25,6 +25,11 @@ module.exports = function () {
                 return resolve(db[k1(k)]);
             });
         },
+        unlock: (k) => {
+            db[k] = db[k1(k)];
+            delete db[k1(k)];
+            return Promise.resolve();
+        },
         unset: (k) => {
             delete db[k1(k)];
             return new Promise((resolve) => {
