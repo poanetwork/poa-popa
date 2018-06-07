@@ -14,6 +14,7 @@ const validateAddressIndex = require('../server-lib/validate_address_index');
 const getAddressIndex = require('../server-lib/get_address_index');
 const getAddressDetails = require('../server-lib/get_address_details');
 const postcardLimiter = require('../server-lib/postcard_limiter');
+const getSha3cc = require('../server-lib/get_sha3cc');
 
 const validateData = (opts, prelog = '') => {
     if (!opts.body) return createResponseObject(false, 'request body: empty');
@@ -150,6 +151,16 @@ const removeUsedSessionKey = (opts, prelog) => {
         });
 };
 
+const validateTx = (txId, sha3cc) => {
+    return getSha3cc(txId)
+        .then(txSha3cc => {
+            const valid = txSha3cc === sha3cc;
+            if (!valid) {
+                throw new Error(`Invalid transaction ${txId}`);
+            }
+        });
+};
+
 const unlockSession = (sessionKey, prelog) => {
     logger.log(`${prelog} unlocking session: ${sessionKey}`);
     return db.unlock(sessionKey);
@@ -163,5 +174,6 @@ module.exports = {
     getAddressByBN,
     createPostCard,
     removeUsedSessionKey,
+    validateTx,
     unlockSession,
 };

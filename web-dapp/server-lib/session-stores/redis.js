@@ -99,7 +99,7 @@ module.exports = function () {
         },
         unset: (k) => {
             return new Promise((resolve, reject) => {
-                client.del(k1(k), (err, v) => {
+                client.del(k1(k), (err) => {
                     if (err) return reject(err);
                     resolve(true);
                 });
