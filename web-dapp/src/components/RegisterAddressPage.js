@@ -9,11 +9,8 @@ import '../assets/javascripts/show-alert.js';
 const logger = log.getLogger('RegisterAddressPage');
 
 const listOfStates = [
-  { code: 'AA', label: 'U.S. Armed Forces – Americas' },
-  { code: 'AE', label: 'U.S. Armed Forces – Europe' },
   { code: 'AK', label: 'Alaska' },
   { code: 'AL', label: 'Alabama' },
-  { code: 'AP', label: 'U.S. Armed Forces – Pacific' },
   { code: 'AR', label: 'Arkansas' },
   { code: 'AS', label: 'American Somoa' },
   { code: 'AZ', label: 'Arizona' },
@@ -71,6 +68,9 @@ const listOfStates = [
   { code: 'WI', label: 'Wisconsin' },
   { code: 'VI', label: 'Virgin Islands' },
   { code: 'VT', label: 'Vermont' },
+  { code: 'AA', label: 'U.S. Armed Forces – Americas' },
+  { code: 'AE', label: 'U.S. Armed Forces – Europe' },
+  { code: 'AP', label: 'U.S. Armed Forces – Pacific' },
 ]
 
 class RegisterAddressPage extends React.Component {
