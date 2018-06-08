@@ -27,7 +27,8 @@ var cfg = {
     blockWaitIntervalMs:   7000,
     blockWaitMaxTimeMs:  70000,
 
-    priceWei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored
+    priceWei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored,
+    priceSymbol: 'POA',
     priceUsCents: 1000, // NOTE: this is in cents! e.g. for $10 price, put 1000
     priceUpdIntervalMs: 60000,
 };
