@@ -163,7 +163,7 @@ input {
   cursor: pointer; }
 
 .primary-btn:hover {
-  box-shadow: inset 0px 0px 0px 2px #5C34A2; }
+  box-shadow: inset 0 0 0 1px #5c34a2; }
 
 .second-title {
   padding-bottom: 10px;
