@@ -581,7 +581,7 @@ input {
 
 @media only screen and (min-width: 1300px) {
   .logo {
-    background: url(../images/logo/logo-top.png) no-repeat; }
+    background: url(../images/logo/logo-top.svg) no-repeat; }
   .second-title {
     margin-top: 60px; }
   .image {
