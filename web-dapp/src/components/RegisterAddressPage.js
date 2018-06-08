@@ -501,7 +501,7 @@ class RegisterAddressPage extends React.Component {
                                     <div className="hidden-info">At the present moment address verification is available only in the United States.</div>
                                 </div>
                                 <input type="text" className="form-control" placeholder="Enter the country" name="country" value={this.state.country}
-                                       onChange={this.on_change} />
+                                       onChange={this.on_change} readOnly={true} />
                                 <p className="help-block">At the present moment address verification is available only in the United States.</p>
                             </div>
                         </div>
