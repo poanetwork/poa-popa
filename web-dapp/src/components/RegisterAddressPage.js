@@ -8,6 +8,8 @@ import '../assets/javascripts/show-alert.js';
 
 const logger = log.getLogger('RegisterAddressPage');
 
+const REACT_APP_PRICE = process.env.REACT_APP_PRICE
+const REACT_APP_PRICE_SYMBOL = process.env.REACT_APP_PRICE_SYMBOL
 const listOfStates = [
   { code: 'AA', label: 'U.S. Armed Forces – Americas' },
   { code: 'AE', label: 'U.S. Armed Forces – Europe' },
@@ -514,7 +516,7 @@ class RegisterAddressPage extends React.Component {
                             <img className="btn-arrow" src={require('../assets/images/arrow.svg')} alt="arrow" />
                         </button>
                     </form>
-                    <div className="small-c-copy"><strong>0.04 ETH</strong> This is the price we charge for sending a postcard to you</div>
+                    <div className="small-c-copy"><strong>{REACT_APP_PRICE} {REACT_APP_PRICE_SYMBOL}</strong> This is the price we charge for sending a postcard to you</div>
                 </div>
                 <Loading show={this.state.loading}/>
             </div>

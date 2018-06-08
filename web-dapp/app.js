@@ -8,6 +8,9 @@ const config = require('./server-config');
 
 const app = express();
 
+process.env.REACT_APP_PRICE = config.web3.fromWei(config.web3.toBigNumber(config.priceWei), 'wei');
+process.env.REACT_APP_PRICE_SYMBOL = config.priceSymbol;
+
 app.use(helmet());
 
 // react front-end
