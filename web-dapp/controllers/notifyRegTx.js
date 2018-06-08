@@ -111,26 +111,25 @@ const createPostCard = (opts, prelog) => {
     const {wallet, txId, address, confirmationCodePlain} = opts;
 
     return sem.take()
-        .then(() => postcardLimiter.canSend()
-            .then(canSend => {
-                sem.leave();
-                if (!canSend) {
-                    logger.error(`${prelog} Limit of postcards per day was reached`);
-                    return Promise.reject({ msg: 'Max limit of postcards reached, please try again tomorrow' });
-                }
+        .then(() => postcardLimiter.canSend())
+        .then(canSend => {
+            if (!canSend) {
+                logger.error(`${prelog} Limit of postcards per day was reached`);
+                return Promise.reject({ msg: 'Max limit of postcards reached, please try again tomorrow' });
+            }
 
-                return new Promise((resolve, reject) => {
-                    postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
-                        if (err) {
-                            logger.error(`${prelog} error returned by create_postcard: ${err}`);
-                            return reject(createResponseObject(false, 'error while sending postcard'));
-                        }
-                        postcardLimiter.inc();
-                        return resolve(result);
-                    });
+            return new Promise((resolve, reject) => {
+                postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
+                    if (err) {
+                        logger.error(`${prelog} error returned by create_postcard: ${err}`);
+                        return reject(createResponseObject(false, 'error while sending postcard'));
+                    }
+                    postcardLimiter.inc();
+                    sem.leave();
+                    return resolve(result);
                 });
-            })
-        );
+            });
+        });
 };
 
 const removeUsedSessionKey = (opts, prelog) => {
