@@ -19,6 +19,7 @@
   "dependencies": {
     "bootstrap": "^4.1.1",
     "font-awesome": "^4.7.0",
+    "petty-cache": "^2.3.2",
     "q-semaphore": "^1.0.3",
     "solc": "0.4.19",
     "web3": "^0.20.4"
