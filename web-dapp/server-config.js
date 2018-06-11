@@ -48,11 +48,11 @@ if (!process.env.REACT_APP_POPA_CONTRACT_ADDRESS) {
 }
 
 // NOTE: this is in wei. If this value is set, other price_* options will be ignored,
-if (process.env.REACT_APP_PRICE_ETH) {
-    cfg.priceWei = web3.toBigNumber(process.env.REACT_APP_PRICE_ETH).mul(web3.toBigNumber('1e+18'));
+if (process.env.REACT_APP_PRICE) {
+    cfg.priceWei = web3.toBigNumber(process.env.REACT_APP_PRICE).mul(web3.toBigNumber('1e+18'));
 }
 else {
-    throw new Error('Please provide REACT_APP_PRICE_ETH env variable. Dynamic prices are not implemented yet');
+    throw new Error('Please provide REACT_APP_PRICE env variable. Dynamic prices are not implemented yet');
 }
 
 const popaContract = require('./src/ProofOfPhysicalAddress.json');

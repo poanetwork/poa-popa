@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const REACT_APP_PRICE_ETH = process.env.REACT_APP_PRICE_ETH;
+const REACT_APP_PRICE = process.env.REACT_APP_PRICE;
 const REACT_APP_PRICE_SYMBOL = process.env.REACT_APP_PRICE_SYMBOL;
 
 class IndexPage extends React.Component {
@@ -14,7 +14,7 @@ class IndexPage extends React.Component {
                         Complete the form with your information to verify your physical address and remember that you can register as many physical addresses as you want.
                     </p>
                     <p className="main-text">
-                        <strong>{REACT_APP_PRICE_ETH} {REACT_APP_PRICE_SYMBOL}</strong> is the price we charge for sending a postcard to you for each physical address verification.
+                        <strong>{REACT_APP_PRICE} {REACT_APP_PRICE_SYMBOL}</strong> is the price we charge for sending a postcard to you for each physical address verification.
                         </p>
                     <p className="main-text">If you have questions about how it works, check our help.</p>
                     <Link to="/help">
