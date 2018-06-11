@@ -5,6 +5,8 @@ services:
 
 env:
   - REACT_APP_POPA_CONTRACT_ADDRESS=0xbc34e0e4cff0643cf7dc5e2e1e8ec55757583c26
+  - REACT_APP_PRICE=1
+  - REACT_APP_PRICE_SYMBOL=POA
 
 before_script:
   - cp web-dapp/test/server/_utils/server-config-private.js web-dapp/
