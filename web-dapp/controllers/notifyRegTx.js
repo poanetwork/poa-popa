@@ -114,18 +114,26 @@ const createPostCard = (opts, prelog) => {
         logger.log(`${prelog} locking mutex`);
         return db.mutexLock('postcardsSentMutex').then(() => {
             postcardLimiter.canSend().then(canSend => {
-                logger.log(`${prelog} unlocking mutex`);
-                return db.mutexUnlock('postcardsSentMutex').then(() => {
-                    if (!canSend) {
-                        logger.error(`${prelog} Limit of postcards per day was reached`);
+                if (!canSend) {
+                    logger.error(`${prelog} Limit of postcards per day was reached`);
+                    logger.log(`${prelog} unlocking mutex`);
+                    return db.mutexUnlock('postcardsSentMutex').then(() => {
                         return reject(createResponseObject(false, 'Max limit of postcards reached, please try again tomorrow'));
-                    }
-                    postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
-                        if (err) {
-                            logger.error(`${prelog} error returned by create_postcard: ${err}`);
+                    });
+                }
+                postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
+                    if (err) {
+                        logger.error(`${prelog} error returned by create_postcard: ${err}`);
+                        logger.log(`${prelog} unlocking mutex`);
+                        return db.mutexUnlock('postcardsSentMutex').then(() => {
                             return reject(createResponseObject(false, 'Error while sending postcard'));
-                        }
-                        postcardLimiter.inc().then(() => resolve(result));
+                        });
+                    }
+                    postcardLimiter.inc().then(() => {
+                        logger.log(`${prelog} unlocking mutex`);
+                        return db.mutexUnlock('postcardsSentMutex').then(() => {
+                            return resolve(result);
+                        });
                     });
                 });
             });
