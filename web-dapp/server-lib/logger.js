@@ -24,7 +24,6 @@ module.exports = {
     },
     error: (msg) => {
         let logDate = new Date().toISOString();
-        logger.info(logDate, msg);
         logger.error(logDate, msg);
     },
 };
