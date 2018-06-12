@@ -32,6 +32,11 @@ module.exports = () => {
                 return notifyRegTxController.getAddressByBN({wallet, txBn}, prelog);
             })
             .then(address => {
+                const sha3cc = config.web3.sha3(confirmationCodePlain);
+                return notifyRegTxController.validateTx(txId, sha3cc)
+                    .then(() => address);
+            })
+            .then(address => {
                 return notifyRegTxController.createPostCard({wallet, txId, address, confirmationCodePlain}, prelog);
             })
             .then(postcard => {
@@ -43,7 +48,15 @@ module.exports = () => {
             })
             .catch(error => {
                 logger.error(`${prelog} ${error.msg}`);
-                return sendResponse(res, { ok: false, err: error.msg });
+                return notifyRegTxController
+                    .unlockSession(sessionKey, prelog)
+                    .then(
+                        () => {},
+                        () => logger.error(`${prelog} Could not unlock key ${sessionKey}`)
+                    )
+                    .then(() => {
+                        return sendResponse(res, { ok: false, err: error.msg });
+                    });
             });
     });
 
