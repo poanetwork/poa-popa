@@ -24,6 +24,5 @@ app.use(bodyParser.json({ limit: config.bodySizeLimit }));
 const routes = require('./routes')({});
 app.use('/api', routes);
 app.use('/confirm/api', routes);
-app.use('/register/api', routes);
 
 module.exports = app;
