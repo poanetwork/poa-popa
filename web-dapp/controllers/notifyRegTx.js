@@ -114,13 +114,13 @@ const createPostCard = (opts, prelog) => {
         logger.log(`${prelog} locking mutex`);
         return db.mutexLock('postcardsSentMutex').then(() => {
             postcardLimiter.canSend().then(canSend => {
-                if (!canSend) {
-                    logger.error(`${prelog} Limit of postcards per day was reached`);
-                    return reject(createResponseObject(false, 'Max limit of postcards reached, please try again tomorrow'));
-                }
-                postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
-                    logger.log(`${prelog} unlocking mutex`);
-                    return db.mutexUnlock('postcardsSentMutex').then(() => {
+                logger.log(`${prelog} unlocking mutex`);
+                return db.mutexUnlock('postcardsSentMutex').then(() => {
+                    if (!canSend) {
+                        logger.error(`${prelog} Limit of postcards per day was reached`);
+                        return reject(createResponseObject(false, 'Max limit of postcards reached, please try again tomorrow'));
+                    }
+                    postApi.create_postcard(wallet, address, txId, confirmationCodePlain, function (err, result) {
                         if (err) {
                             logger.error(`${prelog} error returned by create_postcard: ${err}`);
                             return reject(createResponseObject(false, 'Error while sending postcard'));
