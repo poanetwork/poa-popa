@@ -195,7 +195,7 @@ class ConfirmationPage extends React.Component {
 
             window.$.ajax({
                 type: 'post',
-                url: './api/prepareConTx',
+                url: '/api/prepareConTx',
                 data: {
                     wallet,
                     confirmationCodePlain: this.state.confirmationCodePlain
