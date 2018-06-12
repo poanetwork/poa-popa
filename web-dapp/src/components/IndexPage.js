@@ -1,15 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+const REACT_APP_PRICE = process.env.REACT_APP_PRICE;
+const REACT_APP_PRICE_SYMBOL = process.env.REACT_APP_PRICE_SYMBOL;
+
 class IndexPage extends React.Component {
     render () {
         return (
             <div className="content home-page">
                 <div className="col-md-12">
                     <h1 className="main-title">Proof of Physical Address</h1>
-                    <p className="main-text">Complete the form with your information to verify your physical address and remember that you can register as many physical addresses as you want.
-                        0.04 ETH is the price we charge for sending a postcard to you for each physical address verification.
+                    <p className="main-text">
+                        Complete the form with your information to verify your physical address and remember that you can register as many physical addresses as you want.
                     </p>
+                    <p className="main-text">
+                        <strong>{REACT_APP_PRICE} {REACT_APP_PRICE_SYMBOL}</strong> is the price we charge for sending a postcard to you for each physical address verification.
+                        </p>
                     <p className="main-text">If you have questions about how it works, check our help.</p>
                     <Link to="/help">
                         <button className="primary-btn mt-3">

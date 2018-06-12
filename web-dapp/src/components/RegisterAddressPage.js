@@ -8,6 +8,9 @@ import '../assets/javascripts/show-alert.js';
 
 const logger = log.getLogger('RegisterAddressPage');
 
+const REACT_APP_PRICE = process.env.REACT_APP_PRICE;
+const REACT_APP_PRICE_SYMBOL = process.env.REACT_APP_PRICE_SYMBOL;
+
 const listOfStates = [
   { code: 'AA', label: 'U.S. Armed Forces – Americas' },
   { code: 'AE', label: 'U.S. Armed Forces – Europe' },
@@ -94,19 +97,6 @@ class RegisterAddressPage extends React.Component {
     }
 
     componentDidMount() {
-        window.mySwipe = new window.Swipe(document.getElementById('slider'), {
-            startSlide: 0,
-            speed: 500,
-            auto: 4000,
-            disableScroll: true,
-            callback: function (index, elem) {
-                window.$('.how-to-navigation-i')
-                    .removeClass('how-to-navigation-i_active')
-                    .eq(index)
-                    .addClass('how-to-navigation-i_active');
-            }
-        });
-
         const [wallet] = this.props.my_web3 && this.props.my_web3.eth.accounts
             ? this.props.my_web3.eth.accounts
             : [];
@@ -514,7 +504,7 @@ class RegisterAddressPage extends React.Component {
                             <img className="btn-arrow" src={require('../assets/images/arrow.svg')} alt="arrow" />
                         </button>
                     </form>
-                    <div className="small-c-copy"><strong>0.04 ETH</strong> This is the price we charge for sending a postcard to you</div>
+                    <div className="small-c-copy"><strong>{REACT_APP_PRICE} {REACT_APP_PRICE_SYMBOL}</strong> This is the price we charge for sending a postcard to you</div>
                 </div>
                 <Loading show={this.state.loading}/>
             </div>

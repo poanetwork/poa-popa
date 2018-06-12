@@ -27,7 +27,6 @@ var cfg = {
     blockWaitIntervalMs:   7000,
     blockWaitMaxTimeMs:  70000,
 
-    priceWei: '0.04e+18', // NOTE: this is in wei. If this value is set, other price_* options will be ignored
     priceUsCents: 1000, // NOTE: this is in cents! e.g. for $10 price, put 1000
     priceUpdIntervalMs: 60000,
 };
@@ -46,6 +45,14 @@ cfg.web3 = web3;
 
 if (!process.env.REACT_APP_POPA_CONTRACT_ADDRESS) {
     throw new Error('REACT_APP_POPA_CONTRACT_ADDRESS env var is not defined');
+}
+
+// NOTE: this is in wei. If this value is set, other price_* options will be ignored,
+if (process.env.REACT_APP_PRICE) {
+    cfg.priceWei = web3.toBigNumber(process.env.REACT_APP_PRICE).mul(web3.toBigNumber('1e+18'));
+}
+else {
+    throw new Error('Please provide REACT_APP_PRICE env variable. Dynamic prices are not implemented yet');
 }
 
 const popaContract = require('./src/ProofOfPhysicalAddress.json');
