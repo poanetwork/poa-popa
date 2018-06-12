@@ -17,6 +17,7 @@
     "helmet": "^3.8.1",
     "lob": "^5.2.0",
     "loglevel": "^1.6.1",
+    "petty-cache": "^2.3.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",

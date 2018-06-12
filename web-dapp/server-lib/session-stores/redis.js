@@ -2,6 +2,16 @@
 const config = require('../../server-config');
 const logger = require('../logger');
 const redis = require('redis'); // https://github.com/NodeRedis/node_redis
+const PettyCache = require('petty-cache');
+
+const pettyCache = new PettyCache();
+const pettyCacheMutexOptions = {
+    retry: {
+        interval: 100,
+        times: 1200,
+    },
+};
+pettyCacheMutexOptions.ttl = pettyCacheMutexOptions.retry.interval * pettyCacheMutexOptions.retry.times;
 
 const prelog = '[redis]';
 const lockedPrefix = 'locked';
@@ -106,7 +116,31 @@ module.exports = function () {
             });
         },
         inc: (k) => {
-            return client.incr(k);
+            return new Promise((resolve, reject) => {
+                client.incr(k, err => {
+                    if (err) return reject(err);
+                    return resolve();
+                });
+            });;
+        },
+        mutexLock: (mutexName) => {
+            return new Promise((resolve, reject) => {
+                pettyCache.mutex.lock(mutexName, pettyCacheMutexOptions, err => {
+                    if (err) {
+                        logger.error(`${prelog} Could not lock mutex: ${mutexName}, err: ${err}`);
+                        return reject(err);
+                    }
+                    return resolve();
+                });
+            });
+        },
+        mutexUnlock: (mutexName) => {
+            return new Promise((resolve, reject) => {
+                pettyCache.mutex.unlock(mutexName, err => {
+                    if (err) logger.error(`${prelog} Could not unlock mutex: ${mutexName} (it will be automatically unlocked after ${pettyCacheMutexOptions.ttl} ms), err: ${err}`);
+                    return resolve();
+                });
+            });
         },
     };
 };

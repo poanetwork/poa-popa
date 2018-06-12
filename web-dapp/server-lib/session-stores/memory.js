@@ -42,5 +42,15 @@ module.exports = function () {
 
             return Promise.resolve(db[k]);
         },
+        mutexLock: (mutexName) => {
+            return new Promise((resolve, reject) => {
+                return resolve();
+            });
+        },
+        mutexUnlock: (mutexName) => {
+            return new Promise((resolve, reject) => {
+                return resolve();
+            });
+        },
     };
 };
