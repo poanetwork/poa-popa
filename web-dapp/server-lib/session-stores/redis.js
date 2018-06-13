@@ -121,7 +121,7 @@ module.exports = function () {
                     if (err) return reject(err);
                     return resolve();
                 });
-            });;
+            });
         },
         mutexLock: (mutexName) => {
             return new Promise((resolve, reject) => {
@@ -135,7 +135,7 @@ module.exports = function () {
             });
         },
         mutexUnlock: (mutexName) => {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 pettyCache.mutex.unlock(mutexName, err => {
                     if (err) logger.error(`${prelog} Could not unlock mutex: ${mutexName} (it will be automatically unlocked after ${pettyCacheMutexOptions.ttl} ms), err: ${err}`);
                     return resolve();
