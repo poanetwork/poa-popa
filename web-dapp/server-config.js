@@ -29,6 +29,8 @@ var cfg = {
 
     priceUsCents: 1000, // NOTE: this is in cents! e.g. for $10 price, put 1000
     priceUpdIntervalMs: 60000,
+
+    maxPostcardsPerDay: 10, // Limits the number of postcards that can be sent per 1 utc day
 };
 
 if (fs.existsSync(path.join(__dirname, './server-config-private.js'))) {

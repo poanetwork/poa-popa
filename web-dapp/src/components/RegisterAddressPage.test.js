@@ -362,7 +362,7 @@ describe('<RegisterAddressPage />', () => {
 
         window.$.ajax = jest.fn(({ url, success, error }) => {
             switch (url) {
-                case './api/prepareRegTx':
+                case '/api/prepareRegTx':
                     return success({
                         ok: true,
                         x_id: 'test',
@@ -378,7 +378,7 @@ describe('<RegisterAddressPage />', () => {
                         }
                     });
 
-                case './api/notifyRegTx':
+                case '/api/notifyRegTx':
                     return error({
                         statusText: 'TX error',
                         status: 500
@@ -427,7 +427,7 @@ describe('<RegisterAddressPage />', () => {
 
         window.$.ajax = jest.fn(({ url, success }) => {
             switch (url) {
-                case './api/prepareRegTx':
+                case '/api/prepareRegTx':
                     return success({
                         ok: true,
                         x_id: 'test',
@@ -443,7 +443,7 @@ describe('<RegisterAddressPage />', () => {
                         }
                     });
 
-                case './api/notifyRegTx':
+                case '/api/notifyRegTx':
                     return success({
                         ok: true,
                         result: {
@@ -495,7 +495,7 @@ describe('<RegisterAddressPage />', () => {
 
         window.$.ajax = jest.fn(({ url, success }) => {
             switch (url) {
-                case './api/prepareRegTx':
+                case '/api/prepareRegTx':
                     return success({
                         ok: true,
                         x_id: 'test',
@@ -511,7 +511,7 @@ describe('<RegisterAddressPage />', () => {
                         }
                     });
 
-                case './api/notifyRegTx':
+                case '/api/notifyRegTx':
                     return success({
                         ok: true,
                         result: {
@@ -563,7 +563,7 @@ describe('<RegisterAddressPage />', () => {
 
         window.$.ajax = jest.fn(({ url, success }) => {
             switch (url) {
-                case './api/prepareRegTx':
+                case '/api/prepareRegTx':
                     return success({
                         ok: true,
                         x_id: 'test',
@@ -579,7 +579,7 @@ describe('<RegisterAddressPage />', () => {
                         }
                     });
 
-                case './api/notifyRegTx':
+                case '/api/notifyRegTx':
                     return success({
                         x_id: 'test',
                         err: 'error message'
@@ -633,7 +633,7 @@ describe('<RegisterAddressPage />', () => {
 
         window.$.ajax = jest.fn(({ url, success }) => {
             switch (url) {
-                case './api/prepareRegTx':
+                case '/api/prepareRegTx':
                     return success({
                         ok: true,
                         x_id: 'test',
@@ -649,7 +649,7 @@ describe('<RegisterAddressPage />', () => {
                         }
                     });
 
-                case './api/notifyRegTx':
+                case '/api/notifyRegTx':
                     return success({
                         ok: true,
                         result: {

@@ -1,4 +1,6 @@
 'use strict';
+const sem = require('q-semaphore');
+var mutexes = {};
 
 let db = {};
 function k1(k) {
@@ -41,6 +43,15 @@ module.exports = function () {
             db[k]++;
 
             return Promise.resolve(db[k]);
+        },
+        mutexLock: (mutexName) => {
+            if (!mutexes[mutexName]) {
+                mutexes[mutexName] = sem(1);
+            }
+            return mutexes[mutexName].take();
+        },
+        mutexUnlock: (mutexName) => {
+            return mutexes[mutexName].leave();
         },
     };
 };

@@ -309,7 +309,7 @@ class RegisterAddressPage extends React.Component {
 
         window.$.ajax({
             type: 'post',
-            url: './api/prepareRegTx',
+            url: '/api/prepareRegTx',
             data: {
                 wallet,
                 name: this.state.name,
@@ -366,7 +366,7 @@ class RegisterAddressPage extends React.Component {
                             logger.debug('Transaction submitted: ' + txId);
                             window.$.ajax({
                                 type: 'post',
-                                url: './api/notifyRegTx',
+                                url: '/api/notifyRegTx',
                                 data: {
                                     wallet,
                                     txId,

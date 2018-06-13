@@ -1,17 +1,15 @@
 'use strict';
 
+const config = require('../server-config');
 const db = require('./session_store');
-
-const MAX_POSTCARDS_PER_DAY = Number(process.env.MAX_POSTCARDS_PER_DAY || 10);
+const MAX_POSTCARDS_PER_DAY = config.maxPostcardsPerDay;
 
 function canSend() {
-    return get()
-        .then(postcardsSent => postcardsSent < MAX_POSTCARDS_PER_DAY);
+    return get().then(postcardsSent => postcardsSent < MAX_POSTCARDS_PER_DAY);
 }
 
 function get() {
     const postcardsSentKey = getDaysAfterEpoch();
-
     return db.get(postcardsSentKey).then(x => {
         if (x) return Number(x);
         return 0;
@@ -20,7 +18,6 @@ function get() {
 
 function inc() {
     const postcardsSentKey = getDaysAfterEpoch();
-
     return db.inc(postcardsSentKey);
 }
 
@@ -35,5 +32,4 @@ module.exports = {
     canSend,
     get,
     inc,
-    MAX_POSTCARDS_PER_DAY,
 };
