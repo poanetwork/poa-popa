@@ -4,6 +4,7 @@ import { mount, shallow } from 'enzyme';
 
 import RegisterAddressPage from './RegisterAddressPage';
 
+
 const web3 = { eth: { accounts: ['0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1'] } };
 const contract = require('../ProofOfPhysicalAddress.json');
 
@@ -15,6 +16,8 @@ const onChange = jest.spyOn(RegisterAddressPage.prototype, 'on_change');
 const orderClicked = jest.spyOn(RegisterAddressPage.prototype, 'order_clicked');
 const registerAddress = jest.spyOn(RegisterAddressPage.prototype, 'registerAddress');
 const showAlert = jest.spyOn(window, 'show_alert');
+
+jest.mock('./BackButton', () => () => (<span>Back</span>));
 
 describe('<RegisterAddressPage />', () => {
     const fields = ['name', 'country', 'state', 'city', 'address', 'zip'];

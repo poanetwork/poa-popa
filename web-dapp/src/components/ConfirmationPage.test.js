@@ -23,6 +23,8 @@ const findAddress = jest.spyOn(ConfirmationPage.prototype, 'find_address');
 const onChange = jest.spyOn(ConfirmationPage.prototype, 'on_change');
 const showAlert = jest.spyOn(window, 'show_alert');
 
+jest.mock('./BackButton', () => () => (<span>Back</span>));
+
 describe('<ConfirmationPage />', () => {
     const addressDetails = {
         country: 'US',
