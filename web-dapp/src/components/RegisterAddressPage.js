@@ -3,6 +3,7 @@ import React from 'react';
 import * as log from 'loglevel';
 
 import { Loading } from './Loading';
+import BackButton from './BackButton';
 
 import '../assets/javascripts/show-alert.js';
 
@@ -495,10 +496,7 @@ class RegisterAddressPage extends React.Component {
                                 <p className="help-block">At the present moment address verification is available only in the United States.</p>
                             </div>
                         </div>
-                        <a href="/" className="primary-btn mt-3">
-                            Back
-                            <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
-                        </a>
+                        <BackButton />
                         <button id="sendMessageButton" type="button" className="action-btn mt-3" onClick={this.order_clicked}>
                             Order
                             <img className="btn-arrow" src={require('../assets/images/arrow.svg')} alt="arrow" />

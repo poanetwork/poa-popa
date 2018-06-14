@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('../server-config');
 const db = require('../server-lib/session_store');
 const postApi = require('../server-lib/post_api');
 const logger = require('../server-lib/logger');
