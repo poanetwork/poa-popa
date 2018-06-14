@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import * as log from 'loglevel';
 
 import { Loading } from './Loading';
+import BackButton from './BackButton';
 
 import waitForTransaction from '../waitForTransaction';
 
@@ -326,10 +327,7 @@ class ConfirmationPage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <a href="/" className="primary-btn mt-3">
-                        Back
-                        <img className="btn-arrow btn-back" src={require('../assets/images/back.svg')} alt="arrow" />
-                    </a>
+                    <BackButton />
                 </div>
                 <Loading show={this.state.loading}/>
             </div>
