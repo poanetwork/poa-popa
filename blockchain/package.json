@@ -7,8 +7,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "solidity-coverage": "^0.4.9",
-    "truffle": "4.0.6",
+    "solidity-coverage": "^0.5.4",
+    "truffle": "^4.1.12",
     "truffle-hdwallet-provider": "0.0.3"
   }
 }

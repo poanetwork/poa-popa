@@ -1,4 +1,4 @@
-pragma solidity 0.4.19;
+pragma solidity 0.4.24;
 
 import "./EthereumClaimsRegistryInterface.sol";
 import "./PhysicalAddressClaim.sol";
@@ -85,12 +85,12 @@ contract ProofOfPhysicalAddress {
     // and on contract-side to verify them
     function setSigner(address newSigner) public onlyOwner {
         signer = newSigner;
-        LogSignerChanged(newSigner);
+        emit LogSignerChanged(newSigner);
     }
 
     function setRegistry(address newRegistry) public onlyOwner {
         registry = EthereumClaimsRegistryInterface(newRegistry);
-        LogRegistryChanged(newRegistry);
+        emit LogRegistryChanged(newRegistry);
     }
 
     // withdraw specified amount of eth in wei
@@ -324,7 +324,7 @@ contract ProofOfPhysicalAddress {
 
         totalAddresses += 1;
 
-        LogAddressRegistered(msg.sender, pa.keccakIdentifier);
+        emit LogAddressRegistered(msg.sender, pa.keccakIdentifier);
     }
 
     function unregisterAddress(string country, string state, string city, string location, string zip)
@@ -361,7 +361,7 @@ contract ProofOfPhysicalAddress {
             totalConfirmed--;
         }
 
-        LogAddressUnregistered(msg.sender, keccakIdentifier);
+        emit LogAddressUnregistered(msg.sender, keccakIdentifier);
     }
 
     function confirmAddress(string confirmationCodePlain, uint8 sigV, bytes32 sigR, bytes32 sigS)
@@ -389,7 +389,7 @@ contract ProofOfPhysicalAddress {
         registry.setClaim(msg.sender, keccakIdentifier, PhysicalAddressClaim.encode(block.number));
         totalConfirmed += 1;
 
-        LogAddressConfirmed(msg.sender, keccakIdentifier);
+        emit LogAddressConfirmed(msg.sender, keccakIdentifier);
     }
 
     function claimTokens(address _token, address _to) public onlyOwner {
@@ -399,6 +399,6 @@ contract ProofOfPhysicalAddress {
         ERC20 token = ERC20(_token);
         uint256 balance = token.balanceOf(this);
         token.transfer(_to, balance);
-        LogClaimedTokens(_token, _to, balance);
+        emit LogClaimedTokens(_token, _to, balance);
     }
 }
