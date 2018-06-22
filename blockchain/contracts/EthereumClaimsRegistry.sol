@@ -1,4 +1,4 @@
-pragma solidity 0.4.19;
+pragma solidity 0.4.24;
 
 import "./EthereumClaimsRegistryInterface.sol";
 
@@ -23,18 +23,18 @@ contract EthereumClaimsRegistry is EthereumClaimsRegistryInterface {
     // create or update claims
     function setClaim(address subject, bytes32 key, bytes32 value) external {
         registry[msg.sender][subject][key] = value;
-        ClaimSet(msg.sender, subject, key, value, now);
+        emit ClaimSet(msg.sender, subject, key, value, now);
     }
 
     function setSelfClaim(bytes32 key, bytes32 value) external {
         registry[msg.sender][msg.sender][key] = value;
-        ClaimSet(msg.sender, msg.sender, key, value, now);
+        emit ClaimSet(msg.sender, msg.sender, key, value, now);
     }
 
     function removeClaim(address issuer, address subject, bytes32 key) external {
         require(msg.sender == issuer);
         delete registry[issuer][subject][key];
-        ClaimRemoved(msg.sender, subject, key, now);
+        emit ClaimRemoved(msg.sender, subject, key, now);
     }
 
     function getClaim(address issuer, address subject, bytes32 key) external view returns(bytes32) {
