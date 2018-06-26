@@ -32,10 +32,6 @@ A more detailed schematic view of the process:
 * [smart contracts audit](./audit/BlockchainLabs) by BlockchainLabsNZ (added via https://github.com/poanetwork/poa-popa/pull/142 )
 * [smart contracts and server audit](./audit/MixBytes) by MixBytes (added via https://github.com/poanetwork/poa-popa/pull/186)
 
-You can read the audit report from [BlockchainLabsNZ/audit](https://github.com/BlockchainLabsNZ/poa-popa/tree/blockchainlabs/audit/blockchain/audit)
-
-Also, you can download the audit report pdf from: [Audit Report PDF](https://github.com/poanetwork/poa-popa/blob/master/blockchain/audit/poa-popa-audit-report.pdf)
-
 ## How to test the current version locally
 1. Clone this repository:
 
