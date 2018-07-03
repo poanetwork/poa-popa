@@ -2,7 +2,7 @@
   "name": "proof-of-address",
   "version": "1.0.0",
   "description": "Smart contract and DApp by poa.network to create proof of a physical address",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "main": "server.js",
   "scripts": {
     "build": "npm run build --prefix web-dapp",
