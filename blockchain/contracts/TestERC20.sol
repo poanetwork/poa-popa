@@ -30,15 +30,21 @@ contract TestERC20 is ERC20 {
     // not implemented
     // the bodies are just to avoid compiler warnings
     function allowance(address tokenOwner, address spender) public view returns (uint remaining) {
-        tokenOwner; spender;
+        tokenOwner;
+        spender;
         return 0;
     }
+
     function approve(address spender, uint tokens) public returns (bool success) {
-        spender; tokens;
+        spender;
+        tokens;
         return false;
     }
+    
     function transferFrom(address from, address to, uint tokens) public returns (bool success) {
-        from; to; tokens;
+        from;
+        to;
+        tokens;
         return false;
     }
 }
