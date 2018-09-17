@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "coverage": "NODE_ENV=test solidity-coverage",
+    "lint": "npm run lint.contracts",
+    "lint.contracts": "solhint contracts/*.sol",
     "test": "NODE_ENV=test truffle test --network test"
   },
   "dependencies": {},
   "devDependencies": {
+    "solhint": "^1.2.1",
     "solidity-coverage": "^0.4.9",
     "truffle": "4.0.6",
     "truffle-hdwallet-provider": "0.0.3"
