@@ -167,7 +167,13 @@ contract ProofOfPhysicalAddress {
     }
 
     // returns (found/not found, index if found/0 if not found, confirmed/not confirmed)
-    function userAddressByAddress(address wallet, string country, string state, string city, string location, string zip)
+    function userAddressByAddress(
+        address wallet,
+        string country,
+        string state,
+        string city,
+        string location,
+        string zip)
     public view checkUserExists(wallet) returns(bool, uint256, bool)
     {
         bytes32 keccakIdentifier = keccak256(country, state, city, location, zip);
@@ -300,12 +306,10 @@ contract ProofOfPhysicalAddress {
             // check if this address is already registered
             bool found;
             (found, , ) = userAddressByAddress(msg.sender, country, state, city, location, zip);
-
             require(!found);
         } else {
             // new user
             users[msg.sender].creationBlock = block.number;
-
             totalUsers += 1;
         }
 
