@@ -14,8 +14,7 @@ import '../assets/javascripts/init-my-web3.js';
 import '../assets/javascripts/show-alert.js';
 
 const WEB3_CHECKER_INTERV_MS = 500;
-const GOOGLE_CHROME_URL = 'https://www.google.com/chrome/browser';
-const META_MASK_URL = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
+const POA_WALLETS_SECTION_URL = 'https://poa.network/dapps?category=wallets';
 
 const logger = log.getLogger('App');
 
@@ -30,6 +29,7 @@ class App extends Component {
         };
         this.check_web3 = this.check_web3.bind(this);
         this.check_contract = this.check_contract.bind(this);
+        this.renderError = this.renderError.bind(this);
     }
 
     check_contract(cconf, callback) {
@@ -114,6 +114,32 @@ class App extends Component {
         this.setState({ web3Checker: setInterval(this.check_web3, WEB3_CHECKER_INTERV_MS) });
     }
 
+    renderError(errorContent) {
+      return (
+          <div className="container-fluid">
+              <div className="row">
+                  <div className="sidebar d-sm-none d-md-block">
+                      <div className="image"></div>
+                  </div>
+                  <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
+                      <div className="row">
+                          <div className="col-md-12">
+                              <div className="content-preloader d-flex">
+                                  <div className="wrap-mask">
+                                      <div className="mask-img">
+                                          <img src={require('../assets/images/warning.svg')} alt="companyName" />
+                                      </div>
+                                      {errorContent}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      );
+    }
+
     render() {
         if (this.state.my_web3 && this.state.contract) {
             return (
@@ -144,71 +170,44 @@ class App extends Component {
         }
         else if (this.state.my_web3 && !this.state.contract) {
             window.show_alert('error', 'Contract not deployed', 'PoPA contract is not deployed on this network');
-            return (
-                <BrowserRouter>
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="sidebar d-sm-none d-md-block">
-                                <div className="image"></div>
-                            </div>
-                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="content-preloader d-flex">
-                                            <div className="wrap-mask">
-                                                <div className="mask-img">
-                                                    <img src={require('../assets/images/warning.svg')} alt="companyName" />
-                                                </div>
-                                                <div className="title-mask">
-                                                    Contract is not deployed
-                                                </div>
-                                                <div className="text-mask">
-                                                    PoPA contract is not deployed on this network, please switch network in metamask
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </BrowserRouter>
+            const errorContent = (
+              <section>
+                <div className="title-mask">
+                  Contract is not deployed
+                </div>
+                <div className="text-mask">
+                  PoPA contract is not deployed on this network, please switch network in metamask
+                </div>
+              </section>
             );
+            return this.renderError(errorContent);
         }
         else if (this.state.web3CheckerDur > 1000) {
-            return (
-                <BrowserRouter>
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="sidebar d-sm-none d-md-block">
-                                <div className="image"></div>
-                            </div>
-                            <div className="offset-md-5 offset-lg-6 offset-xl-6 col-md-7 col-lg-6 col-lg-5 col-xl-5">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="content-preloader d-flex">
-                                            <div className="wrap-mask">
-                                                <div className="mask-img">
-                                                    <img src={require('../assets/images/warning.svg')} alt="companyName" />
-                                                </div>
-                                                <div className="title-mask">
-                                                    No MetaMask found
-                                                </div>
-                                                <div className="text-mask">
-                                                    This application requires MetaMask extension for Google Chrome.
-                                                    Please make sure you are running the <a href={GOOGLE_CHROME_URL} target="_blank" rel="noopener noreferrer">latest version of
-                                                    Google Chrome</a> and follow this <a href={META_MASK_URL} target="_blank" rel="noopener noreferrer">link</a> to install
-                                                    MetaMask.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </BrowserRouter>
+            const errorContent = (
+              <section>
+                <div className="title-mask">
+                  Wallet not found, or access to Ethereum account not granted
+                </div>
+                <p className="text-mask">
+                  This application requires a web browser Wallet extension.
+                  <br />
+                  Check{' '}
+                  <a
+                    href={POA_WALLETS_SECTION_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    POA Network Wallets{`'`} section
+                  </a>{' '}
+                  for more information.
+                </p>
+                <p>
+                  If a Wallet extension is installed on your web browser, please verify that the
+                  access to Ethereum account has been granted and is available for the corresponding domain.
+                </p>
+              </section>
             );
+            return this.renderError(errorContent);
         }
         else {
             return (

@@ -201,11 +201,13 @@ input {
   align-items: center;
   height: 100vh; }
   .content-preloader .title-mask {
-    margin-top: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     font-size: 24px;
-    line-height: 2.67;
+    line-height: 1.58;
     color: #333333; }
   .content-preloader .text-mask {
+    line-height: 24px;
     margin-top: 10px;
     font-size: 14px;
     color: #777777; }

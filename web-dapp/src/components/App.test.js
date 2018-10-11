@@ -47,13 +47,13 @@ describe('<App/>', () => {
         expect(wrapper.find('.l-preload')).toHaveLength(1);
     });
 
-    it('provides download information if no MetaMask found', () => {
+    it('provides information if no wallet found', () => {
         const wrapper = mount(<App/>);
 
         jest.runTimersToTime(999);
 
         wrapper.setState({ my_web3: null, web3CheckerDur: 1001 });
-        expect(wrapper.find('.title-mask').text()).toEqual('No MetaMask found');
+        expect(wrapper.find('.title-mask').text()).toEqual('Wallet not found, or access to Ethereum account not granted');
     });
 
     it('detects when contract is not deployed', async () => {
