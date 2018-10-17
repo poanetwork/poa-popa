@@ -6,7 +6,7 @@
     "start": "react-scripts start",
     "build": "npm run build-css && react-scripts build",
     "build-css": "node-sass ./src/assets/stylesheets/application.scss ./src/assets/stylesheets/application.css",
-    "test": "react-scripts test --testMatch **/test/server/**/*.spec.js **/src/**/*.test.js --env=jsdom --coverage"
+    "test": "react-scripts test --testMatch **/test/server/**/*.spec.js **/src/**/*.test.js --env=jsdom --coverage --forceExit"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
