@@ -1,9 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import * as log from 'loglevel';
 
-import {Loading} from './Loading';
 import BackButton from './BackButton';
 import waitForTransaction from '../waitForTransaction';
 
