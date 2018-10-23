@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 window.show_alert = function (type, title, text) {
     var body = '';
     if (typeof text === 'object' && text != null && Array.isArray(text)) {
@@ -15,5 +17,5 @@ window.show_alert = function (type, title, text) {
     else {
         body = text;
     }
-    return window.swal(title, body, type);
+    return Swal(title, body, type);
 }
