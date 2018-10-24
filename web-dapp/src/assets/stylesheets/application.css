@@ -437,13 +437,12 @@ input {
   margin-right: 25px; }
 
 .item-adress {
-  width: 195px;
-  -ms-flex-positive: 0 !important;
-  flex-grow: 0 !important; }
+  flex-grow: 1; }
+  .item-adress > div {
+    width: 195px; }
 
 .wrap-btn {
-  position: absolute;
-  right: 125px; }
+  margin: 0 10px; }
 
 .verify-btn {
   opacity: 0;
@@ -474,8 +473,9 @@ input {
     flex-direction: column; }
   .item-adress {
     padding: 10px;
-    width: 100%;
     text-align: center; }
+    .item-adress > div {
+      width: 100%; }
   .wrap-btn {
     right: 0;
     text-align: center;

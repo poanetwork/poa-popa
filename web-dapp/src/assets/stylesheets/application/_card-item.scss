@@ -1,49 +1,49 @@
 // Card Item Style
 .card-item{
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: -o-flex;
-	display: flex;
-	align-items: center;
-	border-radius: 5px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
   border: solid 1px $border-color;
 }
 .card-item:hover{
-	box-shadow: 0px 10px 30px 0 rgba(76, 43, 134, 0.2);
-	cursor: pointer;
+  box-shadow: 0px 10px 30px 0 rgba(76, 43, 134, 0.2);
+  cursor: pointer;
 }
 .card-item img{
-	margin-right: 25px;
+  margin-right: 25px;
 }
 .item-adress{
-	width: 195px;
-  -ms-flex-positive: 0!important;
-  flex-grow: 0!important;
+  &>div {
+    width: 195px;
+  }
+  flex-grow: 1;
 }
 .wrap-btn{
-	position: absolute;
-	right: 125px;
+  margin: 0 10px;
 }
 .verify-btn{
-	opacity: 0;
-	padding: 5px 10px;
-	margin-right: 25px;
-	font-size: 14px;
-	background-color: white;
-	border-radius: 3px;
+  opacity: 0;
+  padding: 5px 10px;
+  margin-right: 25px;
+  font-size: 14px;
+  background-color: white;
+  border-radius: 3px;
   border: solid 1px $verify-btn;
   color: $verify-btn;
 }
 .verify-btn:hover{
-	box-shadow: inset 0 0 0 2px #5c34a2;
+  box-shadow: inset 0 0 0 2px #5c34a2;
 }
 .card-item:hover .verify-btn{
-	opacity: 1;
+  opacity: 1;
 }
 .item-data{
-	font-size: 14px;
-	color: #777777;
-	flex-grow: 1!important;
-	text-align: right;
+  font-size: 14px;
+  color: #777777;
+  flex-grow: 1!important;
+  text-align: right;
 }

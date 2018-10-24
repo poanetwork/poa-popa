@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import * as log from 'loglevel';
 
@@ -145,10 +146,17 @@ class ConfirmationPage extends React.Component {
                                          ` : `
                                             ${require('../assets/images/card-item/clock@2x.png')} 2x,
                                             ${require('../assets/images/card-item/clock@3x.png')} 3x
-                                         `} />
+                                         `} alt={confirmed ? 'Verified' : 'Registered'} />
                                     <div className="item-adress">
-                                        {location}, {zip}, {city}, {state}, {country}
+                                        <div>{location}, {zip}, {city}, {state}, {country}</div>
                                     </div>
+                                    { !confirmed ? null : (
+                                      <div className="wrap-btn">
+                                        <Link to={`/add-claim-to-identity/${index}`} title="Add claim to identity">
+                                          <i className="fa fa-id-card-o" />
+                                        </Link>
+                                      </div>
+                                    ) }
                                     <div className="wrap-btn">
                                         <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
                                             <i className="fa fa-trash"></i>

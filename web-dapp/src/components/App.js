@@ -7,6 +7,7 @@ import Footer from './Footer';
 import RegisterAddressPage from './RegisterAddressPage';
 import ConfirmationPage from './ConfirmationPage';
 import MyAddressesPage from './MyAddressesPage';
+import AddClaimToIdentityPage from './AddClaimToIdentityPage';
 import IndexPage from "./IndexPage";
 import HelpPage from "./HelpPage";
 
@@ -159,6 +160,8 @@ class App extends Component {
                                     <Route path="/confirm" component={() => <ConfirmationPage my_web3={this.state.my_web3}
                                                                                               contract={this.state.contract}/>}/>
                                     <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
+                                                                                              contract={this.state.contract}/>}/>
+                                                                                          <Route path="/add-claim-to-identity/:physicalAddressIndex" component={() => <AddClaimToIdentityPage my_web3={this.state.my_web3}
                                                                                               contract={this.state.contract}/>}/>
                                     <Footer/>
                                 </div>
