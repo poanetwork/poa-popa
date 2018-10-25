@@ -161,8 +161,12 @@ class App extends Component {
                                                                                               contract={this.state.contract}/>}/>
                                     <Route path="/my-addresses" component={() => <MyAddressesPage my_web3={this.state.my_web3}
                                                                                               contract={this.state.contract}/>}/>
-                                                                                          <Route path="/add-claim-to-identity/:physicalAddressIndex" component={() => <AddClaimToIdentityPage my_web3={this.state.my_web3}
-                                                                                              contract={this.state.contract}/>}/>
+                                    <Route path="/add-claim-to-identity/:physicalAddressIndex"
+                                        component={props => {
+                                          const {physicalAddressIndex} = props.match.params
+                                          return (<AddClaimToIdentityPage my_web3={this.state.my_web3} physicalAddressIndex={physicalAddressIndex}/>)
+                                        }}
+                                    />
                                     <Footer/>
                                 </div>
                             </div>

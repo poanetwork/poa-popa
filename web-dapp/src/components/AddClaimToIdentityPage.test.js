@@ -7,7 +7,12 @@ import AddClaimToIdentityPage from './AddClaimToIdentityPage';
 
 const onChange = jest.spyOn(AddClaimToIdentityPage.prototype, 'on_change');
 
-const web3 = { isAddress: () => true };
+const web3 = {
+  eth: {
+    accounts: ['0x555553F12BFd372042B754B729D1474572A4444'],
+  },
+  isAddress: () => true
+};
 const showAlert = jest.spyOn(window, 'show_alert');
 
 jest.mock('./BackButton', () => () => (<span>Back</span>));
@@ -135,7 +140,7 @@ describe('<AddClaimToIdentityPage />', () => {
         );
     });
 
-    it('displays a message if received a response without result', () => {
+    it('displays a message if received a response without the fields needed to generate the claim', () => {
         const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
         const generateClaimButton = page.find('#generateClaim');
 
@@ -149,7 +154,7 @@ describe('<AddClaimToIdentityPage />', () => {
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
             'Generating ERC725 claim',
-            [['Request ID', 'test'], ['Error', 'Missing result field']]
+            [['Request ID', 'test'], ['Error', 'Missing issuer address, signature, uri or hashed data field']]
         );
     });
 

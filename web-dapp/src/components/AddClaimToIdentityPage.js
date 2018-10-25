@@ -34,7 +34,7 @@ class AddClaimToIdentityPage extends React.Component {
     };
 
     generateClaim() {
-        const {wallet, my_web3, physicalAddressIndex} = this.props;
+        const {my_web3, physicalAddressIndex} = this.props;
         const identityContractAddress = this.state.identitycontractaddress;
         const web3 = my_web3;
 
@@ -42,6 +42,8 @@ class AddClaimToIdentityPage extends React.Component {
             window.show_alert('warning', 'Verification', 'Please provide a valid IDENTITY CONTRACT ADDRESS');
             return;
         }
+
+        const [wallet] = web3 && web3.eth.accounts ? web3.eth.accounts : [];
 
         this.setState({ loading: true });
 
@@ -67,17 +69,17 @@ class AddClaimToIdentityPage extends React.Component {
                 }
                 logger.debug(res);
 
-                if (!res.ok) {
+                const {ok, data, issuerAddress, signature, uri} = res;
+                if (!ok) {
                     logger.debug('Error: ' + res.err);
                     this.setState({ loading: false });
                     window.show_alert('error', 'Generating ERC725 claim', [['Request ID', res.x_id], ['Error', res.err]]);
                     return;
                 }
-
-                if (!res.result) {
-                    logger.debug('Invalid response: missing result');
+                if (!data || !issuerAddress || !signature || !uri) {
+                    logger.debug('Invalid response: missing issuer address, signature, uri or hashed data.');
                     this.setState({ loading: false });
-                    window.show_alert('error', 'Generating ERC725 claim', [['Request ID', res.x_id], ['Error', 'Missing result field']]);
+                    window.show_alert('error', 'Generating ERC725 claim', [['Request ID', res.x_id], ['Error', 'Missing issuer address, signature, uri or hashed data field']]);
                     return;
                 }
 

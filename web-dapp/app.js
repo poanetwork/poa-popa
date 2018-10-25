@@ -16,6 +16,7 @@ app.use('/register', express.static(path.join(__dirname, 'build')));
 app.use('/confirm', express.static(path.join(__dirname, 'build')));
 app.use('/help', express.static(path.join(__dirname, 'build')));
 app.use('/my-addresses', express.static(path.join(__dirname, 'build')));
+app.use('/add-claim-to-identity', express.static(path.join(__dirname, 'build')));
 
 // api
 app.use(bodyParser.urlencoded({ extended: true, limit: config.bodySizeLimit }));
