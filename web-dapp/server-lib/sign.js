@@ -26,7 +26,7 @@ function sign(text, privateKey) {
     logger.log(prelog + 'v: ' + v);
     logger.log(prelog + 'r: ' + r);
     logger.log(prelog + 's: ' + s);
-    return { v, r, s };
+    return { v, r, s, sig, dataHashed: buffSha3 };
 }
 
 module.exports = sign;
