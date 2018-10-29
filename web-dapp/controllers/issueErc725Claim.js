@@ -4,6 +4,7 @@ const logger = require('../server-lib/logger');
 const config = require('../server-config');
 const sendResponse = require('../server-lib/send_response');
 const sign = require('../server-lib/sign');
+const validations = require('../server-lib/validations');
 
 const web3 = config.web3;
 const SIGNER_PRIVATE_KEY = config.signerPrivateKey;
@@ -16,11 +17,16 @@ function issueErc725Claim(req, res) {
     const logPrfx = req.logPrfx;
     const prelog = `[issueErc725Claim] (${logPrfx})`;
 
-    const {wallet, addressIndex, destinationClaimHolderAddress} = req.body;
+    let targetIdentityContractAddress;
 
-    return getConfirmedAddressByIndex(wallet, addressIndex)
+    return validateData(req.body)
+        .then(data => {
+            const {wallet, addressIndex, destinationClaimHolderAddress} = data;
+            targetIdentityContractAddress = destinationClaimHolderAddress;
+            return getConfirmedAddressByIndex(wallet, addressIndex);
+        })
         .then(physicalAddress => {
-            const {signature, physicalAddressSha3} = getErc725Signature(physicalAddress, destinationClaimHolderAddress);
+            const {signature, physicalAddressSha3} = getErc725Signature(physicalAddress, targetIdentityContractAddress);
             return sendResponse(res, {
                 ok: true,
                 signature,
@@ -34,6 +40,31 @@ function issueErc725Claim(req, res) {
             return sendResponse(res, { ok: false, err: error.msg });
         });
 }
+
+const validateData = (body = {}) => {
+    return new Promise((resolve, reject) => {
+        if (!body || !Object.keys(body).length) {
+            return reject({ok: false, log: 'request body empty', msg: 'request body empty'});
+        } else {
+            return resolve(body);
+        }
+    })
+        .then(body => validateParams(body, 'wallet'))
+        .then(body => validateParams(body, 'addressIndex'))
+        .then(body => validateParams(body, 'destinationClaimHolderAddress'));
+};
+const validateParams = (body, param) => {
+    return new Promise((resolve, reject) => {
+        const result = (param === 'wallet' || param === 'destinationClaimHolderAddress')
+            ? validations.validate.wallet(body[param])
+            : validations.validate.string(body[param]);
+        if (!result.ok) {
+            const log = `validation error on ${param}: ${body[param]}, err: ${result.msg}`;
+            return reject({...result, log, msg: log});
+        }
+        return resolve(body);
+    });
+};
 
 const getErc725Signature = (physicalAddress, destinationClaimHolderAddress) => {
     let physicalAddressText = [
