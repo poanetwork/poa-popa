@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 import * as log from 'loglevel';
 
@@ -6,6 +7,8 @@ import { Loading } from './Loading';
 import BackButton from './BackButton';
 
 import '../assets/javascripts/show-alert.js';
+
+window.$ = $;
 
 const logger = log.getLogger('RegisterAddressPage');
 
