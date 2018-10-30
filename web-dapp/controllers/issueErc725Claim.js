@@ -3,19 +3,15 @@
 const logger = require('../server-lib/logger');
 const config = require('../server-config');
 const sendResponse = require('../server-lib/send_response');
-const sign = require('../server-lib/sign');
 const validations = require('../server-lib/validations');
 const isAddressConfirmed = require('../server-lib/is_address_confirmed');
 const getAddressDetails = require('../server-lib/get_address_details');
+const getErc725Signature = require('../server-lib/get_erc725_signature');
 
-const web3 = config.web3;
-const SIGNER_PRIVATE_KEY = config.signerPrivateKey;
 const POPA_ERC725_CONTRACT_ADDRESS = config.cconf.popaErc725ContractAddress;
-const POPA_URI = 'http://popa.poa.network';
-// Number "7" zero-padded-uint256-representation
-const CLAIM_TYPE_KYC_UINT256 = '0x0000000000000000000000000000000000000000000000000000000000000007';
+const POPA_ERC725_URI = config.cconf.popaErc725Uri;
 
-function issueErc725Claim(req, res) {
+const issueErc725Claim = (req, res) => {
     const logPrfx = req.logPrfx;
     const prelog = `[issueErc725Claim] (${logPrfx})`;
 
@@ -41,33 +37,13 @@ function issueErc725Claim(req, res) {
                 signature,
                 data: physicalAddressSha3,
                 issuerAddress: POPA_ERC725_CONTRACT_ADDRESS,
-                uri: POPA_URI,
+                uri: POPA_ERC725_URI,
             });
         })
         .catch(error => {
             logger.error(`${prelog} ${error.msg}`);
             return sendResponse(res, { ok: false, err: error.msg });
         });
-}
-
-const getErc725Signature = (physicalAddress, destinationClaimHolderAddress) => {
-    const physicalAddressKeys = Object.keys(physicalAddress);
-    let physicalAddressValues = [];
-    for (let i = 0; i < physicalAddressKeys.length; i++) {
-        physicalAddressValues.push(physicalAddress[physicalAddressKeys[i]]);
-    }
-    let physicalAddressSha3 = web3.sha3(physicalAddressValues.join(','));
-
-    let dataToHash = Buffer.concat([
-        Buffer.from(destinationClaimHolderAddress.substr(2), 'hex'),
-        Buffer.from(CLAIM_TYPE_KYC_UINT256.substr(2), 'hex'),
-        Buffer.from(physicalAddressSha3.substr(2), 'hex'),
-    ]).toString('hex');
-
-    const { sig } = sign(dataToHash, SIGNER_PRIVATE_KEY);
-    const signature = '0x' + sig;
-
-    return {signature, physicalAddressSha3};
 };
 
 const validateData = (body = {}) => {
@@ -82,6 +58,7 @@ const validateData = (body = {}) => {
         .then(body => validateParams(body, 'addressIndex'))
         .then(body => validateParams(body, 'destinationClaimHolderAddress'));
 };
+
 const validateParams = (body, param) => {
     return new Promise((resolve, reject) => {
         const result = (param === 'wallet' || param === 'destinationClaimHolderAddress')
@@ -95,7 +72,7 @@ const validateParams = (body, param) => {
     });
 };
 
-
 module.exports = {
     issueErc725Claim,
+    validateData,
 };

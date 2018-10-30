@@ -63,6 +63,7 @@ cfg.cconf = {};
 cfg.cconf.abi = popaContract.abi;
 cfg.cconf.address = process.env.REACT_APP_POPA_CONTRACT_ADDRESS;
 cfg.cconf.popaErc725ContractAddress = process.env.REACT_APP_POPA_ERC725_CONTRACT_ADDRESS;
+cfg.cconf.popaErc725Uri = process.env.REACT_APP_POPA_ERC725_URI;
 
 cfg.contract = web3.eth.contract(cfg.cconf.abi).at(cfg.cconf.address);
 
