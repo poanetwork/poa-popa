@@ -8,7 +8,7 @@ const SIGNER_PRIVATE_KEY = config.signerPrivateKey;
 // Number "7" zero-padded-uint256-representation
 const CLAIM_TYPE_KYC_UINT256 = '0x0000000000000000000000000000000000000000000000000000000000000007';
 
-const getErc725Signature = (physicalAddress, destinationClaimHolderAddress) => {
+const getErc735Signature = (physicalAddress, destinationClaimHolderAddress) => {
     let physicalAddressSha3 = web3.sha3(getAllTextDetailsFromPhysicalAddress(physicalAddress));
 
     let dataToHash = Buffer.concat([
@@ -32,4 +32,8 @@ const getAllTextDetailsFromPhysicalAddress = (physicalAddressDetails) => {
     return physicalAddressValues.join(',');
 };
 
-module.exports = getErc725Signature;
+module.exports = {
+    CLAIM_TYPE_KYC_UINT256,
+    getErc735Signature,
+    getAllTextDetailsFromPhysicalAddress,
+};

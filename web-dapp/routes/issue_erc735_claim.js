@@ -1,10 +1,10 @@
 'use strict';
 
 const express = require('express');
-const {issueErc725Claim} = require('../controllers/issueErc725Claim');
+const {issueErc735Claim} = require('../controllers/issueErc735Claim');
 
 module.exports = () => {
     const router = express.Router();
-    router.post('/issueErc725Claim', issueErc725Claim);
+    router.post('/issueErc735Claim', issueErc735Claim);
     return router;
 };

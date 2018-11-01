@@ -9,10 +9,10 @@ const POPA_ERC725_URI = config.cconf.popaErc725Uri;
 jest.mock('../../server-lib/is_address_confirmed', () => jest.fn(() => Promise.resolve(true)));
 jest.mock('../../server-lib/get_address_details', () => jest.fn(() => Promise.resolve({some: 'address', random: 'details'})));
 
-describe('issue_erc725_claim', () => {
+describe('issue_erc735_claim', () => {
     it('should return error if body is empty', () => {
         return request(app)
-            .post('/api/issueErc725Claim')
+            .post('/api/issueErc735Claim')
             .then(res => {
                 return expect(res.body.ok).toBeFalsy();
             });
@@ -20,7 +20,7 @@ describe('issue_erc725_claim', () => {
 
     it('should return a valid response if the input data is valid', () => {
         return request(app)
-            .post('/api/issueErc725Claim')
+            .post('/api/issueErc735Claim')
             .send({
                 wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
                 addressIndex: '0',
@@ -31,9 +31,9 @@ describe('issue_erc725_claim', () => {
             });
     });
 
-    it('should return in response signature, data (hashed), issuerAddress and uri for erc725 claim generation', (done) => {
+    it('should return in response signature, data (hashed), issuerAddress and uri for erc735 claim generation', (done) => {
         return request(app)
-            .post('/api/issueErc725Claim')
+            .post('/api/issueErc735Claim')
             .send({
                 wallet: '0x1aa2d288d03d8397c193d2327ee7a7443d4ec3a1',
                 addressIndex: '0',

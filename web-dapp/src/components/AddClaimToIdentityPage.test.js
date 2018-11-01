@@ -99,7 +99,7 @@ describe('<AddClaimToIdentityPage />', () => {
         expect(window.$.ajax).toHaveBeenCalled();
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
-            'Generating ERC725 claim',
+            'Generating ERC735 claim',
             [['Server error', 'Server Error (500)']]
         );
     });
@@ -117,7 +117,7 @@ describe('<AddClaimToIdentityPage />', () => {
         expect(window.$.ajax).toHaveBeenCalled();
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
-            'Generating ERC725 claim',
+            'Generating ERC735 claim',
             [['Error', 'Empty response from server']]
         );
     });
@@ -135,7 +135,7 @@ describe('<AddClaimToIdentityPage />', () => {
         expect(window.$.ajax).toHaveBeenCalled();
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
-            'Generating ERC725 claim',
+            'Generating ERC735 claim',
             [['Request ID', 'test'], ['Error', 'fake error']]
         );
     });
@@ -153,7 +153,7 @@ describe('<AddClaimToIdentityPage />', () => {
         expect(window.$.ajax).toHaveBeenCalled();
         expect(showAlert).toHaveBeenLastCalledWith(
             'error',
-            'Generating ERC725 claim',
+            'Generating ERC735 claim',
             [['Request ID', 'test'], ['Error', 'Missing issuer address, signature, uri or hashed data field']]
         );
     });

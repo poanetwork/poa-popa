@@ -6,14 +6,14 @@ const sendResponse = require('../server-lib/send_response');
 const validations = require('../server-lib/validations');
 const isAddressConfirmed = require('../server-lib/is_address_confirmed');
 const getAddressDetails = require('../server-lib/get_address_details');
-const getErc725Signature = require('../server-lib/get_erc725_signature');
+const erc735Claim = require('../server-lib/erc735_claim');
 
 const POPA_ERC725_CONTRACT_ADDRESS = config.cconf.popaErc725ContractAddress;
 const POPA_ERC725_URI = config.cconf.popaErc725Uri;
 
-const issueErc725Claim = (req, res) => {
+const issueErc735Claim = (req, res) => {
     const logPrfx = req.logPrfx;
-    const prelog = `[issueErc725Claim] (${logPrfx})`;
+    const prelog = `[issueErc735Claim] (${logPrfx})`;
 
     // Store options/params sent in req.bod, after validation
     let opts = null;
@@ -31,7 +31,7 @@ const issueErc725Claim = (req, res) => {
             return getAddressDetails([null, opts.addressIndex], opts.wallet);
         })
         .then(physicalAddress => {
-            const {signature, physicalAddressSha3} = getErc725Signature(physicalAddress, opts.destinationClaimHolderAddress);
+            const {signature, physicalAddressSha3} = erc735Claim.getErc735Signature(physicalAddress, opts.destinationClaimHolderAddress);
             return sendResponse(res, {
                 ok: true,
                 signature,
@@ -73,6 +73,6 @@ const validateParams = (body, param) => {
 };
 
 module.exports = {
-    issueErc725Claim,
+    issueErc735Claim,
     validateData,
 };
