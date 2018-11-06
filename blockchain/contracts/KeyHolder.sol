@@ -135,6 +135,10 @@ contract KeyHolder is ERC725 {
         returns (bool success)
     {
         require(keys[_key].key == _key, "No such key");
+
+        bytes32 senderKey = keccak256(msg.sender);
+        require(keys[senderKey].purpose == 1, "MANAGEMENT_KEY purpose required for removeKey");
+
         emit KeyRemoved(keys[_key].key, keys[_key].purpose, keys[_key].keyType);
 
         /* uint index;
