@@ -1,5 +1,6 @@
 var POPA = artifacts.require('ProofOfPhysicalAddress');
 var PhysicalAddressClaim = artifacts.require('PhysicalAddressClaim');
+var PhysicalAddressClaimMock = artifacts.require('mocks/PhysicalAddressClaimMock');
 var EthereumClaimsRegistry = artifacts.require('EthereumClaimsRegistry');
 var TestERC20 = artifacts.require('TestERC20');
 var POPAKeyHolder = artifacts.require('ProofOfPhysicalAddressKeyHolder');
@@ -20,6 +21,8 @@ module.exports = function(deployer, network) {
 
         if (network === 'test' || network === 'coverage') {
             await deployer.deploy(TestERC20);
+            await deployer.link(PhysicalAddressClaim, PhysicalAddressClaimMock);
+            await deployer.deploy(PhysicalAddressClaimMock);
         }
 
         const gas = network === 'coverage' ? '0xfffffffffff' : '6000000';
