@@ -477,6 +477,17 @@ input {
     background-image: url(../images/remove-purple.svg);
     cursor: pointer; }
 
+.add-claim-to-identity__icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  background-image: url(../images/add.svg);
+  background-position: center;
+  background-repeat: no-repeat; }
+  .add-claim-to-identity__icon:hover {
+    background-image: url(../images/add-purple.svg);
+    cursor: pointer; }
+
 @media only screen and (max-width: 480px) {
   .block-card {
     width: 100%; }

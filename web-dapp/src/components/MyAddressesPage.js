@@ -153,7 +153,7 @@ class ConfirmationPage extends React.Component {
                                     { !confirmed ? null : (
                                       <div className="wrap-btn">
                                         <Link to={`/add-claim-to-identity/${index}`} title="Add claim to identity">
-                                          <i className="fa fa-id-card-o" />
+                                          <i className="add-claim-to-identity__icon" />
                                         </Link>
                                       </div>
                                     ) }
