@@ -54,7 +54,7 @@ class AddClaimToIdentityPage extends React.Component {
 
         window.$.ajax({
             type: 'post',
-            url: '/api/issueErc725Claim',
+            url: '/api/issueErc735Claim',
             data: {
                 wallet,
                 addressIndex: physicalAddressIndex,
@@ -64,7 +64,7 @@ class AddClaimToIdentityPage extends React.Component {
                 if (!res) {
                     logger.debug('Empty response from server');
                     this.setState({ loading: false });
-                    window.show_alert('error', 'Generating ERC725 claim', [['Error', 'Empty response from server']]);
+                    window.show_alert('error', 'Generating ERC735 claim', [['Error', 'Empty response from server']]);
                     return;
                 }
                 logger.debug(res);
@@ -73,13 +73,13 @@ class AddClaimToIdentityPage extends React.Component {
                 if (!ok) {
                     logger.debug('Error: ' + res.err);
                     this.setState({ loading: false });
-                    window.show_alert('error', 'Generating ERC725 claim', [['Request ID', res.x_id], ['Error', res.err]]);
+                    window.show_alert('error', 'Generating ERC735 claim', [['Request ID', res.x_id], ['Error', res.err]]);
                     return;
                 }
                 if (!data || !issuerAddress || !signature || !uri) {
                     logger.debug('Invalid response: missing issuer address, signature, uri or hashed data.');
                     this.setState({ loading: false });
-                    window.show_alert('error', 'Generating ERC725 claim', [['Request ID', res.x_id], ['Error', 'Missing issuer address, signature, uri or hashed data field']]);
+                    window.show_alert('error', 'Generating ERC735 claim', [['Request ID', res.x_id], ['Error', 'Missing issuer address, signature, uri or hashed data field']]);
                     return;
                 }
 
@@ -92,7 +92,7 @@ class AddClaimToIdentityPage extends React.Component {
                 this.executeAddClaim(web3, wallet, identityContractAddress, claim);
             },
             error: ({ responseJSON, statusText, status }) => {
-                logger.debug('Server returned error on issueErc725Claim: ' + statusText + ' (' + status + ')');
+                logger.debug('Server returned error on issueErc735Claim: ' + statusText + ' (' + status + ')');
                 this.setState({ loading: false });
                 const errorBody = [
                     ['Server error', statusText + ' (' + status + ')']
@@ -100,7 +100,7 @@ class AddClaimToIdentityPage extends React.Component {
                 if (responseJSON && responseJSON.err) {
                     errorBody.push([responseJSON.err]);
                 }
-                window.show_alert('error', 'Generating ERC725 claim', errorBody);
+                window.show_alert('error', 'Generating ERC735 claim', errorBody);
             }
         });
     }
