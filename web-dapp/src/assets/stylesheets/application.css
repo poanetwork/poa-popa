@@ -466,6 +466,17 @@ input {
   flex-grow: 1 !important;
   text-align: right; }
 
+.remove-button__icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  background-image: url(../images/remove.svg);
+  background-position: center;
+  background-repeat: no-repeat; }
+  .remove-button__icon:hover {
+    background-image: url(../images/remove-purple.svg);
+    cursor: pointer; }
+
 @media only screen and (max-width: 480px) {
   .block-card {
     width: 100%; }
