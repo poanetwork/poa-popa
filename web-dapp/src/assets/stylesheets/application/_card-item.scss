@@ -47,3 +47,17 @@
   flex-grow: 1!important;
   text-align: right;
 }
+
+.remove-button__icon {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    background-image: url(../images/remove.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      background-image: url(../images/remove-purple.svg);
+      cursor: pointer;
+    }
+}
