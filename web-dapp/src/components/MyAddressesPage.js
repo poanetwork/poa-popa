@@ -151,7 +151,7 @@ class ConfirmationPage extends React.Component {
                                     </div>
                                     <div className="wrap-btn">
                                         <a href="" className="remove-button" onClick={(e) => this.remove(e, country, state, city, location, zip)} title="Remove address">
-                                            <i className="fa fa-trash"></i>
+                                            <i className="remove-button__icon" />
                                         </a>
                                     </div>
                                 </div>
