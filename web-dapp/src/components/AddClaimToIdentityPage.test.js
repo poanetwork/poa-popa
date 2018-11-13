@@ -21,6 +21,14 @@ const sample = new Map([
   ['identitycontractaddress', '0x7e7693F12BFd372042B754B729D1474572A2DD01']
 ]);
 
+const issueErc735ClaimOkResponse = {
+    data : "0x347e05694d7ed94f9f9964e2d1998bce98ebf62437e01a868f2e4ef206ba038a",
+    issuerAddress : "0xd0a01db20de37853c02bd33619485ef1ab961929",
+    ok: true,
+    signature: "0xccedc54ae3e8f7ed65769496a51ee995051cae915d67d9b402b42295ad96e70029fb8aa1d5d22bbaf976e4fe02c80c03dc0f8f1d099c615475fbdfafb88762fc00",
+    uri : "http://popa.poa.network",
+};
+
 describe('<AddClaimToIdentityPage />', () => {
     it('renders correctly', () => {
         const page = mount(<AddClaimToIdentityPage/>);
@@ -158,6 +166,74 @@ describe('<AddClaimToIdentityPage />', () => {
             'Generating ERC735 claim',
             [['Request ID', 'test'], ['Error', 'Missing issuer address, signature, uri or hashed data field']]
         );
+    });
+
+    it('should show the generated erc735 claim, given a valid response was received', () => {
+        const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
+        const generateClaimButton = page.find('#btnSubmit');
+
+        for (const [field, value] of sample) {
+            page.setState({ [field]: value });
+        }
+        window.$.ajax = jest.fn((args) => args.success(issueErc735ClaimOkResponse));
+        generateClaimButton.simulate('click');
+
+        expect(window.$.ajax).toHaveBeenCalled();
+        const ercClaimData = page.find('.erc735-claim-data');
+        expect(ercClaimData).toHaveLength(1);
+    });
+
+    it('should display alert message if erc735 claim is not generated and add claim button is clicked', () => {
+        window.$.ajax = jest.fn();
+
+        const page = mount(<AddClaimToIdentityPage/>);
+        const addToIdentity = page.find('#addToIdentity');
+        page.setProps({ my_web3: web3 });
+        addToIdentity.simulate('click');
+
+        expect(showAlert).toHaveBeenLastCalledWith(
+            'warning',
+            'Execute add claim',
+            `The ERC-735 claim must be generated first`
+        );
+    });
+
+    it('should send a transaction to add the generated erc735 claim to the specified identity contract', () => {
+      const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
+      page.setProps({ my_web3: web3 });
+
+      // Simulate erc735 claim generation
+      for (const [field, value] of sample) {
+          page.setState({ [field]: value });
+      }
+      window.$.ajax = jest.fn((args) => args.success(issueErc735ClaimOkResponse));
+      const generateClaimButton = page.find('#btnSubmit');
+      generateClaimButton.simulate('click');
+      const ercClaimData = page.find('.erc735-claim-data');
+
+      // Mock web3/contracts methods
+      const userIdentityContractInstanceMock = {
+        addClaim: { getData: () => true },
+        execute: { getData: () => true }
+      }
+      const contractResultMock = {
+        at: () => userIdentityContractInstanceMock
+      };
+      web3.eth.contract = jest.fn(() => contractResultMock);
+      web3.eth.sendTransaction = jest.fn((options, cb) => {
+        cb(null, 'fakeTxId')
+      });
+
+      // Simulate successful add to identity invocation
+      const addToIdentity = page.find('#addToIdentity');
+      addToIdentity.simulate('click');
+      expect(web3.eth.sendTransaction).toHaveBeenCalledWith(
+          expect.objectContaining({
+              from: web3.eth.accounts[0],
+              to: sample.get('identitycontractaddress'),
+          }),
+          expect.anything()
+      );
     });
 
 });

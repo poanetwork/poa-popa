@@ -503,6 +503,10 @@ input {
   .form-group.identity-contract-address .form-control {
     line-height: 24px; }
 
+.erc735-claim-data {
+  font-size: 100%;
+  line-height: 1.6; }
+
 @media only screen and (max-width: 480px) {
   .block-card {
     width: 100%; }

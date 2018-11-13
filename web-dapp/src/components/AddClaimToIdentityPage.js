@@ -118,7 +118,7 @@ class AddClaimToIdentityPage extends React.Component {
       const {identitycontractaddress, erc735Claim} = this.state;
 
       if (!erc735Claim) {
-        window.show_alert('warning', 'Execute add claim', 'The ERC-735 claim must be generated first.');
+        window.show_alert('warning', 'Execute add claim', 'The ERC-735 claim must be generated first');
         return;
       }
 
@@ -140,7 +140,7 @@ class AddClaimToIdentityPage extends React.Component {
                 .then(() => {
                     logger.debug('Transaction submitted: ' + txId);
                     // @TODO: add details included in claim
-                    window.show_alert('success', 'Claim generated and added to identity contract!', [
+                    window.show_alert('success', 'Claim added to identity contract!', [
                         ['Transaction to execute and add claim to identity contract was submitted'],
                         ['Transaction ID', txId],
                     ]);
@@ -169,9 +169,7 @@ class AddClaimToIdentityPage extends React.Component {
                 <p>
                     ERC-735 claim data generated:
                 </p>
-                <p>
-                    <pre>{erc735ClaimContent}</pre>
-                </p>
+                <pre className="erc735-claim-data">{erc735ClaimContent}</pre>
                 <div className="small-c-copy">
                     Click on "Add To Identity" and sign the transaction to <span className="monospaced-text">execute</span> an <span className="monospaced-text">addClaim</span> on the specified identity contract using the data above.
                 </div>
