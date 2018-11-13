@@ -178,6 +178,9 @@ input {
   color: #777777;
   margin-bottom: 5px; }
 
+.monospaced-text {
+  font-family: monospace; }
+
 .bottom-copy {
   font-size: 12px;
   color: #5C34A2; }
@@ -487,6 +490,18 @@ input {
   .add-claim-to-identity__icon:hover {
     background-image: url(../images/add-purple.svg);
     cursor: pointer; }
+
+.claim-form-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 20px 40px 0 rgba(76, 43, 134, 0.2);
+  margin-bottom: 20px;
+  padding: 40px 34px; }
+
+.form-group.identity-contract-address {
+  position: relative; }
+  .form-group.identity-contract-address .form-control {
+    line-height: 24px; }
 
 @media only screen and (max-width: 480px) {
   .block-card {

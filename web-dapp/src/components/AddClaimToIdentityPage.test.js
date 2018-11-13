@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { mount, shallow } from 'enzyme';
 
 import AddClaimToIdentityPage from './AddClaimToIdentityPage';
-
+import BackButton from './BackButton';
 
 const onChange = jest.spyOn(AddClaimToIdentityPage.prototype, 'on_change');
 
@@ -26,11 +26,13 @@ describe('<AddClaimToIdentityPage />', () => {
         const page = mount(<AddClaimToIdentityPage/>);
 
         expect(page.root()).toHaveLength(1);
-        expect(page.find('#addToIdentityForm')).toHaveLength(1);
+        expect(page.find('.claim-form-container')).toHaveLength(1);
         for (const field of fields) {
             expect(page.find(`[name="${field}"]`)).toHaveLength(1);
         }
-        expect(page.find('#generateClaim')).toHaveLength(1);
+        expect(page.find('#btnSubmit')).toHaveLength(1);
+        expect(page.find(BackButton)).toHaveLength(1);
+        expect(page.find('#addToIdentity')).toHaveLength(1);
     });
 
     it('receive web3 instance as property', () => {
@@ -55,7 +57,7 @@ describe('<AddClaimToIdentityPage />', () => {
         window.$.ajax = jest.fn();
 
         const page = mount(<AddClaimToIdentityPage/>);
-        const generateClaimButton = page.find('#generateClaim');
+        const generateClaimButton = page.find('#btnSubmit');
         page.setProps({ my_web3: web3 });
         generateClaimButton.simulate('click');
 
@@ -72,7 +74,7 @@ describe('<AddClaimToIdentityPage />', () => {
         const web3 = { isAddress: () => false };
 
         const page = mount(<AddClaimToIdentityPage/>);
-        const generateClaimButton = page.find('#generateClaim');
+        const generateClaimButton = page.find('#btnSubmit');
         page.setProps({ my_web3: web3 });
         generateClaimButton.simulate('click');
 
@@ -86,7 +88,7 @@ describe('<AddClaimToIdentityPage />', () => {
 
     it('displays a message if received an error response', () => {
         const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
-        const generateClaimButton = page.find('#generateClaim');
+        const generateClaimButton = page.find('#btnSubmit');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -106,7 +108,7 @@ describe('<AddClaimToIdentityPage />', () => {
 
     it('displays a message if received an empty response from server', () => {
         const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
-        const generateClaimButton = page.find('#generateClaim');
+        const generateClaimButton = page.find('#btnSubmit');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -124,7 +126,7 @@ describe('<AddClaimToIdentityPage />', () => {
 
     it('displays a message if received a not valid response', () => {
         const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
-        const generateClaimButton = page.find('#generateClaim');
+        const generateClaimButton = page.find('#btnSubmit');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
@@ -142,7 +144,7 @@ describe('<AddClaimToIdentityPage />', () => {
 
     it('displays a message if received a response without the fields needed to generate the claim', () => {
         const page = mount(<AddClaimToIdentityPage my_web3={web3}/>);
-        const generateClaimButton = page.find('#generateClaim');
+        const generateClaimButton = page.find('#btnSubmit');
 
         for (const [field, value] of sample) {
             page.setState({ [field]: value });
