@@ -35,7 +35,9 @@ class AddClaimToIdentityPage extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
     };
 
-    async generateClaim() {
+    async generateClaim(event) {
+        event.preventDefault();
+
         const {my_web3, physicalAddressIndex} = this.props;
         const identityContractAddress = this.state.identitycontractaddress;
         const web3 = my_web3;
@@ -190,7 +192,7 @@ class AddClaimToIdentityPage extends React.Component {
                     <div className="claim-form-container">
                         <div className="row">
                             <div className="col-md-12">
-                                <form id="claim-form" name="claimForm" noValidate>
+                                <form id="claim-form" name="claimForm" noValidate onSubmit={this.generateClaim}>
                                     <label>Identity Contract Address:</label>
                                     <div className="form-group identity-contract-address">
                                         <input className="form-control" type="text" name="identitycontractaddress" value={identitycontractaddress} onChange={this.on_change}/>
