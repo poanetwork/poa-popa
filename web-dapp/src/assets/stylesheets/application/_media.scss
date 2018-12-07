@@ -7,8 +7,10 @@
   }
   .item-adress{
     padding: 10px;
-    width: 100%;
     text-align: center;
+    &>div {
+      width: 100%;
+    }
   }
   .wrap-btn{
     right: 0;
@@ -93,7 +95,7 @@ only screen and (   min--moz-device-pixel-ratio: 2)      and (min-width: 320px),
 only screen and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 320px),
 only screen and (        min-device-pixel-ratio: 2)      and (min-width: 320px),
 only screen and (                min-resolution: 192dpi) and (min-width: 320px),
-only screen and (                min-resolution: 2dppx)  and (min-width: 320px) { 
+only screen and (                min-resolution: 2dppx)  and (min-width: 320px) {
 
   .logo{
   	background: url(../images/logo/logo-top.svg) no-repeat;
@@ -164,7 +166,7 @@ only screen and (   min--moz-device-pixel-ratio: 2)      and (min-width: 700px),
 only screen and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 700px),
 only screen and (        min-device-pixel-ratio: 2)      and (min-width: 700px),
 only screen and (                min-resolution: 192dpi) and (min-width: 700px),
-only screen and (                min-resolution: 2dppx)  and (min-width: 700px) { 
+only screen and (                min-resolution: 2dppx)  and (min-width: 700px) {
 
   .image{
     background: url(../images/banner-image/pic@2x.jpg) no-repeat;
@@ -199,8 +201,8 @@ only screen and (   min--moz-device-pixel-ratio: 2)      and (min-width: 1920px)
 only screen and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 1920px),
 only screen and (        min-device-pixel-ratio: 2)      and (min-width: 1920px),
 only screen and (                min-resolution: 192dpi) and (min-width: 1920px),
-only screen and (                min-resolution: 2dppx)  and (min-width: 1920px) { 
-	
+only screen and (                min-resolution: 2dppx)  and (min-width: 1920px) {
+
   .image{
   	background: url(../images/banner-image/pic@3x.jpg) no-repeat;
   }

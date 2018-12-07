@@ -17,13 +17,13 @@
   margin-right: 25px;
 }
 .item-adress{
-  width: 195px;
-  -ms-flex-positive: 0!important;
-  flex-grow: 0!important;
+  &>div {
+    width: 195px;
+  }
+  flex-grow: 1;
 }
 .wrap-btn{
-  position: absolute;
-  right: 125px;
+  margin: 0 10px;
 }
 .verify-btn{
   opacity: 0;
@@ -49,15 +49,29 @@
 }
 
 .remove-button__icon {
-    display: inline-block;
-    height: 18px;
-    width: 18px;
-    background-image: url(../images/remove.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  background-image: url(../images/remove.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 
-    &:hover {
-      background-image: url(../images/remove-purple.svg);
-      cursor: pointer;
-    }
+  &:hover {
+    background-image: url(../images/remove-purple.svg);
+    cursor: pointer;
+  }
+}
+
+.add-claim-to-identity__icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  background-image: url(../images/add.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &:hover {
+    background-image: url(../images/add-purple.svg);
+    cursor: pointer;
+  }
 }

@@ -1,6 +1,9 @@
-const PhysicalAddressClaim = artifacts.require('PhysicalAddressClaim');
+const PhysicalAddressClaim = artifacts.require('mocks/PhysicalAddressClaimMock');
 
-contract('PhysicalAddressClaim', () => {
+// Use a mock contract to access the library due to a bug in solidity-coverage. Check
+// the following comment for more information:
+// https://github.com/sc-forks/solidity-coverage/issues/234#issuecomment-390846584
+contract('PhysicalAddressClaim library (through mock to fix coverage errors)', () => {
     it('Should encodes the confirmation block number in a bytes32', async () => {
         const contract = await PhysicalAddressClaim.deployed();
         const _confirmationBlockNumber = '0x0000000000000000000000000000000000000000000000000000000000FAFAFA';

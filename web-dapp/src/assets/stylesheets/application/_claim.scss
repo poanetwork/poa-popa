@@ -1,0 +1,23 @@
+.claim-form-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 20px 40px 0 rgba(76, 43, 134, 0.2);
+  margin-bottom: 20px;
+  padding: 40px 34px;
+}
+
+.form-group.identity-contract-address {
+  // Position the submit identity-contract-address button
+  position: relative;
+
+  .form-control {
+    // Fix height/appearance of identity-contract-address text input
+    // to match the submit button height
+    line-height: 24px;
+  }
+}
+
+.erc735-claim-data {
+  font-size: 100%;
+  line-height: 1.6;
+}
