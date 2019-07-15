@@ -10,7 +10,7 @@
   "dependencies": {},
   "devDependencies": {
     "solhint": "^1.2.1",
-    "solidity-coverage": "^0.4.9",
+    "solidity-coverage": "^0.5.11",
     "truffle": "4.0.6",
     "truffle-hdwallet-provider": "0.0.3"
   }
