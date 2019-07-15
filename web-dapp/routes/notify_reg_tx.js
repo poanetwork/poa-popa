@@ -6,9 +6,9 @@ const config = require('../server-config');
 const sendResponse = require('../server-lib/send_response');
 const notifyRegTxController = require('../controllers/notifyRegTx');
 
-module.exports = () => {
+module.exports = (reqId, logRequest) => {
     const router = express.Router();
-    router.post('/notifyRegTx', function(req, res) {
+    router.post('/notifyRegTx', reqId, logRequest, function(req, res) {
         const logPrfx = req.logPrfx;
         const prelog = `[notifyRegTx] (${logPrfx})`;
 

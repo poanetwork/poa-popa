@@ -14,7 +14,7 @@ module.exports = (opts) => {
 
     logger.log('Found ' + files.length + ' route(s): ' + JSON.stringify(files));
     for (let f of files) {
-        router.use('/', reqId, logRequest, require('./' + f)(opts));
+        router.use('/', require('./' + f)(reqId, logRequest, opts));
     }
 
     return router;

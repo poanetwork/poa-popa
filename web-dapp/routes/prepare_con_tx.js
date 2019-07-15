@@ -6,9 +6,9 @@ const send_response = require('../server-lib/send_response');
 
 const prepareConTx = require('../controllers/prepareConTx');
 
-module.exports = () => {
+module.exports = (reqId, logRequest) => {
     var router = express.Router();
-    router.post('/prepareConTx', function(req, res) {
+    router.post('/prepareConTx', reqId, logRequest, function(req, res) {
         const prelog = `[prepareConTx] (${req.logPrfx})`;
         let params;
         let wallet;

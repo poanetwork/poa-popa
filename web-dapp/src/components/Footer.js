@@ -8,7 +8,7 @@ class Footer extends React.Component {
                     <div className="row">
 
                         <div className="col-md-6 sm-center pd-sm-3">
-                            <span className="bottom-copy">2018 POA Networks. All rights reserved.</span>
+                            <span className="bottom-copy">&copy; 2018-{new Date().getFullYear()} POA Network. All rights reserved.</span>
                         </div>
 
                         <div className="col-md-6 sm-center pd-sm-3 text-right">

@@ -18,6 +18,7 @@ function new_idempotency_key() {
 }
 
 function verify_address(address) {
+    logger.log(prelog + 'Verifying address: ' + JSON.stringify(address));
     return new Promise((resolve, reject) => {
         Lob.usVerifications.verify({
             state: address.state.toUpperCase(),
@@ -25,8 +26,35 @@ function verify_address(address) {
             primary_line: address.location,
             zip_code: address.zip.toUpperCase(),
         }, function (err, result) {
-            if (err || !result || !result.deliverability || result.deliverability.trim().toLowerCase() !== 'deliverable') {
-                return reject({ok: false, msg: 'address is invalid', log: 'address is invalid'});
+            if (err) {
+                return reject({ok: false, msg: 'Error occured during address verification', log: err.toString() });
+            }
+            if (!result || !result.components) {
+                return reject({ok: false, msg: 'Address could not be verified at the moment', log: 'Lob returned empty result: ' + result });
+            }
+            if (!result.deliverability || result.deliverability.trim().toLowerCase() !== 'deliverable') {
+                return reject({ok: false, msg: 'Address is not deliverable', log: 'Address is not deliverable: ' + result.deliverability });
+            }
+            if (result.components.state.toUpperCase() !== address.state.toUpperCase()) {
+                return reject({
+                    ok: false,
+                    msg: `Address auto-correction suggests changing STATE to ${result.components.state.toUpperCase()}.`,
+                    log: `Lob auto-corrected STATE from ${address.state.toUpperCase()} to ${result.components.state.toUpperCase()}`,
+                });
+            }
+            if (result.components.city.toUpperCase() !== address.city.toUpperCase()) {
+                return reject({
+                    ok: false,
+                    msg: `Address auto-correction suggests changing CITY to ${result.components.city.toUpperCase()}.`,
+                    log: `Lob auto-corrected CITY from ${address.city.toUpperCase()} to ${result.components.city.toUpperCase()}`,
+                });
+            }
+            if (result.components.zip_code.toUpperCase() !== address.zip.toUpperCase()) {
+                return reject({
+                    ok: false,
+                    msg: `Address auto-correction suggests changing ZIP CODE to ${result.components.zip_code.toUpperCase()}.`,
+                    log: `Lob auto-corrected ZIP CODE from ${address.zip.toUpperCase()} to ${result.components.zip_code.toUpperCase()}`,
+                });
             }
             return resolve(address);
         });

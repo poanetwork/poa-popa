@@ -7,9 +7,9 @@ const postcardLimiter = require('../server-lib/postcard_limiter');
 
 const prepareRegTx = require('../controllers/prepareRegTx');
 
-module.exports = () => {
+module.exports = (reqId, logRequest) => {
     const router = express.Router();
-    router.post('/prepareRegTx', function(req, res) {
+    router.post('/prepareRegTx', reqId, logRequest, function(req, res) {
         const prelog = `[prepareRegTx] (${req.logPrfx}) `;
         let params;
         let wallet;
