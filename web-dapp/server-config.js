@@ -22,7 +22,27 @@ var cfg = {
 
     codeLength: 10,
     codeSymbols: 'abcdhkmnprstwxy345789',
-    confirmationPageUrl: 'http://localhost:3000/confirm', // used only for postcard's front cover
+
+    // confirmation text parameters
+    confirmationPageUrl: 'http://localhost:3000/confirm',
+    confirmationRPCUrl: 'http://localhost:8545',
+    confirmationLogoUrl: 'http://localhost:3000/logo.svg',
+    confirmationSignature: 'Dev Team',
+
+    // options for letters
+    letterFrom: {
+        "description": "Harry - Office",
+        "name": "HARRY ZHANG",
+        "company": "LOB",
+        "phone": "5555555555",
+        "email": "harry@lob.com",
+        "address_line1": "185 BERRY ST STE 6100",
+        "address_line2": null,
+        "address_city": "SAN FRANCISCO",
+        "address_state": "CA",
+        "address_zip": "94107-1741",
+        "address_country": "US",
+    },
 
     blockWaitIntervalMs:   7000,
     blockWaitMaxTimeMs:  70000,

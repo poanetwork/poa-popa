@@ -37,7 +37,7 @@ class IndexPage extends React.Component {
                     <p className="second-text">Complete the process by confirming the verification code that you received in the postcard. You can also consult and manage all your registered addresses, whether they are verified or not.</p>
                     <Link to="/confirm">
                         <button className="primary-btn mt-3">
-                            Verify postcard
+                            Verify postcard/letter
                             <img className="btn-arrow" src={require('../assets/images/verify.svg')} alt="verify" />
                         </button>
                     </Link>

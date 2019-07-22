@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css?family=Arimo:400,700" rel="stylesheet">
+<title>Proof of Physical Address confirmation letter</title>
+<style>
+
+  *, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  body {
+    width: 8.5in;
+    height: 11in;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arimo';
+    position: relative;
+  }
+
+  .page {
+    page-break-after: always;
+  }
+
+  #logo {
+    position: absolute;
+    right: .7in;
+    top: .7in;
+  }
+
+  .header {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background-color: #cccccc;
+    font-size: 18px;
+    padding-left: .7in;
+    position: relative;
+    top: 3.2in;
+  }
+
+  .text {
+    position: relative;
+    top: 3.3in;
+    margin: 0 .7in;
+  }
+
+  .steps {
+    margin-left: 70px;
+  }
+
+  .code {
+    font-size: 20px;
+    text-indent: 55px;
+  }
+
+</style>
+</head>
+<body>
+  <div class="page">
+    <!-- Your logo here! -->
+    <img id="logo" src="{{confirmationLogoUrl}}" width="150px" />
+
+    <div class="header">
+      <p><b>Proof of Physical Address - Confirmation Code</b></p>
+    </div>
+
+    <div class="text">
+      <p>{{current_date}}</p>
+
+      <p>Dear {{name}},</p>
+
+      <p>You have requested confirmation of your physical address via PoPA DApp.</p>
+
+      <p>Please follow the steps below to complete the verification process</p>
+
+      <div class="steps">
+        <p><b>Step 1</b>: Go to <b>{{confirmationPageUrl}}</b></p>
+        <p><b>Step 2</b>: Login to MetaMask and connect to {{confirmationRPCUrl}}</p>
+        <p><b>Step 3</b>: Select "Verify postcard/letter"
+        <p><b>Step 4</b>: Enter the verification code below</p>
+        <div class="code">
+          <p><strong>{{code}}</strong></p>
+        </div>
+        <p><b>Step 5</b>: Confirm transaction in MetaMask</p>
+      </div>
+
+      <p>Upon completing these steps, your physical address will be confirmed in the PoPA contract</p>
+
+      <p>Sincerely,</p>
+      <p>{{confirmationSignature}}</p>
+    </div>
+  </div>
+</body>
+</html>
